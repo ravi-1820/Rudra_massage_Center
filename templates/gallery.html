@@ -18,14 +18,30 @@
   <!-- Filter Buttons -->
   <section class="py-4 bg-white border-bottom">
     <div class="container">
-      <div class="d-flex justify-content-center flex-wrap gap-2">
-        <button class="btn btn-sm btn-outline-dark gallery-filter-btn active" data-filter="all">All Showcase</button>
-        <button class="btn btn-sm btn-outline-dark gallery-filter-btn" data-filter="machines">Therapy Machines</button>
-        <button class="btn btn-sm btn-outline-dark gallery-filter-btn" data-filter="kansa">Vedic Kansa Metal</button>
-        <button class="btn btn-sm btn-outline-dark gallery-filter-btn" data-filter="centre">Demonstration Centre</button>
-        <button class="btn btn-sm btn-outline-dark gallery-filter-btn" data-filter="sessions">Live Sessions</button>
+      <div class="gallery-filter-bar">
+        <button class="gallery-filter-pill active" data-filter="all" id="filter-all">
+          <span class="gallery-filter-pill-icon"><i class="bi bi-grid-3x3-gap-fill"></i></span>
+          <span>All Showcase</span>
+        </button>
+        <button class="gallery-filter-pill" data-filter="machines" id="filter-machines">
+          <span class="gallery-filter-pill-icon"><i class="bi bi-cpu-fill"></i></span>
+          <span>Therapy Machines</span>
+        </button>
+        <button class="gallery-filter-pill" data-filter="kansa" id="filter-kansa">
+          <span class="gallery-filter-pill-icon"><i class="bi bi-circle-half"></i></span>
+          <span>Vedic Kansa Metal</span>
+        </button>
+        <button class="gallery-filter-pill" data-filter="centre" id="filter-centre">
+          <span class="gallery-filter-pill-icon"><i class="bi bi-building"></i></span>
+          <span>Demonstration Centre</span>
+        </button>
+        <button class="gallery-filter-pill" data-filter="sessions" id="filter-sessions">
+          <span class="gallery-filter-pill-icon"><i class="bi bi-camera-video-fill"></i></span>
+          <span>Live Sessions</span>
+        </button>
       </div>
     </div>
+  </section>
   <!-- Featured Showcase Highlights Carousel -->
   <section class="py-4 bg-white border-bottom">
     <div class="container">

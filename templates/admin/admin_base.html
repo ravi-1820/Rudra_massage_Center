@@ -93,15 +93,30 @@
             <i class="bi bi-moon-stars"></i>
           </button>
           {% block topbar_actions %}
-          <button class="btn btn-sm btn-outline-secondary rounded-pill" onclick="showToast('Alert', 'No unread alerts in demo state.', 'gold');">
+          <!-- Search Bar -->
+          <div class="admin-topbar-search d-none d-md-flex">
+            <i class="bi bi-search admin-topbar-search-icon"></i>
+            <input type="text" class="admin-topbar-search-input" placeholder="Search anything…" aria-label="Search">
+          </div>
+          <!-- Notification Bell -->
+          <div class="admin-topbar-icon-btn" onclick="showToast('Notifications', 'No unread alerts at the moment.', 'gold');" title="Notifications" tabindex="0" role="button" aria-label="Notifications">
             <i class="bi bi-bell"></i>
-          </button>
+            <span class="admin-topbar-badge">3</span>
+          </div>
+          <!-- Settings Quick Access -->
+          <a href="{% url 'custom_admin:settings' %}" class="admin-topbar-icon-btn" title="Settings" aria-label="Portal Settings">
+            <i class="bi bi-gear"></i>
+          </a>
+          <!-- Divider -->
+          <div class="admin-topbar-divider"></div>
+          <!-- User Profile -->
           <div class="admin-user-profile">
             <div class="admin-user-avatar">AD</div>
             <div class="d-none d-md-block text-start" style="line-height: 1.2;">
-              <small class="fw-bold text-dark d-block">Admin User</small>
-              <small class="text-muted" style="font-size: 0.72rem;">Lead Coordinator</small>
+              <small class="fw-bold d-block admin-topbar-name">Admin User</small>
+              <small class="admin-topbar-role">Lead Coordinator</small>
             </div>
+            <i class="bi bi-chevron-down admin-topbar-chevron d-none d-md-block"></i>
           </div>
           {% endblock %}
         </div>

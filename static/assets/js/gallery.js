@@ -3,7 +3,7 @@
  */
 
 document.addEventListener("DOMContentLoaded", () => {
-  const filterBtns = document.querySelectorAll(".gallery-filter-btn");
+  const filterBtns = document.querySelectorAll(".gallery-filter-btn, .gallery-filter-pill");
   const galleryItems = document.querySelectorAll(".gallery-item-wrap");
   const lightbox = document.getElementById("galleryLightbox");
   const lightboxImg = document.getElementById("lightboxImage");
