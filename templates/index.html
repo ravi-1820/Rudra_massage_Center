@@ -35,20 +35,6 @@
         <div class="col-lg-6">
           <div class="position-relative">
             <div id="heroCarousel" class="carousel slide carousel-fade hero-stage-carousel" data-bs-ride="carousel" data-bs-interval="5000" data-bs-pause="false">
-              
-              <!-- Top Segmented Progress Bar (Apple/Story Style 5s Timer) -->
-              <div class="hero-stage-progress-bar">
-                <button type="button" class="hero-stage-seg active" data-bs-target="#heroCarousel" data-bs-slide-to="0" aria-label="Slide 1"><div class="seg-fill"></div></button>
-                <button type="button" class="hero-stage-seg" data-bs-target="#heroCarousel" data-bs-slide-to="1" aria-label="Slide 2"><div class="seg-fill"></div></button>
-                <button type="button" class="hero-stage-seg" data-bs-target="#heroCarousel" data-bs-slide-to="2" aria-label="Slide 3"><div class="seg-fill"></div></button>
-              </div>
-
-              <!-- Top Live Status Badge -->
-              <div class="hero-stage-live-tag">
-                <span class="hero-live-pulse-dot"></span>
-                <span>Auto-Switching • 5s</span>
-              </div>
-
               <!-- Carousel Slides -->
               <div class="carousel-inner">
                 <!-- Slide 1 -->
@@ -768,36 +754,12 @@
   document.addEventListener('DOMContentLoaded', function () {
     const heroCarouselEl = document.getElementById('heroCarousel');
     if (heroCarouselEl) {
-      // Ensure Bootstrap Carousel instance runs continuously every 5000ms with pause: false
-      const carouselInstance = new bootstrap.Carousel(heroCarouselEl, {
+      // Continuously auto-rotates every 5 seconds without pausing on hover
+      new bootstrap.Carousel(heroCarouselEl, {
         interval: 5000,
         ride: 'carousel',
         pause: false,
         wrap: true
-      });
-
-      const segButtons = heroCarouselEl.querySelectorAll('.hero-stage-seg');
-
-      heroCarouselEl.addEventListener('slide.bs.carousel', function (e) {
-        const nextIndex = e.to;
-        segButtons.forEach((btn, idx) => {
-          btn.classList.remove('active', 'completed');
-          const fill = btn.querySelector('.seg-fill');
-
-          if (idx < nextIndex) {
-            btn.classList.add('completed');
-            if (fill) fill.style.animation = 'none';
-          } else if (idx === nextIndex) {
-            if (fill) {
-              fill.style.animation = 'none';
-              fill.offsetHeight; // Trigger reflow to restart CSS animation
-              fill.style.animation = '';
-            }
-            btn.classList.add('active');
-          } else {
-            if (fill) fill.style.animation = 'none';
-          }
-        });
       });
     }
   });
