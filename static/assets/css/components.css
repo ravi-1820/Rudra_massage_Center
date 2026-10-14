@@ -2121,6 +2121,24 @@
   color: #052e1b;
 }
 
+/* Categories Carousel Modern Controls & Animations */
+#categoriesCarousel .carousel-indicators [data-bs-target] {
+  width: 28px;
+  height: 6px;
+  border-radius: 999px;
+  background-color: var(--primary);
+  opacity: 0.3;
+  border: none;
+  transition: width var(--transition-fast), opacity var(--transition-fast), background-color var(--transition-fast);
+  cursor: pointer;
+}
 
+#categoriesCarousel .carousel-indicators [data-bs-target].active {
+  width: 46px;
+  opacity: 1;
+}
 
+#categoriesCarousel .carousel-item {
+  transition: transform 0.65s cubic-bezier(0.25, 1, 0.5, 1);
+}
 

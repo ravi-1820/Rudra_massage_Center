@@ -215,165 +215,199 @@
     </div>
   </section>
 
-  <!-- Featured Product Categories (Approved 10 Categories in 2 Rows of 5) -->
+  <!-- Featured Product Categories (Approved 10 Categories Carousel) -->
   <section class="section-py section-bg-white border-top border-bottom">
     <div class="container">
-      <div class="section-header text-center mb-5">
-        <h2 class="section-title mb-2">Featured Product Categories</h2>
-        <p class="section-desc text-muted mb-0">Explore our 10 wellness categories designed for your complete well-being</p>
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end mb-4 gap-3">
+        <div>
+          <div class="d-inline-flex align-items-center gap-2 mb-2">
+            <span class="badge badge-mint px-3 py-1 fw-bold"><i class="bi bi-grid-3x3-gap-fill me-1"></i> Wellness Categories</span>
+            <span class="badge bg-light text-dark border px-2 py-1"><i class="bi bi-arrow-repeat me-1 text-success"></i> Auto-Plays Every 5s</span>
+          </div>
+          <h2 class="section-title mb-1">Featured Product Categories</h2>
+          <p class="section-desc text-muted mb-0">Explore our 10 wellness categories designed for your complete well-being</p>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+          <button class="carousel-nav-btn" data-bs-target="#categoriesCarousel" data-bs-slide="prev" aria-label="Previous categories">
+            <i class="bi bi-arrow-left"></i>
+          </button>
+          <button class="carousel-nav-btn" data-bs-target="#categoriesCarousel" data-bs-slide="next" aria-label="Next categories">
+            <i class="bi bi-arrow-right"></i>
+          </button>
+        </div>
       </div>
 
-      <div class="row g-4 row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5">
-        <!-- Row 1: Item 1 -->
-        <div class="col">
-          <a href="{% url 'user:services' %}?category=Therapy+Machines" class="category-card-clean">
-            <div class="category-img-box">
-              <img src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80" alt="Therapy Machines" loading="lazy">
-            </div>
-            <div class="category-body">
-              <h5 class="category-title">Therapy Machines</h5>
-              <div class="category-footer">
-                <p class="category-desc">Advanced technology for better wellness.</p>
-                <span class="category-circle-arrow"><i class="bi bi-arrow-up-right"></i></span>
+      <div id="categoriesCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000" data-bs-pause="hover">
+        <div class="carousel-inner pb-2">
+          <!-- Slide 1: Categories 1 to 5 -->
+          <div class="carousel-item active">
+            <div class="row g-4 row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5">
+              <!-- Item 1 -->
+              <div class="col">
+                <a href="{% url 'user:services' %}?category=Therapy+Machines" class="category-card-clean">
+                  <div class="category-img-box">
+                    <img src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80" alt="Therapy Machines" loading="lazy">
+                  </div>
+                  <div class="category-body">
+                    <h5 class="category-title">Therapy Machines</h5>
+                    <div class="category-footer">
+                      <p class="category-desc">Advanced technology for better wellness.</p>
+                      <span class="category-circle-arrow"><i class="bi bi-arrow-up-right"></i></span>
+                    </div>
+                  </div>
+                </a>
+              </div>
+              <!-- Item 2 -->
+              <div class="col">
+                <a href="{% url 'user:services' %}?category=Massagers" class="category-card-clean">
+                  <div class="category-img-box">
+                    <img src="https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=600&q=80" alt="Massagers" loading="lazy">
+                  </div>
+                  <div class="category-body">
+                    <h5 class="category-title">Massagers</h5>
+                    <div class="category-footer">
+                      <p class="category-desc">Relax your muscles, relieve tension.</p>
+                      <span class="category-circle-arrow"><i class="bi bi-arrow-up-right"></i></span>
+                    </div>
+                  </div>
+                </a>
+              </div>
+              <!-- Item 3 -->
+              <div class="col">
+                <a href="{% url 'user:services' %}?category=Exercise+Equipment" class="category-card-clean">
+                  <div class="category-img-box">
+                    <img src="https://images.unsplash.com/photo-1576678927484-cc907957088c?auto=format&fit=crop&w=600&q=80" alt="Exercise Equipment" loading="lazy">
+                  </div>
+                  <div class="category-body">
+                    <h5 class="category-title">Exercise Equipment</h5>
+                    <div class="category-footer">
+                      <p class="category-desc">Stay active, stay healthy.</p>
+                      <span class="category-circle-arrow"><i class="bi bi-arrow-up-right"></i></span>
+                    </div>
+                  </div>
+                </a>
+              </div>
+              <!-- Item 4 -->
+              <div class="col">
+                <a href="{% url 'user:services' %}?category=Kansa+Therapy" class="category-card-clean">
+                  <div class="category-img-box">
+                    <img src="https://images.unsplash.com/photo-1519823551278-64ac92734fb1?auto=format&fit=crop&w=600&q=80" alt="Kansa Therapy" loading="lazy">
+                  </div>
+                  <div class="category-body">
+                    <h5 class="category-title">Kansa Therapy</h5>
+                    <div class="category-footer">
+                      <p class="category-desc">Ancient wisdom, modern wellness.</p>
+                      <span class="category-circle-arrow"><i class="bi bi-arrow-up-right"></i></span>
+                    </div>
+                  </div>
+                </a>
+              </div>
+              <!-- Item 5 -->
+              <div class="col">
+                <a href="{% url 'user:services' %}?category=Surgical+%26+Support+Products" class="category-card-clean">
+                  <div class="category-img-box">
+                    <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=600&q=80" alt="Surgical & Support" loading="lazy">
+                  </div>
+                  <div class="category-body">
+                    <h5 class="category-title">Surgical & Support</h5>
+                    <div class="category-footer">
+                      <p class="category-desc">Support for every need.</p>
+                      <span class="category-circle-arrow"><i class="bi bi-arrow-up-right"></i></span>
+                    </div>
+                  </div>
+                </a>
               </div>
             </div>
-          </a>
-        </div>
-        <!-- Row 1: Item 2 -->
-        <div class="col">
-          <a href="{% url 'user:services' %}?category=Massagers" class="category-card-clean">
-            <div class="category-img-box">
-              <img src="https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=600&q=80" alt="Massagers" loading="lazy">
-            </div>
-            <div class="category-body">
-              <h5 class="category-title">Massagers</h5>
-              <div class="category-footer">
-                <p class="category-desc">Relax your muscles, relieve tension.</p>
-                <span class="category-circle-arrow"><i class="bi bi-arrow-up-right"></i></span>
+          </div>
+
+          <!-- Slide 2: Categories 6 to 10 -->
+          <div class="carousel-item">
+            <div class="row g-4 row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5">
+              <!-- Item 6 -->
+              <div class="col">
+                <a href="{% url 'user:services' %}?category=Personal+Care" class="category-card-clean">
+                  <div class="category-img-box">
+                    <img src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=600&q=80" alt="Personal Care" loading="lazy">
+                  </div>
+                  <div class="category-body">
+                    <h5 class="category-title">Personal Care</h5>
+                    <div class="category-footer">
+                      <p class="category-desc">Gentle care for your everyday needs.</p>
+                      <span class="category-circle-arrow"><i class="bi bi-arrow-up-right"></i></span>
+                    </div>
+                  </div>
+                </a>
+              </div>
+              <!-- Item 7 -->
+              <div class="col">
+                <a href="{% url 'user:services' %}?usage=Home+Use" class="category-card-clean">
+                  <div class="category-img-box">
+                    <img src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=600&q=80" alt="Home Wellness" loading="lazy">
+                  </div>
+                  <div class="category-body">
+                    <h5 class="category-title">Home Wellness</h5>
+                    <div class="category-footer">
+                      <p class="category-desc">Wellness for your home.</p>
+                      <span class="category-circle-arrow"><i class="bi bi-arrow-up-right"></i></span>
+                    </div>
+                  </div>
+                </a>
+              </div>
+              <!-- Item 8 -->
+              <div class="col">
+                <a href="{% url 'user:services' %}?usage=Elderly-Friendly+Products" class="category-card-clean">
+                  <div class="category-img-box">
+                    <img src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=600&q=80" alt="Mobility Aids" loading="lazy">
+                  </div>
+                  <div class="category-body">
+                    <h5 class="category-title">Mobility Aids</h5>
+                    <div class="category-footer">
+                      <p class="category-desc">Live independently.</p>
+                      <span class="category-circle-arrow"><i class="bi bi-arrow-up-right"></i></span>
+                    </div>
+                  </div>
+                </a>
+              </div>
+              <!-- Item 9 -->
+              <div class="col">
+                <a href="{% url 'user:services' %}?category=Recovery+%26+Rehab" class="category-card-clean">
+                  <div class="category-img-box">
+                    <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=600&q=80" alt="Recovery & Rehab" loading="lazy">
+                  </div>
+                  <div class="category-body">
+                    <h5 class="category-title">Recovery & Rehab</h5>
+                    <div class="category-footer">
+                      <p class="category-desc">Support your recovery journey.</p>
+                      <span class="category-circle-arrow"><i class="bi bi-arrow-up-right"></i></span>
+                    </div>
+                  </div>
+                </a>
+              </div>
+              <!-- Item 10 -->
+              <div class="col">
+                <a href="{% url 'user:services' %}?category=Wellness+Accessories" class="category-card-clean">
+                  <div class="category-img-box">
+                    <img src="https://images.unsplash.com/photo-1599447421416-3414500d18a5?auto=format&fit=crop&w=600&q=80" alt="Wellness Accessories" loading="lazy">
+                  </div>
+                  <div class="category-body">
+                    <h5 class="category-title">Wellness Accessories</h5>
+                    <div class="category-footer">
+                      <p class="category-desc">Small tools for big changes.</p>
+                      <span class="category-circle-arrow"><i class="bi bi-arrow-up-right"></i></span>
+                    </div>
+                  </div>
+                </a>
               </div>
             </div>
-          </a>
-        </div>
-        <!-- Row 1: Item 3 -->
-        <div class="col">
-          <a href="{% url 'user:services' %}?category=Exercise+Equipment" class="category-card-clean">
-            <div class="category-img-box">
-              <img src="https://images.unsplash.com/photo-1576678927484-cc907957088c?auto=format&fit=crop&w=600&q=80" alt="Exercise Equipment" loading="lazy">
-            </div>
-            <div class="category-body">
-              <h5 class="category-title">Exercise Equipment</h5>
-              <div class="category-footer">
-                <p class="category-desc">Stay active, stay healthy.</p>
-                <span class="category-circle-arrow"><i class="bi bi-arrow-up-right"></i></span>
-              </div>
-            </div>
-          </a>
-        </div>
-        <!-- Row 1: Item 4 -->
-        <div class="col">
-          <a href="{% url 'user:services' %}?category=Kansa+Therapy" class="category-card-clean">
-            <div class="category-img-box">
-              <img src="https://images.unsplash.com/photo-1519823551278-64ac92734fb1?auto=format&fit=crop&w=600&q=80" alt="Kansa Therapy" loading="lazy">
-            </div>
-            <div class="category-body">
-              <h5 class="category-title">Kansa Therapy</h5>
-              <div class="category-footer">
-                <p class="category-desc">Ancient wisdom, modern wellness.</p>
-                <span class="category-circle-arrow"><i class="bi bi-arrow-up-right"></i></span>
-              </div>
-            </div>
-          </a>
-        </div>
-        <!-- Row 1: Item 5 -->
-        <div class="col">
-          <a href="{% url 'user:services' %}?category=Surgical+%26+Support+Products" class="category-card-clean">
-            <div class="category-img-box">
-              <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=600&q=80" alt="Surgical & Support" loading="lazy">
-            </div>
-            <div class="category-body">
-              <h5 class="category-title">Surgical & Support</h5>
-              <div class="category-footer">
-                <p class="category-desc">Support for every need.</p>
-                <span class="category-circle-arrow"><i class="bi bi-arrow-up-right"></i></span>
-              </div>
-            </div>
-          </a>
+          </div>
         </div>
 
-        <!-- Row 2: Item 6 -->
-        <div class="col">
-          <a href="{% url 'user:services' %}?category=Personal+Care" class="category-card-clean">
-            <div class="category-img-box">
-              <img src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=600&q=80" alt="Personal Care" loading="lazy">
-            </div>
-            <div class="category-body">
-              <h5 class="category-title">Personal Care</h5>
-              <div class="category-footer">
-                <p class="category-desc">Gentle care for your everyday needs.</p>
-                <span class="category-circle-arrow"><i class="bi bi-arrow-up-right"></i></span>
-              </div>
-            </div>
-          </a>
-        </div>
-        <!-- Row 2: Item 7 -->
-        <div class="col">
-          <a href="{% url 'user:services' %}?usage=Home+Use" class="category-card-clean">
-            <div class="category-img-box">
-              <img src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=600&q=80" alt="Home Wellness" loading="lazy">
-            </div>
-            <div class="category-body">
-              <h5 class="category-title">Home Wellness</h5>
-              <div class="category-footer">
-                <p class="category-desc">Wellness for your home.</p>
-                <span class="category-circle-arrow"><i class="bi bi-arrow-up-right"></i></span>
-              </div>
-            </div>
-          </a>
-        </div>
-        <!-- Row 2: Item 8 -->
-        <div class="col">
-          <a href="{% url 'user:services' %}?usage=Elderly-Friendly+Products" class="category-card-clean">
-            <div class="category-img-box">
-              <img src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=600&q=80" alt="Mobility Aids" loading="lazy">
-            </div>
-            <div class="category-body">
-              <h5 class="category-title">Mobility Aids</h5>
-              <div class="category-footer">
-                <p class="category-desc">Live independently.</p>
-                <span class="category-circle-arrow"><i class="bi bi-arrow-up-right"></i></span>
-              </div>
-            </div>
-          </a>
-        </div>
-        <!-- Row 2: Item 9 -->
-        <div class="col">
-          <a href="{% url 'user:services' %}?category=Recovery+%26+Rehab" class="category-card-clean">
-            <div class="category-img-box">
-              <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=600&q=80" alt="Recovery & Rehab" loading="lazy">
-            </div>
-            <div class="category-body">
-              <h5 class="category-title">Recovery & Rehab</h5>
-              <div class="category-footer">
-                <p class="category-desc">Support your recovery journey.</p>
-                <span class="category-circle-arrow"><i class="bi bi-arrow-up-right"></i></span>
-              </div>
-            </div>
-          </a>
-        </div>
-        <!-- Row 2: Item 10 -->
-        <div class="col">
-          <a href="{% url 'user:services' %}?category=Wellness+Accessories" class="category-card-clean">
-            <div class="category-img-box">
-              <img src="https://images.unsplash.com/photo-1599447421416-3414500d18a5?auto=format&fit=crop&w=600&q=80" alt="Wellness Accessories" loading="lazy">
-            </div>
-            <div class="category-body">
-              <h5 class="category-title">Wellness Accessories</h5>
-              <div class="category-footer">
-                <p class="category-desc">Small tools for big changes.</p>
-                <span class="category-circle-arrow"><i class="bi bi-arrow-up-right"></i></span>
-              </div>
-            </div>
-          </a>
+        <!-- Indicators -->
+        <div class="d-flex justify-content-center align-items-center gap-2 mt-4">
+          <div class="carousel-indicators position-static m-0 d-flex gap-2">
+            <button type="button" data-bs-target="#categoriesCarousel" data-bs-slide-to="0" class="active rounded-pill" aria-current="true" aria-label="Slide 1" style="width: 32px; height: 6px; background-color: var(--primary); border: 0;"></button>
+            <button type="button" data-bs-target="#categoriesCarousel" data-bs-slide-to="1" class="rounded-pill" aria-label="Slide 2" style="width: 32px; height: 6px; background-color: var(--primary); border: 0;"></button>
+          </div>
         </div>
       </div>
     </div>
