@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Offers & Festive Bundles | Rudra Massage & Wellness{% endblock %}
+
+{% block content %}
+<!-- Banner -->
+  <section class="py-5 section-bg-ivory border-bottom text-center">
+    <div class="container">
+      <span class="section-subtitle-tag">SPECIAL INCENTIVES</span>
+      <h1 class="h2 fw-bold text-forest mb-2">Offers, Vouchers & Festive Packages</h1>
+      <p class="text-muted max-w-md mx-auto mb-0">
+        Copy promo codes below to redeem savings during your telephone enquiry or clinic booking.
+      </p>
+    </div>
+  </section>
+
+  <!-- Offers Grid -->
+  <section class="section-py section-bg-white">
+    <div class="container">
+      <div class="row g-4 justify-content-center">
+        
+        <!-- Offer 1 -->
+        <div class="col-md-6 col-lg-4">
+          <div class="offer-card">
+            <span class="offer-card-tag">Festive Exclusive</span>
+            <div class="offer-discount">Flat 25% OFF</div>
+            <h4 class="offer-title">Navratri & Diwali Festive Bundle</h4>
+            <p class="offer-desc">
+              Valid on all Kansa Metal Therapy bowls and portable Swedana Herbal Steam Chambers. Bring timeless Ayurvedic detoxification into your home.
+            </p>
+            <div class="small text-muted mb-3"><i class="bi bi-clock me-1"></i> Valid till November 15, 2026</div>
+            <div class="offer-promo-box">
+              <span class="promo-code-text">FESTIVE25</span>
+              <button class="btn btn-sm btn-dark" onclick="navigator.clipboard.writeText('FESTIVE25'); showToast('Code Copied', 'Promo code FESTIVE25 copied to clipboard!', 'gold');">
+                <i class="bi bi-copy me-1"></i> Copy Code
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Offer 2 -->
+        <div class="col-md-6 col-lg-4">
+          <div class="offer-card">
+            <span class="offer-card-tag">Elders First</span>
+            <div class="offer-discount">Extra ₹1,500 OFF</div>
+            <h4 class="offer-title">Senior Citizen Joint Care Combo</h4>
+            <p class="offer-desc">
+              Applies on cart values containing OrthoRelief Infrared Knee Guards and AyurSpine Traction Belts exceeding ₹5,000.
+            </p>
+            <div class="small text-muted mb-3"><i class="bi bi-clock me-1"></i> Ongoing Community Senior Offer</div>
+            <div class="offer-promo-box">
+              <span class="promo-code-text">SENIORCARE</span>
+              <button class="btn btn-sm btn-dark" onclick="navigator.clipboard.writeText('SENIORCARE'); showToast('Code Copied', 'Promo code SENIORCARE copied to clipboard!', 'gold');">
+                <i class="bi bi-copy me-1"></i> Copy Code
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Offer 3 -->
+        <div class="col-md-6 col-lg-4">
+          <div class="offer-card">
+            <span class="offer-card-tag">Practitioner Demo</span>
+            <div class="offer-discount">Free Live Demo</div>
+            <h4 class="offer-title">Clinic Trial Demonstration</h4>
+            <p class="offer-desc">
+              Complimentary on-site demonstration and biomedical technician consultation for physiotherapy centres interested in automated Shirodhara consoles.
+            </p>
+            <div class="small text-muted mb-3"><i class="bi bi-clock me-1"></i> For Verified Clinics & Doctors</div>
+            <div class="offer-promo-box">
+              <span class="promo-code-text">CLINICPRO</span>
+              <button class="btn btn-sm btn-dark" onclick="navigator.clipboard.writeText('CLINICPRO'); showToast('Code Copied', 'Promo code CLINICPRO copied to clipboard!', 'gold');">
+                <i class="bi bi-copy me-1"></i> Copy Code
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Offer 4 -->
+        <div class="col-md-6 col-lg-4">
+          <div class="offer-card">
+            <span class="offer-card-tag">Digital Wellness</span>
+            <div class="offer-discount">Free Eye Mask</div>
+            <h4 class="offer-title">Corporate Tech Relief Combo</h4>
+            <p class="offer-desc">
+              Purchase any CervicalFlex Trapezius massager and receive a complimentary OcuRest heated eye relaxer mask.
+            </p>
+            <div class="small text-muted mb-3"><i class="bi bi-clock me-1"></i> Limited to first 50 enquiries</div>
+            <div class="offer-promo-box">
+              <span class="promo-code-text">TECHDETOX</span>
+              <button class="btn btn-sm btn-dark" onclick="navigator.clipboard.writeText('TECHDETOX'); showToast('Code Copied', 'Promo code TECHDETOX copied to clipboard!', 'gold');">
+                <i class="bi bi-copy me-1"></i> Copy Code
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Action -->
+      <div class="text-center mt-5">
+        <a href="{% url 'user:appointment' %}" class="btn-veda-primary btn-veda-lg">
+          Apply a Promo Code During Demo Booking &rarr;
+        </a>
+      </div>
+    </div>
+  </section>
+
+  {% endblock %}

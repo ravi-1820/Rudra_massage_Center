@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Therapy Solution Details | Rudra Massage & Wellness{% endblock %}
+
+{% block content %}
+<!-- Breadcrumbs Bar -->
+  <section class="py-3 section-bg-ivory border-bottom">
+    <div class="container">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-0 small">
+          <li class="breadcrumb-item"><a href="{% url 'user:home' %}">Home</a></li>
+          <li class="breadcrumb-item"><a href="{% url 'user:services' %}">Catalogue</a></li>
+          <li class="breadcrumb-item active" id="breadcrumbCurrentProduct" aria-current="page">Loading product...</li>
+        </ol>
+      </nav>
+    </div>
+  </section>
+
+  <!-- Product Hero & Overview -->
+  <section class="section-py section-bg-white border-bottom">
+    <div class="container">
+      <div class="row g-5">
+        
+        <!-- Left: Gallery & Thumbnails -->
+        <div class="col-lg-6">
+          <div class="bg-light p-4 rounded-4 text-center border mb-3 position-relative" style="min-height: 400px; display: flex; align-items: center; justify-content: center;">
+            <span class="badge-custom badge-forest position-absolute top-0 start-0 m-3" id="detailBadge">Bestseller</span>
+            <img src="" id="detailMainImage" alt="Therapy Product" class="img-fluid rounded-3" style="max-height: 380px; object-fit: contain;">
+          </div>
+          <!-- Thumbnail Row -->
+          <div class="d-flex align-items-center gap-2 overflow-auto pb-2" id="detailThumbnails"></div>
+        </div>
+
+        <!-- Right: Information & Actions -->
+        <div class="col-lg-6">
+          <div class="d-flex align-items-center gap-2 mb-2">
+            <span class="badge bg-light text-forest border fw-bold" id="detailCategory">Therapy Machines</span>
+            <div class="small" id="detailRating"></div>
+          </div>
+
+          <h1 class="h2 fw-bold text-forest mb-3" id="detailTitle">Loading Title...</h1>
+          <p class="lead fs-6 text-muted mb-4" id="detailShortDesc"></p>
+
+          <!-- Pricing Block -->
+          <div class="p-3 rounded-3 section-bg-ivory border d-flex align-items-baseline gap-3 mb-4">
+            <span class="fs-2 fw-bold text-forest" id="detailPrice">₹0</span>
+            <span class="text-muted text-decoration-line-through fs-5" id="detailOriginalPrice">₹0</span>
+            <span class="badge bg-success-subtle text-success fw-bold px-3 py-1" id="detailDiscount">0% OFF</span>
+          </div>
+
+          <!-- Feature Bullets Preview -->
+          <h5 class="fw-bold text-forest mb-3">Key Therapeutic Highlights:</h5>
+          <ul class="list-unstyled mb-4" id="detailFeaturesList"></ul>
+
+          <!-- CTAs: Enquire Now & Book Demo -->
+          <div class="d-flex gap-3 flex-wrap mb-4">
+            <a href="{% url 'user:enquiry' %}" id="detailEnquireBtn" class="btn-veda-gold btn-veda-lg flex-grow-1 text-center">
+              <i class="bi bi-chat-text-fill me-2"></i> Enquire Now
+            </a>
+            <a href="{% url 'user:appointment' %}" id="detailDemoBtn" class="btn-veda-primary btn-veda-lg flex-grow-1 text-center">
+              <i class="bi bi-calendar2-check-fill me-2"></i> Book Product Demo
+            </a>
+          </div>
+
+          <!-- Tags -->
+          <div class="d-flex align-items-center gap-2 flex-wrap">
+            <span class="small text-muted fw-bold">Tags:</span>
+            <div id="detailTags" class="d-inline-flex flex-wrap"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Deep Dive Tabs: Detailed Specs, Precautions, Usage Instructions -->
+  <section class="section-py section-bg-ivory">
+    <div class="container">
+      <ul class="nav nav-pills justify-content-center mb-4 gap-2" id="detailTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="btn btn-outline-dark active px-4 py-2" id="desc-tab" data-bs-toggle="pill" data-bs-target="#descTabContent" type="button" role="tab">Comprehensive Details</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="btn btn-outline-dark px-4 py-2" id="specs-tab" data-bs-toggle="pill" data-bs-target="#specsTabContent" type="button" role="tab">Specifications</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="btn btn-outline-dark px-4 py-2" id="precautions-tab" data-bs-toggle="pill" data-bs-target="#precautionsTabContent" type="button" role="tab">Safety & Precautions</button>
+        </li>
+      </ul>
+
+      <div class="tab-content bg-white p-4 p-md-5 rounded-4 border shadow-sm" id="detailTabsContent">
+        <!-- Tab 1: Full Description -->
+        <div class="tab-pane fade show active" id="descTabContent" role="tabpanel">
+          <h4 class="fw-bold text-forest mb-3">Therapeutic Mechanism & Background</h4>
+          <p class="text-muted leading-relaxed" id="detailFullDesc"></p>
+          
+          <div class="alert alert-light border mt-4 p-3 d-flex align-items-center gap-3">
+            <i class="bi bi-info-circle-fill text-gold fs-3"></i>
+            <small class="text-muted">
+              <strong>Wellness Advisory:</strong> This apparatus is designed to promote relaxation, posture alignment, and muscle tension release. It is not an invasive surgical device or a replacement for direct medical diagnosis.
+            </small>
+          </div>
+        </div>
+
+        <!-- Tab 2: Specifications -->
+        <div class="tab-pane fade" id="specsTabContent" role="tabpanel">
+          <h4 class="fw-bold text-forest mb-3">Technical & Engineering Specifications</h4>
+          <div class="table-responsive">
+            <table class="table table-bordered mb-0">
+              <tbody id="detailSpecsBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Tab 3: Safety Precautions -->
+        <div class="tab-pane fade" id="precautionsTabContent" role="tabpanel">
+          <h4 class="fw-bold text-forest mb-3">Important Health Precautions</h4>
+          <div class="p-3 bg-light rounded-3 border mb-3">
+            <p class="text-muted mb-0" id="detailPrecautions"></p>
+          </div>
+          <p class="small text-muted mb-0">
+            For individuals with pacemakers, active fractures, deep vein thrombosis, or unmanaged severe medical conditions, please consult your primary physician or physical therapist prior to use.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Related Solutions Recommendation Section -->
+  <section class="section-py section-bg-white border-top">
+    <div class="container">
+      <div class="d-flex align-items-center justify-content-between mb-4">
+        <div>
+          <span class="section-subtitle-tag">COMPLEMENTARY SUPPORT</span>
+          <h3 class="fw-bold text-forest mb-0">Related Therapy Solutions</h3>
+        </div>
+        <a href="{% url 'user:services' %}" class="btn-veda-outline btn-veda-sm">View Full Catalogue &rarr;</a>
+      </div>
+
+      <div class="row g-4" id="relatedProductsGrid"></div>
+    </div>
+  </section>
+
+  {% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'assets/js/service-detail.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Quality Standards & Brand Partners | Rudra Massage & Wellness{% endblock %}
+
+{% block content %}
+<!-- Banner -->
+  <section class="py-5 section-bg-ivory border-bottom text-center">
+    <div class="container">
+      <span class="section-subtitle-tag">VERIFIED COMPLIANCE</span>
+      <h1 class="h2 fw-bold text-forest mb-2">Quality Standards & Certifications</h1>
+      <p class="text-muted max-w-md mx-auto mb-0">
+        Review our manufacturing quality parameters and metallurgical assay specifications. <small class="text-secondary">(Illustrative documents until official PDF assets are uploaded)</small>
+      </p>
+    </div>
+  </section>
+
+  <!-- Certificates Grid -->
+  <section class="section-py section-bg-white border-bottom">
+    <div class="container">
+      <div class="row g-4">
+        
+        <!-- Cert 1 -->
+        <div class="col-md-6 col-lg-4">
+          <div class="card border rounded-4 p-4 shadow-sm h-100">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+              <span class="badge-custom badge-forest">Metallurgy Standard</span>
+              <i class="bi bi-patch-check-fill text-gold fs-3"></i>
+            </div>
+            <h5 class="fw-bold text-forest mb-2">Pure Kansa Alloy Spectrometry Assay</h5>
+            <p class="small text-muted mb-3">
+              Spectrometric verification confirming 78.2% Copper and 21.6% Tin ratio, ensuring zero traces of toxic lead or cadmium in bell bronze bowls.
+            </p>
+            <div class="mt-auto pt-3 border-top d-flex justify-content-between align-items-center">
+              <span class="small text-muted">Ref: ASSAY-2026-KN</span>
+              <button class="btn btn-sm btn-outline-dark" onclick="showToast('Assay Certificate', 'Viewing Metallurgical Spectrometry Report (Demo)', 'gold');">
+                <i class="bi bi-eye"></i> View Doc
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cert 2 -->
+        <div class="col-md-6 col-lg-4">
+          <div class="card border rounded-4 p-4 shadow-sm h-100">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+              <span class="badge-custom badge-forest">Biomedical Safety</span>
+              <i class="bi bi-shield-check text-gold fs-3"></i>
+            </div>
+            <h5 class="fw-bold text-forest mb-2">ISO 13485 Quality Management Standard</h5>
+            <p class="small text-muted mb-3">
+              Pneumatic bladders and motorized air compression assemblies manufactured under medical device quality management system compliance.
+            </p>
+            <div class="mt-auto pt-3 border-top d-flex justify-content-between align-items-center">
+              <span class="small text-muted">Ref: ISO-MED-8911</span>
+              <button class="btn btn-sm btn-outline-dark" onclick="showToast('ISO Standard', 'Viewing ISO 13485 Scope Certificate (Demo)', 'gold');">
+                <i class="bi bi-eye"></i> View Doc
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cert 3 -->
+        <div class="col-md-6 col-lg-4">
+          <div class="card border rounded-4 p-4 shadow-sm h-100">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+              <span class="badge-custom badge-forest">Electrical Safety</span>
+              <i class="bi bi-lightning-charge text-gold fs-3"></i>
+            </div>
+            <h5 class="fw-bold text-forest mb-2">CE & RoHS Electronic Safety Certification</h5>
+            <p class="small text-muted mb-3">
+              Certifies low-voltage direct current (12V DC) operation, electromagnetic shielding, and lead-free circuit soldering across all massagers.
+            </p>
+            <div class="mt-auto pt-3 border-top d-flex justify-content-between align-items-center">
+              <span class="small text-muted">Ref: CE-EMC-4420</span>
+              <button class="btn btn-sm btn-outline-dark" onclick="showToast('CE Compliance', 'Viewing CE Electronic Certificate (Demo)', 'gold');">
+                <i class="bi bi-eye"></i> View Doc
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Partner Logos Grid -->
+  <section class="section-py section-bg-ivory text-center">
+    <div class="container">
+      <span class="section-subtitle-tag">COLLABORATION NETWORK</span>
+      <h3 class="fw-bold text-forest mb-4">Ayurvedic Clinics & Rehabilitation Centres</h3>
+      <p class="text-muted max-w-md mx-auto mb-5">
+        Trusted by holistic retreat centers, physical therapy clinics, and wellness resorts across Western India.
+      </p>
+
+      <div class="row g-4 justify-content-center align-items-center">
+        <div class="col-6 col-md-3">
+          <div class="p-4 bg-white rounded-3 border shadow-sm">
+            <h6 class="fw-bold text-forest mb-0"><i class="bi bi-building me-2 text-gold"></i>VedaCare Clinics</h6>
+            <small class="text-muted">Ahmedabad</small>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="p-4 bg-white rounded-3 border shadow-sm">
+            <h6 class="fw-bold text-forest mb-0"><i class="bi bi-hospital me-2 text-gold"></i>Surat Ortho Rehab</h6>
+            <small class="text-muted">Surat</small>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="p-4 bg-white rounded-3 border shadow-sm">
+            <h6 class="fw-bold text-forest mb-0"><i class="bi bi-heart-pulse me-2 text-gold"></i>AyurNiramaya Wellness</h6>
+            <small class="text-muted">Vadodara</small>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="p-4 bg-white rounded-3 border shadow-sm">
+            <h6 class="fw-bold text-forest mb-0"><i class="bi bi-flower2 me-2 text-gold"></i>Gir Holistic Resort</h6>
+            <small class="text-muted">Junagadh</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {% endblock %}

@@ -1,0 +1,284 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Customer Reviews & Feedback | Rudra Massage & Wellness{% endblock %}
+
+{% block content %}
+<!-- Banner -->
+  <section class="py-5 section-bg-ivory border-bottom text-center">
+    <div class="container">
+      <span class="section-subtitle-tag">COMMUNITY VOICES</span>
+      <h1 class="h2 fw-bold text-forest mb-2">Experiences & Client Reviews</h1>
+      <p class="text-muted max-w-md mx-auto mb-0">
+        Read sample impressions and feedback from therapy recipients. <small class="text-secondary">(Illustrative sample reviews until genuine client feedback is synced)</small>
+      </p>
+    </div>
+  </section>
+
+  <!-- Ratings Summary Bar -->
+  <section class="py-4 bg-white border-bottom">
+    <div class="container">
+      <div class="row align-items-center g-4">
+        <div class="col-md-4 text-center text-md-start">
+          <div class="d-flex align-items-center justify-content-center justify-content-md-start gap-3">
+            <span class="display-4 fw-bold text-forest">4.9</span>
+            <div>
+              <div class="text-warning fs-5">
+                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+              </div>
+              <small class="text-muted">Based on 450+ sample ratings</small>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-5">
+          <div class="d-flex flex-column gap-1 small">
+            <div class="d-flex align-items-center gap-2">
+              <span style="width: 50px;">5 Star</span>
+              <div class="progress flex-grow-1" style="height: 6px;"><div class="progress-bar bg-success" style="width: 88%;"></div></div>
+              <span class="text-muted">88%</span>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+              <span style="width: 50px;">4 Star</span>
+              <div class="progress flex-grow-1" style="height: 6px;"><div class="progress-bar bg-info" style="width: 10%;"></div></div>
+              <span class="text-muted">10%</span>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+              <span style="width: 50px;">3 Star</span>
+              <div class="progress flex-grow-1" style="height: 6px;"><div class="progress-bar bg-warning" style="width: 2%;"></div></div>
+              <span class="text-muted">2%</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 text-center text-md-end">
+          <button class="btn-veda-gold btn-veda-sm" data-bs-toggle="modal" data-bs-target="#submitReviewModal">
+            <i class="bi bi-pencil-square me-1"></i> Submit a Review
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Review Cards Grid -->
+  <section class="section-py section-bg-ivory">
+    <div class="container">
+      <div class="row g-4" id="testimonialsList">
+        
+        <div class="col-md-6 col-lg-4">
+          <div class="testimonial-card">
+            <i class="bi bi-quote testimonial-quote-icon"></i>
+            <div class="testimonial-rating">
+              <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+            </div>
+            <p class="testimonial-text">
+              "After struggling with L4-L5 lumbar discomfort from long car drives, this belt gave me tangible relief within 2 weeks. The quality of the air pump and stitching feels truly medical-grade."
+            </p>
+            <div class="testimonial-author-row">
+              <div class="author-avatar">RP</div>
+              <div class="author-info">
+                <h6>Rajesh S. Parekh</h6>
+                <span>Ahmedabad • AyurSpine Decompression Belt</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4">
+          <div class="testimonial-card">
+            <i class="bi bi-quote testimonial-quote-icon"></i>
+            <div class="testimonial-rating">
+              <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+            </div>
+            <p class="testimonial-text">
+              "My night-time restlessness and burning feet sensation in summers was unbearable. Using the Kansa foot bowl with sesame oil before sleep has become a sacred ritual. Deep sleep is back!"
+            </p>
+            <div class="testimonial-author-row">
+              <div class="author-avatar">HP</div>
+              <div class="author-info">
+                <h6>Hansaben Patel</h6>
+                <span>Vadodara • Kansa Vataki Massager</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4">
+          <div class="testimonial-card">
+            <i class="bi bi-quote testimonial-quote-icon"></i>
+            <div class="testimonial-rating">
+              <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+            </div>
+            <p class="testimonial-text">
+              "Recommended this for my 68-year-old mother. The large touch controls and gentle warmth allow her to operate it independently twice a day. Her stair-climbing confidence has improved remarkably."
+            </p>
+            <div class="testimonial-author-row">
+              <div class="author-avatar">KJ</div>
+              <div class="author-info">
+                <h6>Dr. K. N. Joshi</h6>
+                <span>Surat • OrthoRelief Knee Guard</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4">
+          <div class="testimonial-card">
+            <i class="bi bi-quote testimonial-quote-icon"></i>
+            <div class="testimonial-rating">
+              <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+            </div>
+            <p class="testimonial-text">
+              "Working 10-hour screen shifts as a programmer destroyed my trapezius muscles. The CervicalFlex kneading nodes give me exactly the deep pinch release I used to pay weekly physio sessions for."
+            </p>
+            <div class="testimonial-author-row">
+              <div class="author-avatar">ST</div>
+              <div class="author-info">
+                <h6>Siddharth Trivedi</h6>
+                <span>Gandhinagar • CervicalFlex Massager</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4">
+          <div class="testimonial-card">
+            <i class="bi bi-quote testimonial-quote-icon"></i>
+            <div class="testimonial-rating">
+              <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+            </div>
+            <p class="testimonial-text">
+              "We equipped two therapy rooms in our Ayurvedic retreat with the AyurShiro consoles. The digital temperature regulation ensures an uninterrupted 45-minute stream without manual oil heating hassle."
+            </p>
+            <div class="testimonial-author-row">
+              <div class="author-avatar">VM</div>
+              <div class="author-info">
+                <h6>Vaidya Mukund Dave</h6>
+                <span>Rajkot • AyurShiro Shirodhara Console</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4">
+          <div class="testimonial-card">
+            <i class="bi bi-quote testimonial-quote-icon"></i>
+            <div class="testimonial-rating">
+              <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+            </div>
+            <p class="testimonial-text">
+              "The compression boots flushed out leg heaviness and ankle swelling after whole-day clinic standing. Easy to wipe clean and heavy duty zippers."
+            </p>
+            <div class="testimonial-author-row">
+              <div class="author-avatar">PB</div>
+              <div class="author-info">
+                <h6>Pooja Bhatt</h6>
+                <span>Bhavnagar • PranaFlow Compression Boots</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Submit Review Modal -->
+  <div class="modal fade" id="submitReviewModal" tabindex="-1" aria-labelledby="submitReviewModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content rounded-4 border-0 shadow-lg">
+        <div class="modal-header border-bottom">
+          <h5 class="modal-title fw-bold text-forest" id="submitReviewModalLabel">
+            <i class="bi bi-star me-2 text-gold"></i> Submit Client Review
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-4">
+          <form id="reviewSubmitForm">
+            <div class="mb-3">
+              <label for="revName" class="form-veda-label">Your Name *</label>
+              <input type="text" class="form-veda-control" id="revName" placeholder="e.g. Anand Shah" required>
+            </div>
+            <div class="mb-3">
+              <label for="revCity" class="form-veda-label">City / Town *</label>
+              <input type="text" class="form-veda-control" id="revCity" placeholder="e.g. Surat" required>
+            </div>
+            <div class="mb-3">
+              <label for="revProduct" class="form-veda-label">Therapy Product / Machine Used *</label>
+              <input type="text" class="form-veda-control" id="revProduct" placeholder="e.g. AyurSpine Belt" required>
+            </div>
+            <div class="mb-3">
+              <label for="revRating" class="form-veda-label">Rating *</label>
+              <select class="form-veda-select" id="revRating">
+                <option value="5">★★★★★ (5/5) Exceptional Comfort</option>
+                <option value="4">★★★★☆ (4/5) Very Good</option>
+                <option value="3">★★★☆☆ (3/5) Average</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="revComment" class="form-veda-label">Your Feedback / Review Comments *</label>
+              <textarea class="form-veda-control" rows="3" id="revComment" placeholder="Describe your experience with the machine..." required></textarea>
+            </div>
+            <button type="submit" class="btn-veda-primary w-100 py-2">
+              Submit Review (Demo)
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% endblock %}
+
+{% block extra_js %}
+<script>
+    function escapeHtml(str) {
+      return String(str).replace(/[&<>"']/g, s => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      }[s]));
+    }
+
+    // Review submission demo logic
+    document.getElementById("reviewSubmitForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const name = document.getElementById("revName").value.trim();
+      const city = document.getElementById("revCity").value.trim();
+      const product = document.getElementById("revProduct").value.trim();
+      const comment = document.getElementById("revComment").value.trim();
+
+      if (!name || !comment) return;
+
+      const newCard = document.createElement("div");
+      newCard.className = "col-md-6 col-lg-4";
+      newCard.innerHTML = `
+        <div class="testimonial-card border-success">
+          <i class="bi bi-quote testimonial-quote-icon"></i>
+          <div class="testimonial-rating">
+            <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+          </div>
+          <p class="testimonial-text">"${escapeHtml(comment)}"</p>
+          <div class="testimonial-author-row">
+            <div class="author-avatar bg-success text-white">${escapeHtml(name.slice(0, 2).toUpperCase())}</div>
+            <div class="author-info">
+              <h6>${escapeHtml(name)}</h6>
+              <span>${escapeHtml(city)} • ${escapeHtml(product)}</span>
+            </div>
+          </div>
+        </div>
+      `;
+
+      document.getElementById("testimonialsList").prepend(newCard);
+
+      const modalEl = document.getElementById("submitReviewModal");
+      if (modalEl && typeof bootstrap !== "undefined") {
+        const modal = bootstrap.Modal.getInstance(modalEl);
+        if (modal) modal.hide();
+      }
+
+      showToast("Review Posted", "Thank you! Your feedback card was appended in demo view.", "success");
+      document.getElementById("reviewSubmitForm").reset();
+    });
+  </script>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends 'admin/admin_base.html' %}
+{% load static %}
+
+{% block title %}Manage Services Catalogue | Rudra Massage & Wellness Admin{% endblock %}
+
+{% block nav_services %}active{% endblock %}
+
+{% block topbar_title %}Products & Therapy Services Management{% endblock %}
+
+{% block topbar_actions %}
+<button class="btn btn-sm btn-veda-gold" onclick="window.adminApp.openAddServiceModal()">
+            <i class="bi bi-plus-lg me-1"></i> Add Solution
+          </button>
+{% endblock %}
+
+{% block content %}
+<div class="admin-table-card">
+          <div class="admin-card-header">
+            <div>
+              <h5>All Catalogue Items</h5>
+              <small class="text-muted">Manage items displayed on the public services page</small>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+              <input type="text" id="adminServiceSearch" class="form-control form-control-sm" placeholder="Search by name or category..." style="width: 250px;" aria-label="Search by name or category">
+            </div>
+          </div>
+          <div class="admin-table-responsive">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Product / Machine Name</th>
+                  <th>Category</th>
+                  <th>Price</th>
+                  <th>Status</th>
+                  <th class="text-end">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="adminServicesTbody"></tbody>
+            </table>
+          </div>
+        </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    (function(){try{var t=localStorage.getItem('rudra_theme');if(t==='dark'||(!t&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)){document.documentElement.classList.add('dark');document.documentElement.setAttribute('data-theme','dark');}}catch(e){}})();
+  </script>
+{% endblock %}

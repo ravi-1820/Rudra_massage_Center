@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Book an Appointment & Product Demo | Rudra Massage & Wellness{% endblock %}
+
+{% block content %}
+<!-- Banner -->
+  <section class="py-5 section-bg-ivory border-bottom text-center">
+    <div class="container">
+      <span class="section-subtitle-tag">EXPERIENCE BEFORE COMMITMENT</span>
+      <h1 class="h2 fw-bold text-forest mb-2">Book a Live Demo or Consultation</h1>
+      <p class="text-muted max-w-md mx-auto mb-0">
+        Experience the decompression sensation and tactile feel of authentic Kansa metal first-hand.
+      </p>
+    </div>
+  </section>
+
+  <!-- Appointment Form Section -->
+  <section class="section-py section-bg-white">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          
+          <div class="card border rounded-4 p-4 p-md-5 shadow-sm">
+            <div class="alert alert-light border mb-4 d-flex align-items-center gap-2">
+              <i class="bi bi-info-circle-fill text-gold fs-4"></i>
+              <div class="small text-muted" data-i18n="form.demoNotice">
+                Notice: Client-side demo scheduling. Appointment slots are validated and simulated in your browser.
+              </div>
+            </div>
+
+            <div class="form-error-summary alert alert-danger d-none mb-4"></div>
+
+            <form id="appointmentForm" novalidate>
+              <div class="row g-3">
+                <!-- Full Name -->
+                <div class="col-md-6">
+                  <label for="aptFullName" class="form-veda-label" data-i18n="form.fullName">Full Name *</label>
+                  <input type="text" id="aptFullName" class="form-veda-control" placeholder="e.g. Smt. Meena Parekh" required>
+                  <div class="invalid-feedback-custom"></div>
+                </div>
+
+                <!-- Email -->
+                <div class="col-md-6">
+                  <label for="aptEmail" class="form-veda-label" data-i18n="form.email">Email Address *</label>
+                  <input type="email" id="aptEmail" class="form-veda-control" placeholder="meena.p@example.com" required>
+                  <div class="invalid-feedback-custom"></div>
+                </div>
+
+                <!-- Phone -->
+                <div class="col-md-6">
+                  <label for="aptPhone" class="form-veda-label" data-i18n="form.phone">Mobile Number (+91) *</label>
+                  <input type="tel" id="aptPhone" class="form-veda-control" data-type="indian-phone" placeholder="98250 12345" required>
+                  <div class="invalid-feedback-custom"></div>
+                </div>
+
+                <!-- City -->
+                <div class="col-md-6">
+                  <label for="aptCity" class="form-veda-label" data-i18n="form.city">City *</label>
+                  <input type="text" id="aptCity" class="form-veda-control" placeholder="e.g. Ahmedabad, Vadodara" required>
+                  <div class="invalid-feedback-custom"></div>
+                </div>
+
+                <!-- Date -->
+                <div class="col-md-6">
+                  <label for="aptDate" class="form-veda-label" data-i18n="form.date">Preferred Date *</label>
+                  <input type="date" id="aptDate" class="form-veda-control" required>
+                  <div class="invalid-feedback-custom"></div>
+                </div>
+
+                <!-- Time Slot -->
+                <div class="col-md-6">
+                  <label for="aptTime" class="form-veda-label" data-i18n="form.time">Preferred Time Slot *</label>
+                  <select id="aptTime" class="form-veda-select" required>
+                    <option value="">-- Choose Slot --</option>
+                    <option value="10:00 AM - 11:30 AM">10:00 AM - 11:30 AM (Morning)</option>
+                    <option value="12:00 PM - 01:30 PM">12:00 PM - 01:30 PM (Midday)</option>
+                    <option value="03:00 PM - 04:30 PM">03:00 PM - 04:30 PM (Afternoon)</option>
+                    <option value="05:30 PM - 07:00 PM">05:30 PM - 07:00 PM (Evening)</option>
+                  </select>
+                  <div class="invalid-feedback-custom"></div>
+                </div>
+
+                <!-- Mode of Demo -->
+                <div class="col-md-6">
+                  <label class="form-veda-label">Demo Format *</label>
+                  <select class="form-veda-select" id="aptMode" required>
+                    <option value="centre">Centre Visit (Ahmedabad Demonstration Facility)</option>
+                    <option value="home">Home Doorstep Demo (Selected Cities)</option>
+                    <option value="video">Virtual Guided Video Consultation</option>
+                  </select>
+                </div>
+
+                <!-- Service Selection -->
+                <div class="col-md-6">
+                  <label for="serviceSelect" class="form-veda-label" data-i18n="form.service">Machine of Primary Interest *</label>
+                  <select id="serviceSelect" class="form-veda-select" required>
+                    <option value="">-- Select Solution --</option>
+                    <option value="wt-101">AyurSpine Lumbar Decompression Belt</option>
+                    <option value="wt-102">Pure Vedic Bronze Kansa Vataki Foot Massager</option>
+                    <option value="wt-103">OrthoRelief Infrared Knee Physiotherapy Guard</option>
+                    <option value="wt-104">CervicalFlex Smart Trapezius Massager</option>
+                    <option value="wt-106">AyurShiro Shirodhara Automated Drip Console</option>
+                    <option value="wt-108">PranaFlow Sequential Leg Compression Boots</option>
+                    <option value="wt-109">AgniFit Whole Body Vibration Platform</option>
+                  </select>
+                  <div class="invalid-feedback-custom"></div>
+                </div>
+
+                <!-- Notes / Address -->
+                <div class="col-12">
+                  <label for="aptNotes" class="form-veda-label">Address (if Home Demo) / Special Discomfort Notes</label>
+                  <textarea id="aptNotes" rows="3" class="form-veda-control" placeholder="Provide complete doorstep address for in-person demos, or describe knee/back pain background..."></textarea>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="col-12 mt-4 text-center">
+                  <button type="submit" class="btn-veda-gold btn-veda-lg px-5" data-i18n="btn.bookAppointment">
+                    Confirm Appointment Request
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'assets/js/forms.js' %}"></script>
+{% endblock %}

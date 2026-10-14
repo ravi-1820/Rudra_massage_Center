@@ -1,0 +1,40 @@
+{% extends 'admin/admin_base.html' %}
+{% load static %}
+
+{% block title %}Manage Enquiries & Leads | Rudra Massage & Wellness Admin{% endblock %}
+
+{% block nav_enquiries %}active{% endblock %}
+
+{% block topbar_title %}Customer Enquiries & Inbound Leads{% endblock %}
+
+{% block content %}
+<div class="admin-table-card">
+          <div class="admin-card-header">
+            <div>
+              <h5>All Customer Enquiries</h5>
+              <small class="text-muted">Update workflow status from the dropdown menu</small>
+            </div>
+            <input type="text" id="adminEnquiriesSearch" class="form-control form-control-sm" placeholder="Search by name, phone, or service..." style="width: 280px;" aria-label="Search enquiries">
+          </div>
+          <div class="admin-table-responsive">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Enquiry ID</th>
+                  <th>Client & Phone</th>
+                  <th>Requested Machine</th>
+                  <th>Submission Date</th>
+                  <th>Status Workflow</th>
+                </tr>
+              </thead>
+              <tbody id="adminEnquiriesTbody"></tbody>
+            </table>
+          </div>
+        </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    (function(){try{var t=localStorage.getItem('rudra_theme');if(t==='dark'||(!t&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)){document.documentElement.classList.add('dark');document.documentElement.setAttribute('data-theme','dark');}}catch(e){}})();
+  </script>
+{% endblock %}

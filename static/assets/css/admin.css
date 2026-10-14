@@ -1,0 +1,391 @@
+/* ==========================================================================
+   Rudra Massage & Wellness - Admin Dashboard: Mint Signal Theme
+   Clean, Minimal, Responsive Management Console
+   ========================================================================== */
+
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+/* Sidebar */
+.admin-sidebar {
+  width: 260px;
+  background-color: var(--sidebar);
+  color: var(--sidebar-foreground);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1040;
+  transition: transform var(--transition-normal), background-color var(--transition-normal);
+  border-right: 1px solid var(--sidebar-border);
+}
+
+.admin-sidebar-header {
+  padding: 20px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid var(--sidebar-border);
+}
+
+.admin-sidebar-header .brand-title-wrap {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+
+.admin-sidebar-header .brand-name {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--sidebar-foreground, #000000);
+  letter-spacing: -0.025em;
+  margin: 0;
+}
+
+.admin-sidebar-header .brand-subtitle {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--accent-foreground, #0d9f5d);
+}
+
+[data-theme="dark"] .admin-sidebar-header .brand-name {
+  color: #ffffff;
+}
+
+[data-theme="dark"] .admin-sidebar-header .brand-subtitle {
+  color: var(--primary, #51f0a8);
+}
+
+[data-theme="dark"] .admin-sidebar-header .btn-close {
+  filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+.admin-sidebar-nav {
+  padding: 16px 12px;
+  list-style: none;
+  margin: 0;
+  flex-grow: 1;
+  overflow-y: auto;
+}
+
+.admin-sidebar-nav .nav-item {
+  margin-bottom: 6px;
+}
+
+.admin-sidebar-nav .nav-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  color: var(--muted-foreground);
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-radius: var(--radius-pill);
+  transition: all var(--transition-fast);
+}
+
+.admin-sidebar-nav .nav-link:hover {
+  color: var(--foreground);
+  background-color: var(--sidebar-accent);
+  transform: translateX(3px);
+}
+
+.admin-sidebar-nav .nav-link.active {
+  color: var(--primary-foreground);
+  background-color: var(--primary);
+  font-weight: 700;
+  box-shadow: 0 4px 14px rgba(81, 240, 168, 0.35);
+}
+
+.admin-sidebar-nav .nav-link i {
+  font-size: 1.15rem;
+}
+
+.admin-sidebar-footer {
+  padding: 16px 20px;
+  border-top: 1px solid var(--sidebar-border);
+  font-size: 0.8rem;
+  color: var(--muted-foreground);
+}
+
+/* Main Content Area */
+.admin-main {
+  margin-left: 260px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background-color: var(--background);
+}
+
+/* Top Navbar */
+.admin-topbar {
+  background-color: var(--sidebar);
+  border-bottom: 1px solid var(--sidebar-border);
+  padding: 14px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 1030;
+  transition: background-color var(--transition-normal);
+}
+
+.admin-topbar-title h1,
+.admin-topbar-title h4 {
+  margin-bottom: 0;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--foreground);
+}
+
+.admin-topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.admin-user-profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  transition: background-color var(--transition-fast);
+}
+
+.admin-user-profile:hover {
+  background-color: var(--muted);
+}
+
+.admin-user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-pill);
+  background-color: var(--primary);
+  color: #000000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 0.85rem;
+}
+
+/* Content Container */
+.admin-body {
+  padding: 28px;
+  flex-grow: 1;
+}
+
+/* Metric Stats Cards (Rounded 1.4rem, Minimalist Mint Signal Accent) */
+.admin-stat-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-fast);
+}
+
+.admin-stat-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--ring);
+  box-shadow: var(--shadow-md);
+}
+
+.admin-stat-info span {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+  letter-spacing: 0.05em;
+}
+
+.admin-stat-info h3 {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--foreground);
+  margin-top: 4px;
+  margin-bottom: 0;
+}
+
+.admin-stat-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+}
+
+.stat-icon-green {
+  background-color: var(--sidebar-accent);
+  color: var(--accent-foreground);
+}
+
+.stat-icon-gold {
+  background-color: var(--sidebar-accent);
+  color: var(--accent-foreground);
+}
+
+.stat-icon-blue {
+  background-color: rgba(59, 130, 246, 0.15);
+  color: #0284c7;
+}
+
+.stat-icon-orange {
+  background-color: rgba(245, 74, 136, 0.15);
+  color: var(--destructive);
+}
+
+/* Data Tables & Management Cards */
+.admin-table-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  margin-bottom: 28px;
+}
+
+.admin-card-header {
+  padding: 18px 22px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  background-color: var(--card);
+}
+
+.admin-card-header h5 {
+  margin-bottom: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--foreground);
+}
+
+.admin-table-responsive {
+  overflow-x: auto;
+}
+
+.admin-table {
+  width: 100%;
+  margin-bottom: 0;
+  border-collapse: collapse;
+}
+
+.admin-table th {
+  background-color: var(--muted);
+  color: var(--foreground);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 12px 18px;
+  border-bottom: 1px solid var(--border);
+}
+
+.admin-table td {
+  padding: 14px 18px;
+  font-size: 0.88rem;
+  color: var(--foreground);
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+
+.admin-table tbody tr:hover {
+  background-color: var(--sidebar-accent);
+}
+
+.admin-badge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+}
+
+.admin-badge-pending {
+  background-color: rgba(234, 179, 8, 0.18);
+  color: #ca8a04;
+}
+
+.dark .admin-badge-pending {
+  background-color: rgba(234, 179, 8, 0.25);
+  color: #facc15;
+}
+
+.admin-badge-confirmed {
+  background-color: var(--sidebar-accent);
+  color: var(--accent-foreground);
+  border: 1px solid rgba(81, 240, 168, 0.4);
+}
+
+.admin-badge-completed {
+  background-color: rgba(59, 130, 246, 0.15);
+  color: #0284c7;
+}
+
+.dark .admin-badge-completed {
+  background-color: rgba(59, 130, 246, 0.25);
+  color: #38bdf8;
+}
+
+.admin-badge-cancelled {
+  background-color: rgba(245, 74, 136, 0.15);
+  color: var(--destructive);
+}
+
+.dark .admin-badge-cancelled {
+  background-color: rgba(245, 74, 136, 0.25);
+  color: #ff78a5;
+}
+
+/* Mobile Sidebar Toggle */
+.btn-sidebar-toggle {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 1.4rem;
+  color: var(--foreground);
+  cursor: pointer;
+}
+
+@media (max-width: 991.98px) {
+  .admin-sidebar {
+    transform: translateX(-100%);
+  }
+
+  .admin-sidebar.show {
+    transform: translateX(0);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .admin-main {
+    margin-left: 0;
+  }
+
+  .btn-sidebar-toggle {
+    display: block;
+  }
+
+  .admin-body {
+    padding: 18px;
+  }
+}

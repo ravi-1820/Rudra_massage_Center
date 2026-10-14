@@ -1,0 +1,42 @@
+{% extends 'admin/admin_base.html' %}
+{% load static %}
+
+{% block title %}Manage Offers & Announcements | Rudra Massage & Wellness Admin{% endblock %}
+
+{% block nav_offers %}active{% endblock %}
+
+{% block topbar_title %}Offers & Seasonal Promotions{% endblock %}
+
+{% block content %}
+<div class="admin-table-card">
+          <div class="admin-card-header">
+            <div>
+              <h5>Active Promotional Campaigns</h5>
+              <small class="text-muted">Promo codes and top banner announcements</small>
+            </div>
+            <button class="btn btn-sm btn-veda-gold" onclick="window.adminApp.openAddOfferModal()">
+              <i class="bi bi-plus-lg me-1"></i> Create Offer Voucher
+            </button>
+          </div>
+          <div class="admin-table-responsive">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Voucher Code</th>
+                  <th>Campaign Title</th>
+                  <th>Discount Value</th>
+                  <th>Validity Status</th>
+                  <th class="text-end">Action</th>
+                </tr>
+              </thead>
+              <tbody id="adminOffersTbody"></tbody>
+            </table>
+          </div>
+        </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    (function(){try{var t=localStorage.getItem('rudra_theme');if(t==='dark'||(!t&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)){document.documentElement.classList.add('dark');document.documentElement.setAttribute('data-theme','dark');}}catch(e){}})();
+  </script>
+{% endblock %}

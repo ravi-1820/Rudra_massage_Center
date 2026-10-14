@@ -1,0 +1,198 @@
+{% extends 'admin/admin_base.html' %}
+{% load static %}
+
+{% block title %}Admin Dashboard Portal | Rudra Massage & Wellness{% endblock %}
+
+{% block nav_dashboard %}active{% endblock %}
+
+{% block topbar_title %}Overview Dashboard{% endblock %}
+
+{% block topbar_actions %}
+<button class="btn btn-sm btn-outline-secondary rounded-pill" onclick="showToast('Demo Alert', 'No unread system alerts in demo state.', 'gold');">
+            <i class="bi bi-bell"></i>
+          </button>
+          <div class="admin-user-profile">
+            <div class="admin-user-avatar">AD</div>
+            <div class="d-none d-md-block text-start" style="line-height: 1.2;">
+              <small class="fw-bold text-dark d-block">Admin User</small>
+              <small class="text-muted" style="font-size: 0.72rem;">Lead Coordinator</small>
+            </div>
+          </div>
+{% endblock %}
+
+{% block content %}
+<!-- Metric Stat Cards Row -->
+        <div class="row g-4 mb-4">
+          <div class="col-sm-6 col-xl-3">
+            <div class="admin-stat-card">
+              <div class="admin-stat-info">
+                <span>Total Enquiries</span>
+                <h3 id="statTotalEnquiries">4</h3>
+              </div>
+              <div class="admin-stat-icon stat-icon-green">
+                <i class="bi bi-chat-text"></i>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-sm-6 col-xl-3">
+            <div class="admin-stat-card">
+              <div class="admin-stat-info">
+                <span>Booked Demos</span>
+                <h3 id="statTotalAppointments">3</h3>
+              </div>
+              <div class="admin-stat-icon stat-icon-gold">
+                <i class="bi bi-calendar2-check"></i>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-sm-6 col-xl-3">
+            <div class="admin-stat-card">
+              <div class="admin-stat-info">
+                <span>Active Solutions</span>
+                <h3 id="statTotalServices">6</h3>
+              </div>
+              <div class="admin-stat-icon stat-icon-blue">
+                <i class="bi bi-grid-fill"></i>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-sm-6 col-xl-3">
+            <div class="admin-stat-card">
+              <div class="admin-stat-info">
+                <span>Avg Rating</span>
+                <h3>4.9★</h3>
+              </div>
+              <div class="admin-stat-icon stat-icon-orange">
+                <i class="bi bi-star-fill"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Enquiries Section -->
+        <div class="admin-table-card">
+          <div class="admin-card-header">
+            <div>
+              <h5>Recent Client Enquiries</h5>
+              <small class="text-muted">Inbound leads awaiting consultation follow-up</small>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+              <input type="text" id="adminEnquiriesSearch" class="form-control form-control-sm" placeholder="Filter enquiries..." style="width: 200px;" aria-label="Filter enquiries">
+              <a href="{% url 'custom_admin:enquiries' %}" class="btn btn-sm btn-outline-dark">View All</a>
+            </div>
+          </div>
+          <div class="admin-table-responsive">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Enquiry ID</th>
+                  <th>Client & Phone</th>
+                  <th>Therapy Solution</th>
+                  <th>Date</th>
+                  <th>Workflow Status</th>
+                </tr>
+              </thead>
+              <tbody id="adminEnquiriesTbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Upcoming Product Demonstrations Table -->
+        <div class="admin-table-card">
+          <div class="admin-card-header">
+            <div>
+              <h5>Upcoming Product Demos & Consultations</h5>
+              <small class="text-muted">Doorstep trials & clinic visits scheduled</small>
+            </div>
+            <a href="{% url 'custom_admin:appointments' %}" class="btn btn-sm btn-outline-dark">Manage Schedule</a>
+          </div>
+          <div class="admin-table-responsive">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Booking ID</th>
+                  <th>Client</th>
+                  <th>Date & Time Slot</th>
+                  <th>Requested Machine</th>
+                  <th>Format</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="adminAppointmentsTbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Quick Catalogue Preview & Action -->
+        <div class="admin-table-card">
+          <div class="admin-card-header">
+            <div>
+              <h5>Featured Products Management</h5>
+              <small class="text-muted">Quick access to catalogue records</small>
+            </div>
+            <button class="btn btn-sm btn-veda-gold" onclick="window.adminApp.openAddServiceModal()">
+              <i class="bi bi-plus-lg me-1"></i> Add New Solution
+            </button>
+          </div>
+          <div class="admin-table-responsive">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Product Name</th>
+                  <th>Category</th>
+                  <th>Price</th>
+                  <th>Status</th>
+                  <th class="text-end">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="adminServicesTbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+<!-- Add / Edit Service Modal -->
+  <div class="modal fade" id="serviceModal" tabindex="-1" aria-labelledby="serviceModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content rounded-4 border-0 shadow-lg">
+        <div class="modal-header border-bottom">
+          <h5 class="modal-title fw-bold text-forest" id="modalServiceTitle">Add Therapy Solution</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-4">
+          <form id="serviceModalForm">
+            <input type="hidden" id="modalServiceId">
+            <div class="mb-3">
+              <label for="modalServiceName" class="form-veda-label">Solution / Machine Name *</label>
+              <input type="text" id="modalServiceName" class="form-veda-control" placeholder="e.g. Lumbar Traction Decompression Unit" required>
+            </div>
+            <div class="mb-3">
+              <label for="modalServiceCategory" class="form-veda-label">Category *</label>
+              <select id="modalServiceCategory" class="form-veda-select" required>
+                <option value="Therapy Machines">Therapy Machines</option>
+                <option value="Kansa Therapy">Kansa Therapy</option>
+                <option value="Massagers">Massagers</option>
+                <option value="Exercise Equipment">Exercise Equipment</option>
+                <option value="Surgical & Support Products">Surgical & Support Products</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="modalServicePrice" class="form-veda-label">Price (INR ₹) *</label>
+              <input type="number" id="modalServicePrice" class="form-veda-control" placeholder="4999" required>
+            </div>
+            <div class="mb-3">
+              <label for="modalServiceStatus" class="form-veda-label">Publication Status *</label>
+              <select id="modalServiceStatus" class="form-veda-select" required>
+                <option value="Active">Active</option>
+                <option value="Draft">Draft</option>
+              </select>
+            </div>
+            <button type="submit" class="btn-veda-primary w-100 py-2">Save Solution (Mock State)</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

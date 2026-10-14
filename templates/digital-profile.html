@@ -1,0 +1,336 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Digital Business Profile & Visiting Card | Rudra Massage & Wellness{% endblock %}
+
+{% block extra_css %}
+<style>
+    .digital-card-container {
+      max-width: 480px;
+      margin: 0 auto;
+    }
+    .profile-header-banner {
+      height: 140px;
+      background: linear-gradient(135deg, #000000, #141414); border-bottom: 2px solid var(--primary);
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+      position: relative;
+    }
+    .profile-avatar-circle {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: var(--color-white);
+      border: 4px solid var(--color-white);
+      box-shadow: var(--shadow-md);
+      position: absolute;
+      bottom: -50px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      padding: 6px;
+    }
+    .profile-avatar-circle img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    .quick-action-pill {
+      background-color: var(--color-surface-ivory);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--color-primary);
+      font-weight: 600;
+      transition: all var(--transition-fast);
+      margin-bottom: 10px;
+    }
+    .quick-action-pill:hover {
+      background-color: var(--color-sage-light);
+      border-color: var(--color-sage);
+      transform: translateY(-2px);
+    }
+    .quick-action-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-pill);
+      background: var(--sidebar-accent);
+      color: var(--accent-foreground);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Digital Business Profile & Visiting Card | Rudra Massage & Wellness</title>
+  <meta name="description" content="Official digital visiting card of Rudra Massage & Wellness. Save contact, scan QR code, or chat instantly on WhatsApp.">
+  
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+  <link rel="stylesheet" href="{% static 'assets/css/components.css' %}">
+  <link rel="stylesheet" href="{% static 'assets/css/responsive.css' %}">
+  <style>
+    .digital-card-container {
+      max-width: 480px;
+      margin: 0 auto;
+    }
+    .profile-header-banner {
+      height: 140px;
+      background: linear-gradient(135deg, #000000, #141414); border-bottom: 2px solid var(--primary);
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+      position: relative;
+    }
+    .profile-avatar-circle {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: var(--color-white);
+      border: 4px solid var(--color-white);
+      box-shadow: var(--shadow-md);
+      position: absolute;
+      bottom: -50px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      padding: 6px;
+    }
+    .profile-avatar-circle img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    .quick-action-pill {
+      background-color: var(--color-surface-ivory);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--color-primary);
+      font-weight: 600;
+      transition: all var(--transition-fast);
+      margin-bottom: 10px;
+    }
+    .quick-action-pill:hover {
+      background-color: var(--color-sage-light);
+      border-color: var(--color-sage);
+      transform: translateY(-2px);
+    }
+    .quick-action-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-pill);
+      background: var(--sidebar-accent);
+      color: var(--accent-foreground);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+    }
+  </style>
+  <script>
+    (function(){try{var t=localStorage.getItem('rudra_theme');if(t==='dark'||(!t&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)){document.documentElement.classList.add('dark');document.documentElement.setAttribute('data-theme','dark');}}catch(e){}})();
+  </script>
+</head>
+<body class="section-bg-ivory py-4">
+
+  <div class="container">
+    <div class="d-flex justify-content-center align-items-center gap-2 mb-4">
+      <a href="{% url 'user:home' %}" class="btn btn-sm btn-outline-dark rounded-pill">
+        <i class="bi bi-arrow-left me-1"></i> Return to Main Website
+      </a>
+      <button class="theme-toggle-btn" id="themeToggleBtn" aria-label="Toggle dark mode" title="Toggle theme">
+        <i class="bi bi-moon-stars"></i>
+      </button>
+    </div>
+
+    <div class="digital-card-container">
+      <div class="card border-0 shadow-lg rounded-4 overflow-hidden bg-white">
+        <!-- Top Visual Banner -->
+        <div class="profile-header-banner">
+          <div class="profile-avatar-circle">
+            <img src="{% static 'assets/images/rudra-wellness-logo.png' %}" alt="Rudra Massage & Wellness Logo">
+          </div>
+        </div>
+
+        <!-- Identity & Title -->
+        <div class="card-body pt-5 text-center px-4">
+          <h1 class="h3 fw-bold text-forest mb-1">Rudra Massage & Wellness</h1>
+          <p class="text-gold fw-bold small text-uppercase letter-spacing-1 mb-2">Ayurvedic & Physiotherapy Equipment</p>
+          <p class="text-muted small mb-4">
+            Specializing in pneumatic spinal traction, authentic bronze Kansa massage instruments, and modern thermal joint guards.
+          </p>
+
+          <!-- Core Call Actions -->
+          <div class="d-flex justify-content-center gap-2 mb-4">
+            <a href="tel:+919825000000" class="btn-veda-primary btn-veda-sm flex-grow-1">
+              <i class="bi bi-telephone-fill me-1"></i> Call Now
+            </a>
+            <a href="https://wa.me/919825000000?text=Hi%20Rudra%20Massage%20%26%20Wellness%20I%20scanned%20your%20digital%20visiting%20card" target="_blank" class="btn-veda-gold btn-veda-sm flex-grow-1">
+              <i class="bi bi-whatsapp me-1"></i> WhatsApp
+            </a>
+            <button class="btn btn-outline-dark btn-sm rounded-3" id="shareProfileBtn" title="Share Profile">
+              <i class="bi bi-share-fill"></i>
+            </button>
+          </div>
+
+          <!-- Direct Links / Actions -->
+          <div class="text-start mb-4">
+            <a href="mailto:care@rudrawellness.com" class="quick-action-pill">
+              <div class="quick-action-icon"><i class="bi bi-envelope-fill"></i></div>
+              <div>
+                <div class="small text-muted">Email Us</div>
+                <div>care@rudrawellness.com</div>
+              </div>
+            </a>
+
+            <a href="{% url 'user:services' %}" class="quick-action-pill">
+              <div class="quick-action-icon"><i class="bi bi-grid-fill"></i></div>
+              <div>
+                <div class="small text-muted">Online Catalogue</div>
+                <div>Browse 18 Therapy Disciplines</div>
+              </div>
+            </a>
+
+            <a href="{% url 'user:appointment' %}" class="quick-action-pill">
+              <div class="quick-action-icon"><i class="bi bi-calendar2-check-fill"></i></div>
+              <div>
+                <div class="small text-muted">Book Demonstration</div>
+                <div>Schedule In-Person or Video Demo</div>
+              </div>
+            </a>
+
+            <a href="https://maps.google.com" target="_blank" class="quick-action-pill">
+              <div class="quick-action-icon"><i class="bi bi-geo-alt-fill"></i></div>
+              <div>
+                <div class="small text-muted">Visit Our Centre</div>
+                <div>S.G. Highway, Bodakdev, Ahmedabad (Demo)</div>
+              </div>
+            </a>
+          </div>
+
+          <!-- QR Code Generator & Display -->
+          <div class="p-3 bg-light rounded-3 border mb-4 text-center">
+            <h6 class="fw-bold text-forest mb-1"><i class="bi bi-qr-code me-1 text-gold"></i> Scan to Save / Share <span class="badge bg-secondary-subtle text-secondary small ms-1">Demo Placeholder</span></h6>
+            <!-- SVG QR Placeholder Pattern -->
+            <div class="d-inline-block bg-white p-2 rounded border shadow-sm">
+              <svg width="140" height="140" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Outer borders & corners -->
+                <rect width="100" height="100" fill="#FFFFFF"/>
+                <rect x="10" y="10" width="25" height="25" fill="#000000"/>
+                <rect x="14" y="14" width="17" height="17" fill="#FFFFFF"/>
+                <rect x="18" y="18" width="9" height="9" fill="#000000"/>
+
+                <rect x="65" y="10" width="25" height="25" fill="#000000"/>
+                <rect x="69" y="14" width="17" height="17" fill="#FFFFFF"/>
+                <rect x="73" y="18" width="9" height="9" fill="#000000"/>
+
+                <rect x="10" y="65" width="25" height="25" fill="#000000"/>
+                <rect x="14" y="69" width="17" height="17" fill="#FFFFFF"/>
+                <rect x="18" y="73" width="9" height="9" fill="#000000"/>
+
+                <!-- Inner dots -->
+                <rect x="42" y="15" width="6" height="6" fill="#51f0a8"/>
+                <rect x="52" y="25" width="6" height="6" fill="#000000"/>
+                <rect x="42" y="42" width="16" height="16" fill="#000000"/>
+                <circle cx="50" cy="50" r="4" fill="#51f0a8"/>
+                <rect x="65" y="45" width="8" height="8" fill="#000000"/>
+                <rect x="75" y="65" width="12" height="12" fill="#000000"/>
+                <rect x="45" y="75" width="10" height="10" fill="#51f0a8"/>
+              </svg>
+            </div>
+            <p class="small text-muted mt-2 mb-0">Illustrative QR illustration. Use the buttons below or above for actual contact sharing.</p>
+          </div>
+
+          <!-- Download vCard Action -->
+          <button class="btn btn-outline-dark w-100 py-2 mb-3 fw-semibold" id="downloadVcardBtn">
+            <i class="bi bi-person-vcard me-2"></i> Save Contact to Phone (vCard)
+          </button>
+
+          <!-- Social Channels Row -->
+          <div class="d-flex justify-content-center gap-3 pt-3 border-top">
+            <a href="#" class="social-btn text-dark" style="background: #F0F4F2;" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+            <a href="#" class="social-btn text-dark" style="background: #F0F4F2;" aria-label="YouTube"><i class="bi bi-youtube"></i></a>
+            <a href="#" class="social-btn text-dark" style="background: #F0F4F2;" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+            <a href="#" class="social-btn text-dark" style="background: #F0F4F2;" aria-label="LinkedIn"><i class="bi bi-linkedin"></i></a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Web Share API + Clipboard Fallback
+    document.getElementById("shareProfileBtn").addEventListener("click", async () => {
+      const shareData = {
+        title: "Rudra Massage & Wellness",
+        text: "Check out the digital card for Rudra Massage & Wellness therapy machines and Ayurvedic wellness.",
+        url: window.location.href
+      };
+
+      if (navigator.share) {
+        try {
+          await navigator.share(shareData);
+        } catch (err) {
+          console.log("Share dismissed");
+        }
+      } else {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(window.location.href)
+            .then(() => showToast("Link Copied", "Digital visiting card link copied to your clipboard!", "gold"))
+            .catch(() => showToast("Share Link", window.location.href, "gold"));
+        } else {
+          showToast("Share Link", window.location.href, "gold");
+        }
+      }
+    });
+
+    // vCard Generator & Downloader
+    document.getElementById("downloadVcardBtn").addEventListener("click", () => {
+      const vcardContent = `BEGIN:VCARD
+VERSION:3.0
+N:Wellness;Rudra Massage &;;;
+FN:Rudra Massage & Wellness
+ORG:Rudra Massage & Wellness
+TITLE:Ayurvedic & Physiotherapy Equipment
+TEL;TYPE=WORK,VOICE:+919825000000
+EMAIL;TYPE=PREF,INTERNET:care@rudrawellness.com
+URL:${window.location.origin}
+ADR;TYPE=WORK:;;S.G. Highway Bodakdev;Ahmedabad;Gujarat;380054;India
+END:VCARD`;
+
+      const blob = new Blob([vcardContent], { type: "text/vcard;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "Rudra-Massage-Wellness-Contact.vcf");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      showToast("Contact Downloaded", "Rudra Massage & Wellness contact card (vCard) saved to downloads.", "success");
+    });
+  </script>
+{% endblock %}

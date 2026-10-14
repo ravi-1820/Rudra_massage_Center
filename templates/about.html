@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}About Us | Rudra Massage & Wellness{% endblock %}
+
+{% block content %}
+<!-- Hero Banner -->
+  <section class="py-5 section-bg-ivory border-bottom text-center">
+    <div class="container">
+      <span class="section-subtitle-tag">OUR JOURNEY & VALUES</span>
+      <h1 class="h1 fw-bold text-forest mb-3">Reimagining Holistic Wellness Through Science & Vedic Metallurgy</h1>
+      <p class="text-muted max-w-md mx-auto mb-0 fs-5">
+        Bridging three millennia of Ayurvedic padabhyanga traditions with certified orthopedic decompression engineering.
+      </p>
+    </div>
+  </section>
+
+  <!-- Mission & Vision Split -->
+  <section class="section-py section-bg-white border-bottom">
+    <div class="container">
+      <div class="row align-items-center g-5">
+        <div class="col-lg-6">
+          <img src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=800&q=80" alt="Ayurvedic Wellness Craftsmanship" class="rounded-4 shadow-lg w-100" style="height: 420px; object-fit: cover;">
+        </div>
+        <div class="col-lg-6">
+          <span class="section-subtitle-tag">PURPOSE & OBJECTIVES</span>
+          <h2 class="section-title">Rooted in Care. Engineered for Daily Longevity.</h2>
+          <p class="text-muted">
+            Founded with a commitment to alleviate chronic modern lifestyle discomforts—including desk posture slump, knee stiffness, and sleep restlessness—Rudra Massage & Wellness manufactures and curates authentic therapy apparatus.
+          </p>
+          <div class="row g-4 mt-2">
+            <div class="col-sm-6">
+              <div class="p-3 bg-light rounded-3 border">
+                <h5 class="fw-bold text-forest mb-2"><i class="bi bi-eye-fill text-gold me-2"></i>Our Vision</h5>
+                <p class="small text-muted mb-0">To establish non-invasive, drug-free ergonomic and Ayurvedic therapies as natural daily habits in every Indian household.</p>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="p-3 bg-light rounded-3 border">
+                <h5 class="fw-bold text-forest mb-2"><i class="bi bi-bullseye text-gold me-2"></i>Our Mission</h5>
+                <p class="small text-muted mb-0">Deliver verified bio-metallic purity in Kansa bronze and clinical decompression precision with transparent education and compassionate customer care.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Core Pillars & Values -->
+  <section class="section-py section-bg-ivory">
+    <div class="container">
+      <div class="section-header text-center">
+        <span class="section-subtitle-tag">UNCOMPROMISING STANDARDS</span>
+        <h2 class="section-title">The Four Pillars of Rudra Massage & Wellness</h2>
+        <p class="section-desc">Every product in our 18 disciplines is designed according to these rigorous principles.</p>
+      </div>
+
+      <div class="row g-4">
+        <div class="col-md-6 col-lg-3">
+          <div class="benefit-card">
+            <div class="benefit-icon-box"><i class="bi bi-gem"></i></div>
+            <h4 class="benefit-title">Authentic Metallurgy</h4>
+            <p class="benefit-text">Our Kansa alloy adheres strictly to the classical 78% Copper and 22% Tin ratio, hand-forged by hereditary metalsmiths in Gujarat without toxic lead.</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+          <div class="benefit-card">
+            <div class="benefit-icon-box"><i class="bi bi-heart-pulse"></i></div>
+            <h4 class="benefit-title">Orthopedic Precision</h4>
+            <p class="benefit-text">Mechanical decompression belts and joint braces are crafted with medical-grade TPU bladders calibrated to anatomical curvature standards.</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+          <div class="benefit-card">
+            <div class="benefit-icon-box"><i class="bi bi-person-check"></i></div>
+            <h4 class="benefit-title">Senior Accessibility</h4>
+            <p class="benefit-text">We design products with large high-contrast LED displays, intuitive one-touch physical controls, and voice-assisted safeguards for elderly independence.</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+          <div class="benefit-card">
+            <div class="benefit-icon-box"><i class="bi bi-shield-check"></i></div>
+            <h4 class="benefit-title">Responsible Claims</h4>
+            <p class="benefit-text">We do not manufacture exaggerated clinical claims. Our devices are therapeutic comfort companions that support natural bodily healing.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Demonstration Facilities & Centre (Placeholders) -->
+  <section class="section-py section-bg-white border-top border-bottom">
+    <div class="container">
+      <div class="row align-items-center g-5">
+        <div class="col-lg-6">
+          <span class="section-subtitle-tag">EXPERIENCE CENTRES</span>
+          <h2 class="section-title">State-of-the-Art Demonstration Facility</h2>
+          <p class="text-muted">
+            Visit our flagship therapy experience lounge on S.G. Highway, Ahmedabad. Try out the Shirodhara consoles, whole-body vibration platforms, and warm pneumatic compression boots in serene private demo suites.
+          </p>
+          <ul class="list-unstyled mb-4">
+            <li class="mb-2"><i class="bi bi-check-circle-fill text-gold me-2"></i> Hands-on trial with trained wellness therapists</li>
+            <li class="mb-2"><i class="bi bi-check-circle-fill text-gold me-2"></i> Free spine curvature and posture review</li>
+            <li class="mb-2"><i class="bi bi-check-circle-fill text-gold me-2"></i> Personal home delivery & installation service in major cities</li>
+          </ul>
+          <a href="{% url 'user:appointment' %}" class="btn-veda-primary">Schedule a Centre Visit &rarr;</a>
+        </div>
+        <div class="col-lg-6">
+          <div class="row g-3">
+            <div class="col-6">
+              <img src="https://images.unsplash.com/photo-1519823551278-64ac92734fb1?auto=format&fit=crop&w=600&q=80" alt="Centre Suite 1" class="rounded-3 shadow-sm w-100" style="height: 220px; object-fit: cover;">
+            </div>
+            <div class="col-6">
+              <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=600&q=80" alt="Centre Suite 2" class="rounded-3 shadow-sm w-100" style="height: 220px; object-fit: cover;">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {% endblock %}

@@ -1,0 +1,299 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Services & Therapy Catalogue | Rudra Massage & Wellness{% endblock %}
+
+{% block content %}
+<!-- Breadcrumb & Page Banner -->
+  <section class="py-4 border-bottom section-bg-ivory">
+    <div class="container">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-2 small">
+          <li class="breadcrumb-item"><a href="{% url 'user:home' %}">Home</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Catalogue</li>
+        </ol>
+      </nav>
+      <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+        <div>
+          <h1 class="h2 fw-bold text-forest mb-1">Therapy & Wellness Catalogue</h1>
+          <p class="text-muted mb-0">Browse and filter verified therapy machines, Ayurvedic Kansa tools, and mobility aids.</p>
+        </div>
+        <div class="text-muted small">
+          <span id="resultCount" class="fw-bold text-forest fs-6">Loading solutions...</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Mobile Filter Bar & Trigger -->
+  <div class="container filter-mobile-bar py-3 d-none align-items-center justify-content-between border-bottom bg-white">
+    <button class="btn btn-outline-dark btn-sm d-flex align-items-center gap-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileFilterOffcanvas">
+      <i class="bi bi-funnel"></i> Filters & Categories
+    </button>
+    <button class="btn btn-sm btn-link text-muted text-decoration-none" id="clearAllFiltersBtnMobile" onclick="window.catalogueApp.clearAllFilters()">
+      Clear All
+    </button>
+  </div>
+
+  <!-- Main Catalogue Content -->
+  <section class="section-py section-bg-white">
+    <div class="container">
+      <div class="row g-4">
+        
+        <!-- Desktop Filter Sidebar -->
+        <div class="col-lg-3 filter-desktop-sidebar">
+          <div class="filter-card">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+              <h5 class="fw-bold text-forest mb-0"><i class="bi bi-sliders me-2"></i>Filter By</h5>
+              <button class="btn btn-sm text-forest p-0 fw-semibold" id="clearAllFiltersBtn">Clear All</button>
+            </div>
+
+            <!-- Group A: Need / Problem -->
+            <div class="mb-4">
+              <div class="filter-group-header">1. Customer Need / Pain</div>
+              <label class="filter-check-item">
+                <input type="checkbox" class="filter-checkbox" data-filter-type="need" value="Back Pain">
+                <span>Back Pain</span>
+              </label>
+              <label class="filter-check-item">
+                <input type="checkbox" class="filter-checkbox" data-filter-type="need" value="Knee Pain">
+                <span>Knee Pain</span>
+              </label>
+              <label class="filter-check-item">
+                <input type="checkbox" class="filter-checkbox" data-filter-type="need" value="Neck & Shoulder Pain">
+                <span>Neck & Shoulder Pain</span>
+              </label>
+              <label class="filter-check-item">
+                <input type="checkbox" class="filter-checkbox" data-filter-type="need" value="Eye Strain">
+                <span>Eye Strain</span>
+              </label>
+              <label class="filter-check-item">
+                <input type="checkbox" class="filter-checkbox" data-filter-type="need" value="Hair & Scalp Care">
+                <span>Hair & Scalp Care</span>
+              </label>
+              <label class="filter-check-item">
+                <input type="checkbox" class="filter-checkbox" data-filter-type="need" value="Weight Management & Fitness">
+                <span>Weight & Fitness</span>
+              </label>
+              <label class="filter-check-item">
+                <input type="checkbox" class="filter-checkbox" data-filter-type="need" value="Sleep & Stress Management">
+                <span>Sleep & Stress Management</span>
+              </label>
+              <label class="filter-check-item">
+                <input type="checkbox" class="filter-checkbox" data-filter-type="need" value="Foot & Leg Fatigue">
+                <span>Foot & Leg Fatigue</span>
+              </label>
+              <label class="filter-check-item">
+                <input type="checkbox" class="filter-checkbox" data-filter-type="need" value="Circulation Support">
+                <span>Circulation Support</span>
+              </label>
+            </div>
+
+            <!-- Group B: Body Part -->
+            <div class="mb-4">
+              <div class="filter-group-header">2. Body Part</div>
+              <label class="filter-check-item">
+                <input type="checkbox" class="filter-checkbox" data-filter-type="body" value="Head">
+                <span>Head / Scalp</span>
+              </label>
+              <label class="filter-check-item">
+                <input type="checkbox" class="filter-checkbox" data-filter-type="body" value="Eyes">
+                <span>Eyes</span>
+              </label>
+              <label class="filter-check-item">
+                <input type="checkbox" class="filter-checkbox" data-filter-type="body" value="Neck">
+                <span>Neck</span>
+              </label>
+              <label class="filter-check-item">
+                <input type="checkbox" class="filter-checkbox" data-filter-type="body" value="Shoulders">
+                <span>Shoulders</span>
+              </label>
+              <label class="filter-check-item">
+                <input type="checkbox" class="filter-checkbox" data-filter-type="body" value="Back">
+                <span>Back / Spine</span>
+              </label>
+              <label class="filter-check-item">
+                <input type="checkbox" class="filter-checkbox" data-filter-type="body" value="Hands">
+                <span>Hands / Wrists</span>
+              </label>
+              <label class="filter-check-item">
+                <input type="checkbox" class="filter-checkbox" data-filter-type="body" value="Knees">
+                <span>Knees / Joints</span>
+              </label>
+              <label class="filter-check-item">
+                <input type="checkbox" class="filter-checkbox" data-filter-type="body" value="Legs">
+                <span>Legs</span>
+              </label>
+              <label class="filter-check-item">
+                <input type="checkbox" class="filter-checkbox" data-filter-type="body" value="Feet">
+                <span>Feet / Soles</span>
+              </label>
+              <label class="filter-check-item">
+                <input type="checkbox" class="filter-checkbox" data-filter-type="body" value="Full Body">
+                <span>Full Body</span>
+              </label>
+            </div>
+
+            <!-- Group C: Product / Service Type -->
+            <div class="mb-4">
+              <div class="filter-group-header">3. Product & Service Type</div>
+              <label class="filter-check-item">
+                <input type="checkbox" class="filter-checkbox" data-filter-type="type" value="Therapy Machines">
+                <span>Therapy Machines</span>
+              </label>
+              <label class="filter-check-item">
+                <input type="checkbox" class="filter-checkbox" data-filter-type="type" value="Massagers">
+                <span>Massagers</span>
+              </label>
+              <label class="filter-check-item">
+                <input type="checkbox" class="filter-checkbox" data-filter-type="type" value="Exercise Equipment">
+                <span>Exercise Equipment</span>
+              </label>
+              <label class="filter-check-item">
+                <input type="checkbox" class="filter-checkbox" data-filter-type="type" value="Kansa Therapy">
+                <span>Kansa Therapy</span>
+              </label>
+              <label class="filter-check-item">
+                <input type="checkbox" class="filter-checkbox" data-filter-type="type" value="Surgical & Support Products">
+                <span>Surgical & Support</span>
+              </label>
+            </div>
+
+            <!-- Group D: Intended Usage -->
+            <div class="mb-2">
+              <div class="filter-group-header">4. Intended Usage Setting</div>
+              <label class="filter-check-item">
+                <input type="checkbox" class="filter-checkbox" data-filter-type="usage" value="Home Use">
+                <span>Home Personal Use</span>
+              </label>
+              <label class="filter-check-item">
+                <input type="checkbox" class="filter-checkbox" data-filter-type="usage" value="Clinic / Centre Use">
+                <span>Clinic / Centre Professional</span>
+              </label>
+              <label class="filter-check-item">
+                <input type="checkbox" class="filter-checkbox" data-filter-type="usage" value="Elderly-Friendly Products">
+                <span>Elderly-Friendly Safe Controls</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Catalogue Products Area -->
+        <div class="col-lg-9">
+          <!-- Search & Sorting Controls Bar -->
+          <div class="card border rounded-3 p-3 mb-4 shadow-sm">
+            <div class="row g-3 align-items-center">
+              <div class="col-md-7">
+                <div class="position-relative">
+                  <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
+                  <input type="text" id="catalogueSearchInput" class="form-control form-veda-control ps-5" placeholder="Search by name, description, category, or tag..." aria-label="Search catalogue products">
+                  <button type="button" id="clearSearchBtn" class="btn btn-sm btn-link text-muted position-absolute top-50 end-0 translate-middle-y me-2" style="display: none;">
+                    <i class="bi bi-x-circle-fill"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="col-md-5">
+                <div class="d-flex align-items-center gap-2">
+                  <label for="sortProductsSelect" class="text-nowrap small text-muted fw-semibold">Sort By:</label>
+                  <select id="sortProductsSelect" class="form-select form-veda-select py-2">
+                    <option value="featured">Featured Relevance</option>
+                    <option value="price-asc">Price: Low to High</option>
+                    <option value="price-desc">Price: High to Low</option>
+                    <option value="rating">Customer Rating</option>
+                    <option value="reviews">Most Reviewed</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Active Filter Chips Area -->
+          <div id="activeFilterChips" class="active-filter-chips" style="display: none;"></div>
+
+          <!-- Product Cards Grid -->
+          <div class="row g-4" id="catalogueGrid">
+            <!-- Dynamic products will be rendered by services.js -->
+          </div>
+
+          <!-- Empty State Container -->
+          <div id="emptyStateContainer" class="d-none text-center py-5">
+            <div class="mb-3">
+              <i class="bi bi-search fs-1 text-muted"></i>
+            </div>
+            <h4 class="fw-bold text-forest">No matching solutions found</h4>
+            <p class="text-muted max-w-md mx-auto">
+              We couldn't find any therapy machines matching your selected combination of filters. Try clearing some filters or searching with different keywords.
+            </p>
+            <button class="btn-veda-primary btn-veda-sm" onclick="window.catalogueApp.clearAllFilters()">
+              Clear All Filters
+            </button>
+          </div>
+
+          <!-- Pagination Bar -->
+          <nav aria-label="Catalogue pagination" class="mt-5" id="cataloguePagination"></nav>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Mobile Offcanvas Filters Drawer -->
+  <div class="offcanvas offcanvas-start" tabindex="-1" id="mobileFilterOffcanvas" aria-labelledby="mobileFilterOffcanvasLabel">
+    <div class="offcanvas-header border-bottom">
+      <h5 class="offcanvas-title fw-bold text-forest" id="mobileFilterOffcanvasLabel">Filter Catalogue</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+      <!-- Same filter checkboxes wired to same data attributes -->
+      <div class="mb-4">
+        <div class="filter-group-header">1. Customer Need / Pain</div>
+        <label class="filter-check-item"><input type="checkbox" class="filter-checkbox" data-filter-type="need" value="Back Pain"><span>Back Pain</span></label>
+        <label class="filter-check-item"><input type="checkbox" class="filter-checkbox" data-filter-type="need" value="Knee Pain"><span>Knee Pain</span></label>
+        <label class="filter-check-item"><input type="checkbox" class="filter-checkbox" data-filter-type="need" value="Neck & Shoulder Pain"><span>Neck & Shoulder</span></label>
+        <label class="filter-check-item"><input type="checkbox" class="filter-checkbox" data-filter-type="need" value="Eye Strain"><span>Eye Strain</span></label>
+        <label class="filter-check-item"><input type="checkbox" class="filter-checkbox" data-filter-type="need" value="Hair & Scalp Care"><span>Hair & Scalp</span></label>
+        <label class="filter-check-item"><input type="checkbox" class="filter-checkbox" data-filter-type="need" value="Weight Management & Fitness"><span>Weight & Fitness</span></label>
+        <label class="filter-check-item"><input type="checkbox" class="filter-checkbox" data-filter-type="need" value="Sleep & Stress Management"><span>Sleep & Stress</span></label>
+        <label class="filter-check-item"><input type="checkbox" class="filter-checkbox" data-filter-type="need" value="Foot & Leg Fatigue"><span>Foot Fatigue</span></label>
+        <label class="filter-check-item"><input type="checkbox" class="filter-checkbox" data-filter-type="need" value="Circulation Support"><span>Circulation</span></label>
+      </div>
+
+      <div class="mb-4">
+        <div class="filter-group-header">2. Body Part</div>
+        <label class="filter-check-item"><input type="checkbox" class="filter-checkbox" data-filter-type="body" value="Head"><span>Head / Scalp</span></label>
+        <label class="filter-check-item"><input type="checkbox" class="filter-checkbox" data-filter-type="body" value="Eyes"><span>Eyes</span></label>
+        <label class="filter-check-item"><input type="checkbox" class="filter-checkbox" data-filter-type="body" value="Neck"><span>Neck</span></label>
+        <label class="filter-check-item"><input type="checkbox" class="filter-checkbox" data-filter-type="body" value="Shoulders"><span>Shoulders</span></label>
+        <label class="filter-check-item"><input type="checkbox" class="filter-checkbox" data-filter-type="body" value="Back"><span>Back / Spine</span></label>
+        <label class="filter-check-item"><input type="checkbox" class="filter-checkbox" data-filter-type="body" value="Hands"><span>Hands / Wrists</span></label>
+        <label class="filter-check-item"><input type="checkbox" class="filter-checkbox" data-filter-type="body" value="Knees"><span>Knees / Joints</span></label>
+        <label class="filter-check-item"><input type="checkbox" class="filter-checkbox" data-filter-type="body" value="Legs"><span>Legs</span></label>
+        <label class="filter-check-item"><input type="checkbox" class="filter-checkbox" data-filter-type="body" value="Feet"><span>Feet / Soles</span></label>
+        <label class="filter-check-item"><input type="checkbox" class="filter-checkbox" data-filter-type="body" value="Full Body"><span>Full Body</span></label>
+      </div>
+
+      <div class="mb-4">
+        <div class="filter-group-header">3. Product Type</div>
+        <label class="filter-check-item"><input type="checkbox" class="filter-checkbox" data-filter-type="type" value="Therapy Machines"><span>Therapy Machines</span></label>
+        <label class="filter-check-item"><input type="checkbox" class="filter-checkbox" data-filter-type="type" value="Massagers"><span>Massagers</span></label>
+        <label class="filter-check-item"><input type="checkbox" class="filter-checkbox" data-filter-type="type" value="Kansa Therapy"><span>Kansa Therapy</span></label>
+        <label class="filter-check-item"><input type="checkbox" class="filter-checkbox" data-filter-type="type" value="Exercise Equipment"><span>Exercise Equipment</span></label>
+        <label class="filter-check-item"><input type="checkbox" class="filter-checkbox" data-filter-type="type" value="Surgical & Support Products"><span>Surgical & Support</span></label>
+      </div>
+
+      <div class="mb-4">
+        <div class="filter-group-header">4. Intended Usage</div>
+        <label class="filter-check-item"><input type="checkbox" class="filter-checkbox" data-filter-type="usage" value="Home Use"><span>Home Personal</span></label>
+        <label class="filter-check-item"><input type="checkbox" class="filter-checkbox" data-filter-type="usage" value="Clinic / Centre Use"><span>Clinic Professional</span></label>
+        <label class="filter-check-item"><input type="checkbox" class="filter-checkbox" data-filter-type="usage" value="Elderly-Friendly Products"><span>Elderly-Friendly</span></label>
+      </div>
+
+      <button class="btn-veda-primary w-100" data-bs-dismiss="offcanvas">Apply Filters</button>
+    </div>
+  </div>
+
+  {% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'assets/js/services.js' %}"></script>
+{% endblock %}

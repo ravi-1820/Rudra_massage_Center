@@ -1,0 +1,251 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Rudra Massage & Wellness | Natural Healing with Modern Therapy Solutions{% endblock %}</title>
+  <meta name="description" content="{% block meta_description %}Experience the perfect blend of traditional wellness and modern therapy solutions. Feel better, move better, live better with Rudra Massage & Wellness.{% endblock %}">
+  
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <!-- Custom Design System Styles: Mint Signal Theme -->
+  <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+  <link rel="stylesheet" href="{% static 'assets/css/components.css' %}">
+  <link rel="stylesheet" href="{% static 'assets/css/responsive.css' %}">
+  
+  <script>
+    (function(){try{var t=localStorage.getItem('rudra_theme');if(t==='dark'||(!t&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)){document.documentElement.classList.add('dark');document.documentElement.setAttribute('data-theme','dark');}}catch(e){}})();
+  </script>
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+  <!-- Announcement Bar (Approved Design: Deep Dark Green with Mint Accent) -->
+  <aside class="announcement-bar" id="announcementBar" aria-label="Special Offer Announcement">
+    <div class="container d-flex align-items-center justify-content-between">
+      <div class="d-flex align-items-center mx-auto text-center flex-wrap justify-content-center">
+        <span class="text-mint me-2" style="font-size: 0.8rem;">●</span>
+        <span>Special Offer: Flat 20% OFF on selected wellness products.</span>
+        <a href="{% url 'user:offers' %}" class="text-white fw-bold text-decoration-underline ms-2">Shop Now &rarr;</a>
+      </div>
+      <button type="button" class="btn-close-announcement" id="closeAnnouncement" aria-label="Dismiss banner">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Site Header (Customer Site Header) -->
+  <header class="site-header">
+    <div class="container">
+      <nav class="navbar navbar-expand-lg py-3">
+        <!-- Brand Logo & Name -->
+        <a class="navbar-brand" href="{% url 'user:home' %}">
+          <img src="{% static 'assets/images/rudra-wellness-logo.png' %}" alt="Rudra Massage & Wellness Logo" class="brand-logo-img me-2">
+          <div class="brand-title-wrap">
+            <span class="brand-name">Rudra</span>
+            <span class="brand-subtitle">MASSAGE & WELLNESS</span>
+          </div>
+        </a>
+
+        <!-- Mobile Toggler -->
+        <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMainContent" aria-controls="navbarMainContent" aria-expanded="false" aria-label="Toggle navigation">
+          <i class="bi bi-list fs-1 text-forest"></i>
+        </button>
+
+        <!-- Navbar Menu & Actions -->
+        <div class="collapse navbar-collapse" id="navbarMainContent">
+          <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'user:home' %}" data-i18n="nav.home">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'user:about' %}" data-i18n="nav.about">About Us</a>
+            </li>
+            <!-- Services Dropdown with Caret -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="{% url 'user:services' %}" id="servicesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" data-i18n="nav.services">
+                Services
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="servicesDropdown">
+                <li><a class="dropdown-item" href="{% url 'user:services' %}"><i class="bi bi-grid"></i> All Products & Services</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="{% url 'user:services' %}?category=Therapy+Machines"><i class="bi bi-cpu"></i> Therapy Machines</a></li>
+                <li><a class="dropdown-item" href="{% url 'user:services' %}?category=Massagers"><i class="bi bi-body-text"></i> Massagers</a></li>
+                <li><a class="dropdown-item" href="{% url 'user:services' %}?category=Exercise+Equipment"><i class="bi bi-activity"></i> Exercise Equipment</a></li>
+                <li><a class="dropdown-item" href="{% url 'user:services' %}?category=Kansa+Therapy"><i class="bi bi-flower1"></i> Kansa Therapy</a></li>
+                <li><a class="dropdown-item" href="{% url 'user:services' %}?category=Surgical+%26+Support+Products"><i class="bi bi-shield-check"></i> Surgical & Support</a></li>
+              </ul>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'user:gallery' %}">Gallery</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'user:blog' %}">Blog</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'user:contact' %}" data-i18n="nav.contact">Contact</a>
+            </li>
+          </ul>
+
+          <!-- Header Actions: Search, Theme Toggle, Language Switcher, CTA -->
+          <div class="header-actions">
+            <!-- Search Button Trigger -->
+            <button class="header-search-btn" id="globalSearchBtn" aria-label="Search catalogue">
+              <i class="bi bi-search"></i>
+            </button>
+
+            <!-- Theme Toggle (Mint Signal Light / Dark) -->
+            <button class="theme-toggle-btn" id="themeToggleBtn" aria-label="Toggle dark mode" title="Toggle theme">
+              <i class="bi bi-moon-stars"></i>
+            </button>
+
+            <!-- Language Switcher Pill -->
+            <div class="lang-switch-group" role="group" aria-label="Language Switcher">
+              <button class="lang-switch-btn active" data-lang="en">EN</button>
+              <button class="lang-switch-btn" data-lang="gu">ગુજરાતી</button>
+            </div>
+
+            <!-- Book Appointment Primary CTA -->
+            <a href="{% url 'user:appointment' %}" class="btn-veda-gold btn-veda-sm d-none d-sm-inline-flex" data-i18n="nav.book">
+              Book Appointment
+            </a>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content Block -->
+  <main id="main-content">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Site Footer (Customer Site Footer) -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="row g-4 mb-5">
+        <!-- Brand & Description -->
+        <div class="col-lg-4 col-md-6">
+          <div class="footer-brand">
+            <div class="d-flex align-items-center gap-2 mb-3">
+              <img src="{% static 'assets/images/rudra-wellness-logo.png' %}" alt="Rudra Massage & Wellness Logo" class="footer-logo-img">
+              <span class="brand-name fs-4 text-white">Rudra</span>
+            </div>
+            <p class="footer-desc mb-4" style="max-width: 320px;">
+              Your partner in natural healing and modern wellness solutions.
+            </p>
+            <div class="footer-social-links">
+              <a href="https://facebook.com/rudrawellness" target="_blank" rel="noopener noreferrer" class="social-btn" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+              <a href="https://instagram.com/rudrawellness" target="_blank" rel="noopener noreferrer" class="social-btn" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+              <a href="https://youtube.com/@rudrawellness" target="_blank" rel="noopener noreferrer" class="social-btn" aria-label="YouTube"><i class="bi bi-youtube"></i></a>
+              <a href="https://linkedin.com/company/rudrawellness" target="_blank" rel="noopener noreferrer" class="social-btn" aria-label="LinkedIn"><i class="bi bi-linkedin"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Navigation Links -->
+        <div class="col-lg-2 col-md-6 col-6">
+          <h5 class="footer-heading">Quick Links</h5>
+          <ul class="footer-links-list">
+            <li><a href="{% url 'user:home' %}">Home</a></li>
+            <li><a href="{% url 'user:about' %}">About Us</a></li>
+            <li><a href="{% url 'user:services' %}">Services</a></li>
+            <li><a href="{% url 'user:gallery' %}">Gallery</a></li>
+            <li><a href="{% url 'user:blog' %}">Blog</a></li>
+            <li><a href="{% url 'user:contact' %}">Contact</a></li>
+          </ul>
+        </div>
+
+        <!-- Our Services Links -->
+        <div class="col-lg-3 col-md-6 col-6">
+          <h5 class="footer-heading">Our Services</h5>
+          <ul class="footer-links-list">
+            <li><a href="{% url 'user:services' %}?category=Therapy+Machines">Therapy Machines</a></li>
+            <li><a href="{% url 'user:services' %}?category=Massagers">Massagers</a></li>
+            <li><a href="{% url 'user:services' %}?category=Exercise+Equipment">Exercise Equipment</a></li>
+            <li><a href="{% url 'user:services' %}?category=Kansa+Therapy">Kansa Therapy</a></li>
+            <li><a href="{% url 'user:services' %}?category=Surgical+%26+Support+Products">Surgical & Support</a></li>
+            <li><a href="{% url 'user:services' %}">View All</a></li>
+          </ul>
+        </div>
+
+        <!-- Contact Us Info -->
+        <div class="col-lg-3 col-md-6">
+          <h5 class="footer-heading">Contact Us</h5>
+          <div class="footer-contact-item">
+            <i class="bi bi-telephone-fill"></i>
+            <span>+91 98765 43210</span>
+          </div>
+          <div class="footer-contact-item">
+            <i class="bi bi-envelope-fill"></i>
+            <span>info@rudrawellness.com</span>
+          </div>
+          <div class="footer-contact-item">
+            <i class="bi bi-geo-alt-fill"></i>
+            <span>Ahmedabad, Gujarat</span>
+          </div>
+          <div class="footer-contact-item">
+            <i class="bi bi-clock-fill"></i>
+            <span>Mon - Sat | 9:00 AM - 7:00 PM</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer Bottom -->
+      <div class="footer-bottom d-flex flex-wrap justify-content-between align-items-center pt-4">
+        <div>
+          &copy; 2026 Rudra Massage & Wellness. All rights reserved.
+        </div>
+        <div class="text-md-end">
+          <a href="{% url 'user:support' %}" class="me-3">Privacy Policy</a>
+          <a href="{% url 'user:support' %}">Terms & Conditions</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Floating Action Button (WhatsApp Button) -->
+  <a href="https://wa.me/919876543210?text=Hello%20Rudra%20Massage%20and%20Wellness%20I%20would%20like%20to%20enquire%20about%20therapy%20products" target="_blank" rel="noopener noreferrer" class="whatsapp-floating" title="Contact Us on WhatsApp" aria-label="Contact Us">
+    <i class="bi bi-plus-lg"></i>
+  </a>
+
+  <!-- Global Search Modal -->
+  <div class="modal fade" id="globalSearchModal" tabindex="-1" aria-labelledby="globalSearchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content rounded-4 border-0 shadow-lg">
+        <div class="modal-header border-bottom">
+          <h5 class="modal-title fw-bold text-forest" id="globalSearchModalLabel">
+            <i class="bi bi-search me-2 text-mint"></i> Search Solutions
+          </h5>
+          <button type="button" class="btn-close" data-bs-toggle="modal" data-bs-target="#globalSearchModal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-4">
+          <form id="globalSearchForm">
+            <div class="input-group mb-3">
+              <input type="text" id="globalSearchInput" class="form-control form-veda-control" placeholder="Search by pain need, body part, or machine..." aria-label="Search wellness products and services" autofocus required>
+              <button class="btn-veda-gold px-4" type="submit">Search</button>
+            </div>
+            <div class="small text-muted">
+              Popular searches: 
+              <a href="{% url 'user:services' %}?q=lumbar" class="badge bg-light text-dark border me-1">Lumbar</a>
+              <a href="{% url 'user:services' %}?q=kansa" class="badge bg-light text-dark border me-1">Kansa</a>
+              <a href="{% url 'user:services' %}?q=knee" class="badge bg-light text-dark border me-1">Knee</a>
+              <a href="{% url 'user:services' %}?q=shirodhara" class="badge bg-light text-dark border">Shirodhara</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="{% static 'assets/js/products-data.js' %}"></script>
+  <script src="{% static 'assets/js/language.js' %}"></script>
+  <script src="{% static 'assets/js/main.js' %}"></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

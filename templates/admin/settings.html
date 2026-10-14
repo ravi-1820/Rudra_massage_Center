@@ -1,0 +1,110 @@
+{% extends 'admin/admin_base.html' %}
+{% load static %}
+
+{% block title %}Portal & Website Settings | Rudra Massage & Wellness Admin{% endblock %}
+
+{% block nav_settings %}active{% endblock %}
+
+{% block topbar_title %}Website Configuration & Localization{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+          <!-- Business Profile -->
+          <div class="col-lg-6">
+            <div class="card border rounded-4 p-4 shadow-sm bg-white h-100">
+              <h5 class="fw-bold text-forest mb-3"><i class="bi bi-building me-2 text-gold"></i>Business & Brand Profile</h5>
+              <form id="brandSettingsForm">
+                <div class="mb-3">
+                  <label for="settingsDisplayName" class="form-veda-label">Business Display Name</label>
+                  <input type="text" id="settingsDisplayName" class="form-veda-control" value="Rudra Massage & Wellness">
+                </div>
+                <div class="mb-3">
+                  <label for="settingsPhone" class="form-veda-label">Official Support Telephone</label>
+                  <input type="tel" id="settingsPhone" class="form-veda-control" value="+91 98250 00000">
+                </div>
+                <div class="mb-3">
+                  <label for="settingsEmail" class="form-veda-label">Official Support Email</label>
+                  <input type="email" id="settingsEmail" class="form-veda-control" value="care@rudrawellness.com">
+                </div>
+                <div class="mb-3">
+                  <label for="settingsAddress" class="form-veda-label">Ahmedabad Centre Physical Address</label>
+                  <textarea id="settingsAddress" class="form-veda-control" rows="2">Rudra Massage & Wellness Centre, S.G. Highway, Bodakdev, Ahmedabad, Gujarat 380054</textarea>
+                </div>
+                <button type="submit" class="btn-veda-primary btn-veda-sm">Save Brand Info</button>
+              </form>
+            </div>
+          </div>
+
+          <!-- Localization & System Settings -->
+          <div class="col-lg-6">
+            <div class="card border rounded-4 p-4 shadow-sm bg-white h-100">
+              <h5 class="fw-bold text-forest mb-3"><i class="bi bi-translate me-2 text-gold"></i>Localization & Preferences</h5>
+              <form id="preferencesSettingsForm">
+                <div class="mb-3">
+                  <label for="settingsLang" class="form-veda-label">Default Website Language</label>
+                  <select id="settingsLang" class="form-veda-select">
+                    <option value="en" selected>English (Primary)</option>
+                    <option value="gu">ગુજરાતી (Gujarati)</option>
+                  </select>
+                </div>
+                <div class="mb-3">
+                  <label for="settingsCurrency" class="form-veda-label">Currency Symbol</label>
+                  <input type="text" id="settingsCurrency" class="form-veda-control" value="INR (₹)" readonly>
+                </div>
+                <div class="mb-3 form-check form-switch pt-2">
+                  <input class="form-check-input" type="checkbox" id="announcementToggle" checked>
+                  <label class="form-check-label fw-semibold" for="announcementToggle">Enable Top Announcement Banner</label>
+                </div>
+                <div class="mb-3 form-check form-switch">
+                  <input class="form-check-input" type="checkbox" id="whatsappFloatingToggle" checked>
+                  <label class="form-check-label fw-semibold" for="whatsappFloatingToggle">Display Floating WhatsApp Contact Button</label>
+                </div>
+                <button type="submit" class="btn-veda-primary btn-veda-sm">Save Preferences</button>
+              </form>
+            </div>
+          </div>
+        </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    (function(){try{var t=localStorage.getItem('rudra_theme');if(t==='dark'||(!t&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)){document.documentElement.classList.add('dark');document.documentElement.setAttribute('data-theme','dark');}}catch(e){}})();
+  </script>
+<script>
+    // Persist brand settings in localStorage
+    document.addEventListener("DOMContentLoaded", () => {
+      try {
+        const savedBrand = JSON.parse(localStorage.getItem("admin_brand_settings"));
+        if (savedBrand) {
+          if (savedBrand.name) document.getElementById("settingsDisplayName").value = savedBrand.name;
+          if (savedBrand.phone) document.getElementById("settingsPhone").value = savedBrand.phone;
+          if (savedBrand.email) document.getElementById("settingsEmail").value = savedBrand.email;
+          if (savedBrand.address) document.getElementById("settingsAddress").value = savedBrand.address;
+        }
+      } catch (e) {}
+
+      const brandForm = document.getElementById("brandSettingsForm");
+      if (brandForm) {
+        brandForm.addEventListener("submit", (e) => {
+          e.preventDefault();
+          const data = {
+            name: document.getElementById("settingsDisplayName").value.trim(),
+            phone: document.getElementById("settingsPhone").value.trim(),
+            email: document.getElementById("settingsEmail").value.trim(),
+            address: document.getElementById("settingsAddress").value.trim()
+          };
+          localStorage.setItem("admin_brand_settings", JSON.stringify(data));
+          showToast("Saved", "Brand settings persisted to demo storage.", "success");
+        });
+      }
+
+      const prefForm = document.getElementById("preferencesSettingsForm");
+      if (prefForm) {
+        prefForm.addEventListener("submit", (e) => {
+          e.preventDefault();
+          showToast("Saved", "Website localization preferences saved.", "success");
+        });
+      }
+    });
+  </script>
+{% endblock %}

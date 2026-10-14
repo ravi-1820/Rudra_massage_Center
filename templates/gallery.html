@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Photo Gallery & Therapy Showcase | Rudra Massage & Wellness{% endblock %}
+
+{% block content %}
+<!-- Banner -->
+  <section class="py-5 section-bg-ivory border-bottom text-center">
+    <div class="container">
+      <span class="section-subtitle-tag">VISUAL GALLERY</span>
+      <h1 class="h2 fw-bold text-forest mb-2">Equipment & Therapy Experience Showcase</h1>
+      <p class="text-muted max-w-md mx-auto mb-0">
+        Click any photograph to launch the high-resolution lightbox view.
+      </p>
+    </div>
+  </section>
+
+  <!-- Filter Buttons -->
+  <section class="py-4 bg-white border-bottom">
+    <div class="container">
+      <div class="d-flex justify-content-center flex-wrap gap-2">
+        <button class="btn btn-sm btn-outline-dark gallery-filter-btn active" data-filter="all">All Showcase</button>
+        <button class="btn btn-sm btn-outline-dark gallery-filter-btn" data-filter="machines">Therapy Machines</button>
+        <button class="btn btn-sm btn-outline-dark gallery-filter-btn" data-filter="kansa">Vedic Kansa Metal</button>
+        <button class="btn btn-sm btn-outline-dark gallery-filter-btn" data-filter="centre">Demonstration Centre</button>
+        <button class="btn btn-sm btn-outline-dark gallery-filter-btn" data-filter="sessions">Live Sessions</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Gallery Grid -->
+  <section class="section-py section-bg-white">
+    <div class="container">
+      <div class="row g-4" id="galleryGrid">
+        
+        <!-- 1 -->
+        <div class="col-md-6 col-lg-4 gallery-item-wrap" data-category="machines">
+          <div class="gallery-item">
+            <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=900&q=80" alt="Lumbar Spinal Traction Belt">
+            <div class="gallery-overlay">
+              <span class="gallery-tag">Therapy Machines</span>
+              <span class="gallery-caption">AyurSpine Pneumatic Decompression Belt</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2 -->
+        <div class="col-md-6 col-lg-4 gallery-item-wrap" data-category="kansa">
+          <div class="gallery-item">
+            <img src="https://images.unsplash.com/photo-1519823551278-64ac92734fb1?auto=format&fit=crop&w=900&q=80" alt="Kansa Vataki Bronze Massager">
+            <div class="gallery-overlay">
+              <span class="gallery-tag">Vedic Kansa Metal</span>
+              <span class="gallery-caption">Sacred Bronze Bell Metal Bowl (Padabhyanga)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3 -->
+        <div class="col-md-6 col-lg-4 gallery-item-wrap" data-category="centre">
+          <div class="gallery-item">
+            <img src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=900&q=80" alt="Shirodhara Drip Console Suite">
+            <div class="gallery-overlay">
+              <span class="gallery-tag">Demonstration Centre</span>
+              <span class="gallery-caption">Automated Shirodhara Oil Chamber Setup</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4 -->
+        <div class="col-md-6 col-lg-4 gallery-item-wrap" data-category="machines">
+          <div class="gallery-item">
+            <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=900&q=80" alt="OrthoRelief Infrared Knee Guard">
+            <div class="gallery-overlay">
+              <span class="gallery-tag">Therapy Machines</span>
+              <span class="gallery-caption">Infrared Thermal Joint Rehabilitation Guard</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5 -->
+        <div class="col-md-6 col-lg-4 gallery-item-wrap" data-category="sessions">
+          <div class="gallery-item">
+            <img src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=900&q=80" alt="Guided Relaxation & Posture Stretch">
+            <div class="gallery-overlay">
+              <span class="gallery-tag">Live Sessions</span>
+              <span class="gallery-caption">Restorative Posture Training at Experience Centre</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6 -->
+        <div class="col-md-6 col-lg-4 gallery-item-wrap" data-category="kansa">
+          <div class="gallery-item">
+            <img src="https://images.unsplash.com/photo-1515377905703-c4788e51af15?auto=format&fit=crop&w=900&q=80" alt="Kansa Facial Wand">
+            <div class="gallery-overlay">
+              <span class="gallery-tag">Vedic Kansa Metal</span>
+              <span class="gallery-caption">Handcrafted Rosewood Kansa Marma Wand</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 7 -->
+        <div class="col-md-6 col-lg-4 gallery-item-wrap" data-category="machines">
+          <div class="gallery-item">
+            <img src="https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=900&q=80" alt="CervicalFlex Neck Pinch Rollers">
+            <div class="gallery-overlay">
+              <span class="gallery-tag">Therapy Machines</span>
+              <span class="gallery-caption">3D Bionic Trapezius & Neck Acupressure Device</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 8 -->
+        <div class="col-md-6 col-lg-4 gallery-item-wrap" data-category="centre">
+          <div class="gallery-item">
+            <img src="https://images.unsplash.com/photo-1512290900672-1a4030438ec6?auto=format&fit=crop&w=900&q=80" alt="OcuRest Temple Massager in Lounge">
+            <div class="gallery-overlay">
+              <span class="gallery-tag">Demonstration Centre</span>
+              <span class="gallery-caption">Digital Eye Care & Temple Rest Testing Suite</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 9 -->
+        <div class="col-md-6 col-lg-4 gallery-item-wrap" data-category="sessions">
+          <div class="gallery-item">
+            <img src="https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=900&q=80" alt="Whole Body Vibration Training">
+            <div class="gallery-overlay">
+              <span class="gallery-tag">Live Sessions</span>
+              <span class="gallery-caption">AgniFit Metabolic Vibration Session</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Fullscreen Lightbox Modal Overlay -->
+  <div class="lightbox-modal" id="galleryLightbox">
+    <div class="lightbox-content-box">
+      <button type="button" class="lightbox-close-btn" id="lightboxClose" aria-label="Close modal">&times;</button>
+      <img src="" id="lightboxImage" alt="Enlarged view">
+      <div class="lightbox-caption-bar">
+        <h5 class="fw-bold text-forest mb-0" id="lightboxTitle">Image Title</h5>
+        <span class="badge-custom badge-sage">Rudra Massage & Wellness</span>
+      </div>
+    </div>
+  </div>
+
+  {% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'assets/js/gallery.js' %}"></script>
+{% endblock %}

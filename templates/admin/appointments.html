@@ -1,0 +1,41 @@
+{% extends 'admin/admin_base.html' %}
+{% load static %}
+
+{% block title %}Manage Appointments & Demos | Rudra Massage & Wellness Admin{% endblock %}
+
+{% block nav_appointments %}active{% endblock %}
+
+{% block topbar_title %}Appointment & Demonstration Schedule{% endblock %}
+
+{% block content %}
+<div class="admin-table-card">
+          <div class="admin-card-header">
+            <div>
+              <h5>Scheduled Trials & Consultations</h5>
+              <small class="text-muted">Doorstep visits and demonstration centre bookings</small>
+            </div>
+            <input type="text" id="adminAppointmentsSearch" class="form-control form-control-sm" placeholder="Search by client, service, or booking ID..." style="width: 280px;" aria-label="Search appointments">
+          </div>
+          <div class="admin-table-responsive">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Booking ID</th>
+                  <th>Client Name</th>
+                  <th>Date & Time Slot</th>
+                  <th>Requested Machine</th>
+                  <th>Demo Format</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="adminAppointmentsTbody"></tbody>
+            </table>
+          </div>
+        </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    (function(){try{var t=localStorage.getItem('rudra_theme');if(t==='dark'||(!t&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)){document.documentElement.classList.add('dark');document.documentElement.setAttribute('data-theme','dark');}}catch(e){}})();
+  </script>
+{% endblock %}

@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Submit Enquiry | Rudra Massage & Wellness{% endblock %}
+
+{% block content %}
+<!-- Banner -->
+  <section class="py-5 section-bg-ivory border-bottom text-center">
+    <div class="container">
+      <span class="section-subtitle-tag">DEDICATED ADVISORY</span>
+      <h1 class="h2 fw-bold text-forest mb-2">Therapy & Equipment Enquiry</h1>
+      <p class="text-muted max-w-md mx-auto mb-0">
+        Submit your enquiry regarding therapy devices, home setups, or clinic bulk orders. Our technical team responds within 24 hours.
+      </p>
+    </div>
+  </section>
+
+  <!-- Enquiry Form Container -->
+  <section class="section-py section-bg-white">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          
+          <div class="card border rounded-4 p-4 p-md-5 shadow-sm">
+            <div class="alert alert-light border mb-4 d-flex align-items-center gap-2">
+              <i class="bi bi-info-circle-fill text-gold fs-4"></i>
+              <div class="small text-muted" data-i18n="form.demoNotice">
+                Notice: This form operates in frontend demo mode. Input fields validate in real-time and provide instant mock submission feedback.
+              </div>
+            </div>
+
+            <div class="form-error-summary alert alert-danger d-none mb-4"></div>
+
+            <form id="enquiryForm" novalidate>
+              <div class="row g-3">
+                <!-- Full Name -->
+                <div class="col-md-6">
+                  <label for="fullName" class="form-veda-label" data-i18n="form.fullName">Full Name *</label>
+                  <input type="text" id="fullName" class="form-veda-control" placeholder="e.g. Ramesh Patel" required>
+                  <div class="invalid-feedback-custom"></div>
+                </div>
+
+                <!-- Email -->
+                <div class="col-md-6">
+                  <label for="email" class="form-veda-label" data-i18n="form.email">Email Address *</label>
+                  <input type="email" id="email" class="form-veda-control" placeholder="ramesh@example.com" required>
+                  <div class="invalid-feedback-custom"></div>
+                </div>
+
+                <!-- Phone (Indian) -->
+                <div class="col-md-6">
+                  <label for="phone" class="form-veda-label" data-i18n="form.phone">Mobile Number (+91) *</label>
+                  <input type="tel" id="phone" class="form-veda-control" data-type="indian-phone" placeholder="98250 12345" required>
+                  <div class="invalid-feedback-custom"></div>
+                </div>
+
+                <!-- City -->
+                <div class="col-md-6">
+                  <label for="city" class="form-veda-label" data-i18n="form.city">City / Location *</label>
+                  <input type="text" id="city" class="form-veda-control" placeholder="e.g. Ahmedabad, Surat, Rajkot" required>
+                  <div class="invalid-feedback-custom"></div>
+                </div>
+
+                <!-- Service Selection -->
+                <div class="col-12">
+                  <label for="serviceSelect" class="form-veda-label" data-i18n="form.service">Therapy Solution of Interest *</label>
+                  <select id="serviceSelect" class="form-veda-select" required>
+                    <option value="">-- Choose Equipment / Service --</option>
+                    <option value="wt-101">AyurSpine Deep Shiatsu Lumbar & Back Decompression Belt</option>
+                    <option value="wt-102">Pure Vedic Bronze (Kansa) Vataki Foot Therapy Massager</option>
+                    <option value="wt-103">OrthoRelief Infrared Heated Knee & Joint Guard</option>
+                    <option value="wt-104">CervicalFlex Smart Trapezius & Neck Massager</option>
+                    <option value="wt-105">OcuRest Smart Air-Pressure Eye Care Massager</option>
+                    <option value="wt-106">AyurShiro Shirodhara Automated Drip Console</option>
+                    <option value="wt-107">VedaRoot Scalp Red Light Therapy Helmet</option>
+                    <option value="wt-108">PranaFlow Sequential Leg Compression Boots</option>
+                    <option value="wt-109">AgniFit Whole Body Vibration Platform</option>
+                    <option value="wt-112">DharaSteam Ayurvedic Herbal Steam Generator</option>
+                    <option value="general">General Wellness Consultation / Other Solution</option>
+                  </select>
+                  <div class="invalid-feedback-custom"></div>
+                </div>
+
+                <!-- Enquiry Type -->
+                <div class="col-md-6">
+                  <label class="form-veda-label">Usage Intention</label>
+                  <select class="form-veda-select" id="usageIntention">
+                    <option value="personal">Personal / Family Home Use</option>
+                    <option value="clinic">Physiotherapy / Wellness Clinic</option>
+                    <option value="elderly">Specialized Senior Citizen Care</option>
+                    <option value="distribution">Bulk Dealership / Reselling</option>
+                  </select>
+                </div>
+
+                <!-- Preferred Callback Time -->
+                <div class="col-md-6">
+                  <label class="form-veda-label">Preferred Callback Time</label>
+                  <select class="form-veda-select" id="callbackTime">
+                    <option value="morning">Morning (10:00 AM - 1:00 PM)</option>
+                    <option value="afternoon">Afternoon (2:00 PM - 5:00 PM)</option>
+                    <option value="evening">Evening (5:00 PM - 8:00 PM)</option>
+                  </select>
+                </div>
+
+                <!-- Message -->
+                <div class="col-12">
+                  <label for="message" class="form-veda-label" data-i18n="form.message">Specific Questions / Discomfort Details</label>
+                  <textarea id="message" rows="4" class="form-veda-control" placeholder="Please describe any specific pain symptoms, questions regarding dimensions, or request for customized advice..."></textarea>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="col-12 mt-4 text-center">
+                  <button type="submit" class="btn-veda-primary btn-veda-lg px-5" data-i18n="btn.submitEnquiry">
+                    Submit Enquiry
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'assets/js/forms.js' %}"></script>
+{% endblock %}

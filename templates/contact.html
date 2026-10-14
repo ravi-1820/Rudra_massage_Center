@@ -1,0 +1,153 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Contact Us | Rudra Massage & Wellness{% endblock %}
+
+{% block content %}
+<!-- Banner -->
+  <section class="py-5 section-bg-ivory border-bottom text-center">
+    <div class="container">
+      <span class="section-subtitle-tag">WE ARE HERE TO HELP</span>
+      <h1 class="h2 fw-bold text-forest mb-2">Connect with Our Wellness Advisory</h1>
+      <p class="text-muted max-w-md mx-auto mb-0">
+        Have questions regarding therapy equipment, shipping across India, or booking a clinic trial? Reach out directly.
+      </p>
+    </div>
+  </section>
+
+  <!-- Contact Details & Form Grid -->
+  <section class="section-py section-bg-white">
+    <div class="container">
+      <div class="row g-5">
+        
+        <!-- Left Column: Contact Cards & Info -->
+        <div class="col-lg-5">
+          <h4 class="fw-bold text-forest mb-4">Contact Information</h4>
+
+          <div class="card border rounded-4 p-4 shadow-sm mb-4">
+            <div class="d-flex align-items-start gap-3 mb-4">
+              <div class="quick-action-icon"><i class="bi bi-geo-alt-fill"></i></div>
+              <div>
+                <h6 class="fw-bold text-forest mb-1">Demonstration & Experience Lounge</h6>
+                <p class="text-muted small mb-0">
+                  Rudra Massage & Wellness Centre, S.G. Highway, Bodakdev, Ahmedabad, Gujarat 380054 (Demo Address)
+                </p>
+              </div>
+            </div>
+
+            <div class="d-flex align-items-start gap-3 mb-4">
+              <div class="quick-action-icon"><i class="bi bi-telephone-fill"></i></div>
+              <div>
+                <h6 class="fw-bold text-forest mb-1">Phone Helpline</h6>
+                <p class="text-muted small mb-1">Toll-free Assistance & Orders:</p>
+                <a href="tel:+919825000000" class="fw-bold text-forest text-decoration-underline">+91 98250 00000</a>
+              </div>
+            </div>
+
+            <div class="d-flex align-items-start gap-3 mb-4">
+              <div class="quick-action-icon"><i class="bi bi-envelope-fill"></i></div>
+              <div>
+                <h6 class="fw-bold text-forest mb-1">Email Inquiries</h6>
+                <a href="mailto:care@rudrawellness-demo.com" class="text-muted small">care@rudrawellness-demo.com</a>
+              </div>
+            </div>
+
+            <div class="d-flex align-items-start gap-3">
+              <div class="quick-action-icon"><i class="bi bi-clock-fill"></i></div>
+              <div>
+                <h6 class="fw-bold text-forest mb-1">Visiting & Consultation Hours</h6>
+                <p class="text-muted small mb-0">Monday to Saturday: 9:30 AM to 7:00 PM<br>Sunday: By Prior Appointment Only</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- WhatsApp Connect Block -->
+          <div class="card border-0 p-4 rounded-4 shadow-sm text-white" style="background: linear-gradient(135deg, #128C7E, #25D366);">
+            <div class="d-flex align-items-center gap-3">
+              <i class="bi bi-whatsapp fs-1"></i>
+              <div>
+                <h5 class="fw-bold mb-1">Need Quick Answers?</h5>
+                <p class="small mb-2 text-white-50">Chat with our senior equipment advisor directly on WhatsApp.</p>
+                <a href="https://wa.me/919825000000" target="_blank" class="btn btn-sm btn-light fw-bold text-dark rounded-pill px-3">
+                  Start WhatsApp Chat &rarr;
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Interactive Contact Form -->
+        <div class="col-lg-7">
+          <div class="card border rounded-4 p-4 p-md-5 shadow-sm">
+            <h4 class="fw-bold text-forest mb-2">Send Us a Direct Message</h4>
+            <p class="text-muted small mb-4">Fill out the form below. Client-side validation is active with instant feedback.</p>
+
+            <div class="form-error-summary alert alert-danger d-none mb-3"></div>
+
+            <form id="contactForm" novalidate>
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label for="contactName" class="form-veda-label">Your Name *</label>
+                  <input type="text" id="contactName" class="form-veda-control" placeholder="e.g. Smt. Gita Mehta" required>
+                  <div class="invalid-feedback-custom"></div>
+                </div>
+                <div class="col-md-6">
+                  <label for="contactEmail" class="form-veda-label">Email Address *</label>
+                  <input type="email" id="contactEmail" class="form-veda-control" placeholder="gita@example.com" required>
+                  <div class="invalid-feedback-custom"></div>
+                </div>
+                <div class="col-md-6">
+                  <label for="contactPhone" class="form-veda-label">Mobile Number (+91) *</label>
+                  <input type="tel" id="contactPhone" class="form-veda-control" data-type="indian-phone" placeholder="98250 12345" required>
+                  <div class="invalid-feedback-custom"></div>
+                </div>
+                <div class="col-md-6">
+                  <label for="contactSubject" class="form-veda-label">Subject *</label>
+                  <select id="contactSubject" class="form-veda-select" required>
+                    <option value="">-- Choose Subject --</option>
+                    <option value="Product Enquiry">Product Specification Enquiry</option>
+                    <option value="Demo Request">Request In-Person Demo</option>
+                    <option value="Clinic Setup">Clinic / Bulk Purchase Setup</option>
+                    <option value="Support">Warranty & Support Request</option>
+                    <option value="Other">Other Feedback</option>
+                  </select>
+                  <div class="invalid-feedback-custom"></div>
+                </div>
+                <div class="col-12">
+                  <label for="contactMessage" class="form-veda-label">Message Details *</label>
+                  <textarea id="contactMessage" rows="4" class="form-veda-control" placeholder="Write your questions or notes here..." required></textarea>
+                  <div class="invalid-feedback-custom"></div>
+                </div>
+                <div class="col-12 mt-4">
+                  <button type="submit" class="btn-veda-primary btn-veda-lg w-100">
+                    Send Message
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Map Embed Placeholder -->
+      <div class="mt-5 pt-3">
+        <h5 class="fw-bold text-forest mb-3"><i class="bi bi-map-fill text-gold me-2"></i>Location Map (Ahmedabad Experience Centre)</h5>
+        <div class="ratio ratio-21x9 rounded-4 overflow-hidden border shadow-sm" style="background-color: #E2E8F0;">
+          <iframe 
+            src="https://maps.google.com/maps?q=Bodakdev,%20Ahmedabad,%20Gujarat&t=&z=13&ie=UTF8&iwloc=&output=embed" 
+            title="Rudra Massage & Wellness Location Map"
+            style="border:0;" 
+            allowfullscreen="" 
+            loading="lazy">
+          </iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'assets/js/forms.js' %}"></script>
+{% endblock %}
