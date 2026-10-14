@@ -31,49 +31,80 @@
           </div>
         </div>
 
-        <!-- Right Hero Media Composition with Modern Carousel -->
+        <!-- Right Hero Media Composition: Distinctive 5s Auto-Rotating Stage Carousel -->
         <div class="col-lg-6">
           <div class="position-relative">
-            <div id="heroCarousel" class="carousel slide carousel-fade modern-carousel" data-bs-ride="carousel" data-bs-interval="4500">
-              <!-- Indicators -->
-              <div class="modern-carousel-indicators">
-                <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+            <div id="heroCarousel" class="carousel slide carousel-fade hero-stage-carousel" data-bs-ride="carousel" data-bs-interval="5000" data-bs-pause="false">
+              
+              <!-- Top Segmented Progress Bar (Apple/Story Style 5s Timer) -->
+              <div class="hero-stage-progress-bar">
+                <button type="button" class="hero-stage-seg active" data-bs-target="#heroCarousel" data-bs-slide-to="0" aria-label="Slide 1"><div class="seg-fill"></div></button>
+                <button type="button" class="hero-stage-seg" data-bs-target="#heroCarousel" data-bs-slide-to="1" aria-label="Slide 2"><div class="seg-fill"></div></button>
+                <button type="button" class="hero-stage-seg" data-bs-target="#heroCarousel" data-bs-slide-to="2" aria-label="Slide 3"><div class="seg-fill"></div></button>
               </div>
 
-              <!-- Slides -->
+              <!-- Top Live Status Badge -->
+              <div class="hero-stage-live-tag">
+                <span class="hero-live-pulse-dot"></span>
+                <span>Auto-Switching • 5s</span>
+              </div>
+
+              <!-- Carousel Slides -->
               <div class="carousel-inner">
                 <!-- Slide 1 -->
                 <div class="carousel-item active">
-                  <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=900&q=80" alt="Relaxing Wellness Massage Therapy">
-                  <div class="hero-floating-pill">
-                    <span class="text-mint">🍃</span> Relax • Rejuvenate • Rebalance
+                  <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=900&q=80" alt="Full Body Therapy & Yoga">
+                  <!-- Bottom Floating Frosted Glass Card -->
+                  <div class="hero-stage-card">
+                    <div>
+                      <span class="hero-stage-tag"><i class="bi bi-flower1 me-1"></i> Holistic Therapy</span>
+                      <h4 class="hero-stage-title">Full Body Deep Relaxation</h4>
+                      <p class="hero-stage-subtitle">Gentle pressure marma point recovery & stress release.</p>
+                    </div>
+                    <a href="{% url 'user:appointment' %}" class="hero-stage-btn">
+                      Book Now &rarr;
+                    </a>
                   </div>
                 </div>
 
                 <!-- Slide 2 -->
                 <div class="carousel-item">
-                  <img src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=900&q=80" alt="Ayurvedic Kansa Therapy & Metallurgy">
-                  <div class="hero-floating-pill">
-                    <span class="text-mint">✨</span> Ancient Healing • Pure Kansa Bronze
+                  <img src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=900&q=80" alt="Ayurvedic Kansa Metallurgy">
+                  <!-- Bottom Floating Frosted Glass Card -->
+                  <div class="hero-stage-card">
+                    <div>
+                      <span class="hero-stage-tag"><i class="bi bi-gem me-1"></i> Vedic Metallurgy</span>
+                      <h4 class="hero-stage-title">100% Pure Kansa Bronze</h4>
+                      <p class="hero-stage-subtitle">Bio-metallic detoxification for foot & facial vitality.</p>
+                    </div>
+                    <a href="{% url 'user:services' %}?category=Kansa+Therapy" class="hero-stage-btn">
+                      Explore &rarr;
+                    </a>
                   </div>
                 </div>
 
                 <!-- Slide 3 -->
                 <div class="carousel-item">
-                  <img src="https://images.unsplash.com/photo-1519823551278-64ac92734fb1?auto=format&fit=crop&w=900&q=80" alt="Clinical Decompression & Physiotherapy">
-                  <div class="hero-floating-pill">
-                    <span class="text-mint">🩺</span> Orthopedic Recovery & Care
+                  <img src="https://images.unsplash.com/photo-1519823551278-64ac92734fb1?auto=format&fit=crop&w=900&q=80" alt="Orthopedic Decompression Care">
+                  <!-- Bottom Floating Frosted Glass Card -->
+                  <div class="hero-stage-card">
+                    <div>
+                      <span class="hero-stage-tag"><i class="bi bi-activity me-1"></i> Orthopedic Precision</span>
+                      <h4 class="hero-stage-title">Spinal Curvature Decompression</h4>
+                      <p class="hero-stage-subtitle">Drug-free pneumatic air bladder lumbar traction.</p>
+                    </div>
+                    <a href="{% url 'user:appointment' %}" class="hero-stage-btn">
+                      Book Demo &rarr;
+                    </a>
                   </div>
                 </div>
               </div>
 
-              <!-- Controls -->
-              <button class="modern-carousel-btn prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev" aria-label="Previous slide">
+              <!-- Minimal Floating Arrows -->
+              <button class="hero-stage-arrow left" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev" aria-label="Previous">
                 <i class="bi bi-chevron-left"></i>
               </button>
-              <button class="modern-carousel-btn next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next" aria-label="Next slide">
+              <button class="hero-stage-arrow right" type="button" data-bs-target="#heroCarousel" data-bs-slide="next" aria-label="Next">
                 <i class="bi bi-chevron-right"></i>
               </button>
             </div>
@@ -730,4 +761,45 @@
     </div>
   </section>
 
-  {% endblock %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const heroCarouselEl = document.getElementById('heroCarousel');
+    if (heroCarouselEl) {
+      // Ensure Bootstrap Carousel instance runs continuously every 5000ms with pause: false
+      const carouselInstance = new bootstrap.Carousel(heroCarouselEl, {
+        interval: 5000,
+        ride: 'carousel',
+        pause: false,
+        wrap: true
+      });
+
+      const segButtons = heroCarouselEl.querySelectorAll('.hero-stage-seg');
+
+      heroCarouselEl.addEventListener('slide.bs.carousel', function (e) {
+        const nextIndex = e.to;
+        segButtons.forEach((btn, idx) => {
+          btn.classList.remove('active', 'completed');
+          const fill = btn.querySelector('.seg-fill');
+
+          if (idx < nextIndex) {
+            btn.classList.add('completed');
+            if (fill) fill.style.animation = 'none';
+          } else if (idx === nextIndex) {
+            if (fill) {
+              fill.style.animation = 'none';
+              fill.offsetHeight; // Trigger reflow to restart CSS animation
+              fill.style.animation = '';
+            }
+            btn.classList.add('active');
+          } else {
+            if (fill) fill.style.animation = 'none';
+          }
+        });
+      });
+    }
+  });
+</script>
+{% endblock %}
