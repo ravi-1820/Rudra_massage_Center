@@ -1722,3 +1722,138 @@
   pointer-events: none;
 }
 
+/* ==========================================================================
+   Modern Carousel Components
+   ========================================================================== */
+.modern-carousel {
+  border-radius: 26px;
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  position: relative;
+}
+
+.modern-carousel .carousel-item {
+  height: 430px;
+  background-color: #0b1511;
+  transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.modern-carousel .carousel-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.92);
+  transition: transform 6s ease;
+}
+
+.modern-carousel .carousel-item.active img {
+  transform: scale(1.04);
+}
+
+.modern-carousel-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.05) 0%, rgba(0, 0, 0, 0.6) 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 30px;
+  color: #ffffff;
+  pointer-events: none;
+}
+
+.modern-carousel-indicators {
+  position: absolute;
+  bottom: 22px;
+  left: 30px;
+  margin: 0;
+  display: flex;
+  gap: 8px;
+  z-index: 10;
+}
+
+.modern-carousel-indicators button {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: none;
+  background-color: rgba(255, 255, 255, 0.45);
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 0;
+  cursor: pointer;
+}
+
+.modern-carousel-indicators button.active {
+  width: 32px;
+  border-radius: 6px;
+  background-color: var(--primary, #51f0a8);
+  box-shadow: 0 0 12px rgba(81, 240, 168, 0.8);
+}
+
+.modern-carousel-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  color: #141414;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  opacity: 0;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+  cursor: pointer;
+}
+
+.modern-carousel:hover .modern-carousel-btn {
+  opacity: 1;
+}
+
+.modern-carousel-btn.prev {
+  left: 20px;
+}
+
+.modern-carousel-btn.next {
+  right: 20px;
+}
+
+.modern-carousel-btn:hover {
+  background: #000000;
+  color: var(--primary, #51f0a8);
+  transform: translateY(-50%) scale(1.1);
+}
+
+/* Modern Testimonial Carousel Controls */
+.clean-testimonial-carousel .carousel-item {
+  transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+}
+
+.carousel-nav-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--foreground);
+  transition: all var(--transition-fast);
+  cursor: pointer;
+}
+
+.carousel-nav-btn:hover {
+  background: var(--primary);
+  color: var(--primary-foreground);
+  border-color: var(--primary);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(81, 240, 168, 0.35);
+}
+
+

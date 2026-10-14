@@ -31,15 +31,51 @@
           </div>
         </div>
 
-        <!-- Right Hero Media Composition -->
+        <!-- Right Hero Media Composition with Modern Carousel -->
         <div class="col-lg-6">
           <div class="position-relative">
-            <div class="hero-image-card" style="border-radius: 26px; overflow: hidden; box-shadow: var(--shadow-md);">
-              <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=900&q=80" alt="Relaxing Wellness Massage Therapy" style="width: 100%; height: 420px; object-fit: cover;">
-            </div>
-            <!-- Floating Feature Pill Badge: Relax • Rejuvenate • Rebalance -->
-            <div class="hero-floating-pill">
-              <span class="text-mint">🍃</span> Relax • Rejuvenate • Rebalance
+            <div id="heroCarousel" class="carousel slide carousel-fade modern-carousel" data-bs-ride="carousel" data-bs-interval="4500">
+              <!-- Indicators -->
+              <div class="modern-carousel-indicators">
+                <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+              </div>
+
+              <!-- Slides -->
+              <div class="carousel-inner">
+                <!-- Slide 1 -->
+                <div class="carousel-item active">
+                  <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=900&q=80" alt="Relaxing Wellness Massage Therapy">
+                  <div class="hero-floating-pill">
+                    <span class="text-mint">🍃</span> Relax • Rejuvenate • Rebalance
+                  </div>
+                </div>
+
+                <!-- Slide 2 -->
+                <div class="carousel-item">
+                  <img src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=900&q=80" alt="Ayurvedic Kansa Therapy & Metallurgy">
+                  <div class="hero-floating-pill">
+                    <span class="text-mint">✨</span> Ancient Healing • Pure Kansa Bronze
+                  </div>
+                </div>
+
+                <!-- Slide 3 -->
+                <div class="carousel-item">
+                  <img src="https://images.unsplash.com/photo-1519823551278-64ac92734fb1?auto=format&fit=crop&w=900&q=80" alt="Clinical Decompression & Physiotherapy">
+                  <div class="hero-floating-pill">
+                    <span class="text-mint">🩺</span> Orthopedic Recovery & Care
+                  </div>
+                </div>
+              </div>
+
+              <!-- Controls -->
+              <button class="modern-carousel-btn prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev" aria-label="Previous slide">
+                <i class="bi bi-chevron-left"></i>
+              </button>
+              <button class="modern-carousel-btn next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next" aria-label="Next slide">
+                <i class="bi bi-chevron-right"></i>
+              </button>
             </div>
           </div>
         </div>
@@ -508,34 +544,96 @@
   <section class="section-py section-bg-white border-top border-bottom">
     <div class="container">
       <div class="row g-5">
-        <!-- Left: What Our Customers Say (col-lg-4) -->
+        <!-- Left: What Our Customers Say (col-lg-4) with Modern Testimonial Carousel -->
         <div class="col-lg-4">
           <div class="d-flex align-items-center justify-content-between mb-2">
             <h3 class="fw-bold mb-0" style="font-size: 1.35rem;">What Our Customers Say</h3>
             <div class="d-flex gap-2">
-              <button class="btn btn-sm btn-outline-secondary rounded-circle" style="width: 32px; height: 32px; padding: 0;" aria-label="Previous review"><i class="bi bi-arrow-left"></i></button>
-              <button class="btn btn-sm btn-outline-secondary rounded-circle" style="width: 32px; height: 32px; padding: 0;" aria-label="Next review"><i class="bi bi-arrow-right"></i></button>
+              <button class="carousel-nav-btn" data-bs-target="#customerReviewsCarousel" data-bs-slide="prev" aria-label="Previous review"><i class="bi bi-arrow-left"></i></button>
+              <button class="carousel-nav-btn" data-bs-target="#customerReviewsCarousel" data-bs-slide="next" aria-label="Next review"><i class="bi bi-arrow-right"></i></button>
             </div>
           </div>
-          <p class="text-muted small mb-4">Real experiences. Better lives.</p>
+          <p class="text-muted small mb-3">Real experiences. Better lives.</p>
 
-          <div class="clean-testimonial-card">
-            <div class="d-flex align-items-center gap-3 mb-3">
-              <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80" alt="Priya Sharma" class="author-avatar-img">
-              <div class="text-warning fs-6">
-                <i class="bi bi-star-fill"></i>
-                <i class="bi bi-star-fill"></i>
-                <i class="bi bi-star-fill"></i>
-                <i class="bi bi-star-fill"></i>
-                <i class="bi bi-star-fill"></i>
+          <div id="customerReviewsCarousel" class="carousel slide carousel-fade clean-testimonial-carousel" data-bs-ride="carousel" data-bs-interval="5000">
+            <div class="carousel-inner">
+              <!-- Review 1 -->
+              <div class="carousel-item active">
+                <div class="clean-testimonial-card shadow-sm border">
+                  <div class="d-flex align-items-center gap-3 mb-3">
+                    <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80" alt="Priya Sharma" class="author-avatar-img">
+                    <div>
+                      <div class="text-warning fs-6 mb-1">
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                      </div>
+                      <small class="badge bg-success-subtle text-success border border-success-subtle py-1">Verified Client</small>
+                    </div>
+                  </div>
+                  <p class="fst-italic text-muted mb-4" style="font-size: 0.92rem; line-height: 1.65;">
+                    "The massage chair has been a game changer for my back pain. The quality and service are excellent. Highly recommend!"
+                  </p>
+                  <div class="mt-auto border-top pt-2">
+                    <h6 class="fw-bold mb-0">Priya Sharma</h6>
+                    <small class="text-muted">Ahmedabad • Full Body Therapy</small>
+                  </div>
+                </div>
               </div>
-            </div>
-            <p class="fst-italic text-muted mb-4" style="font-size: 0.92rem; line-height: 1.65;">
-              "The massage chair has been a game changer for my back pain. The quality and service are excellent. Highly recommend!"
-            </p>
-            <div class="mt-auto">
-              <h6 class="fw-bold mb-0">Priya Sharma</h6>
-              <small class="text-muted">Ahmedabad</small>
+
+              <!-- Review 2 -->
+              <div class="carousel-item">
+                <div class="clean-testimonial-card shadow-sm border">
+                  <div class="d-flex align-items-center gap-3 mb-3">
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80" alt="Rajesh Parekh" class="author-avatar-img">
+                    <div>
+                      <div class="text-warning fs-6 mb-1">
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                      </div>
+                      <small class="badge bg-success-subtle text-success border border-success-subtle py-1">Verified Client</small>
+                    </div>
+                  </div>
+                  <p class="fst-italic text-muted mb-4" style="font-size: 0.92rem; line-height: 1.65;">
+                    "After struggling with lumbar discomfort from long desk hours, the decompression belt gave me tangible relief within 2 weeks. Medical-grade comfort!"
+                  </p>
+                  <div class="mt-auto border-top pt-2">
+                    <h6 class="fw-bold mb-0">Rajesh S. Parekh</h6>
+                    <small class="text-muted">Vadodara • AyurSpine Decompressor</small>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Review 3 -->
+              <div class="carousel-item">
+                <div class="clean-testimonial-card shadow-sm border">
+                  <div class="d-flex align-items-center gap-3 mb-3">
+                    <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=200&q=80" alt="Hansaben Patel" class="author-avatar-img">
+                    <div>
+                      <div class="text-warning fs-6 mb-1">
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                      </div>
+                      <small class="badge bg-success-subtle text-success border border-success-subtle py-1">Verified Client</small>
+                    </div>
+                  </div>
+                  <p class="fst-italic text-muted mb-4" style="font-size: 0.92rem; line-height: 1.65;">
+                    "Using the authentic Kansa foot bowl with herbal oil before sleep has become our family ritual. Deep, restful sleep returned naturally."
+                  </p>
+                  <div class="mt-auto border-top pt-2">
+                    <h6 class="fw-bold mb-0">Hansaben Patel</h6>
+                    <small class="text-muted">Surat • Kansa Vataki Therapy</small>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
