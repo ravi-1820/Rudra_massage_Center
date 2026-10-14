@@ -2085,5 +2085,42 @@
   transform: translateY(-50%) scale(1.1);
 }
 
+/* Temporary Admin Site Shortcut Button */
+.btn-admin-shortcut {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  border-radius: var(--radius-pill);
+  background-color: #F0FBF6;
+  color: #0d9f5d;
+  border: 1.5px solid rgba(13, 159, 93, 0.45);
+  text-decoration: none;
+  transition: all var(--transition-fast);
+  box-shadow: 0 2px 6px rgba(13, 159, 93, 0.12);
+}
+
+.btn-admin-shortcut:hover {
+  background-color: #0d9f5d;
+  color: #ffffff;
+  border-color: #0d9f5d;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(13, 159, 93, 0.3);
+}
+
+[data-theme="dark"] .btn-admin-shortcut {
+  background-color: rgba(81, 240, 168, 0.12);
+  color: #51f0a8;
+  border-color: rgba(81, 240, 168, 0.35);
+}
+
+[data-theme="dark"] .btn-admin-shortcut:hover {
+  background-color: #51f0a8;
+  color: #052e1b;
+}
+
+
 
 
