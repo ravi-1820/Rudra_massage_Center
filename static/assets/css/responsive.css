@@ -1,39 +1,181 @@
 /* ==========================================================================
-   Rudra Massage & Wellness - Responsive Breakpoint Stylesheet: Mint Signal Theme
-   Mobile First & Desktop Media Queries
+   Rudra Massage & Wellness - Responsive Stylesheet: Mint Signal Theme
+   Device Support: Nest Hub Max (1280x800), iPad Pro (1024x1366, 834x1194, 1366x1024),
+   Tablets, Laptops, Desktops, and Mobile Devices
    ========================================================================== */
 
-/* Breakpoints:
-   xs: < 576px
-   sm: >= 576px
-   md: >= 768px
-   lg: >= 992px
-   xl: >= 1200px
-   xxl: >= 1400px
-*/
+/* Universal Responsive Hygiene */
+html, body {
+  overflow-x: clip;
+  max-width: 100vw;
+}
 
-@media (max-width: 991.98px) {
-  /* Mobile Navigation adjustments */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* ==========================================================================
+   1. Large Desktop & Above (>= 1400px)
+   ========================================================================== */
+@media (min-width: 1400px) {
+  .container {
+    max-width: 1320px;
+  }
+}
+
+/* ==========================================================================
+   2. Nest Hub Max & Standard Desktop Viewports (1200px to 1399.98px)
+   Target: Nest Hub Max (1280x800), 13" Laptops (1280-1366px), iPad Pro 12.9" Landscape
+   ========================================================================== */
+@media (min-width: 1200px) and (max-width: 1399.98px) {
+  /* Header & Navigation */
+  .site-header .navbar-nav {
+    padding: 3px 6px;
+    gap: 2px;
+  }
+  .site-header .navbar-nav .nav-link {
+    padding: 6px 11px;
+    font-size: 0.84rem;
+  }
+  .site-header .header-actions {
+    gap: 6px;
+  }
+  .site-header .btn-veda-gold {
+    padding: 7px 14px;
+    font-size: 0.82rem;
+  }
+  .site-header .btn-admin-shortcut {
+    padding: 6px 10px;
+    font-size: 0.8rem;
+  }
+  .site-header .header-search-btn,
+  .site-header .theme-toggle-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 0.88rem;
+  }
+  .site-header .lang-switch-btn {
+    padding: 4px 8px;
+    font-size: 0.74rem;
+  }
+  .brand-logo-img {
+    height: 40px;
+    max-height: 40px;
+  }
+  .brand-name {
+    font-size: 1.15rem;
+  }
+
+  /* Hero Section */
+  .hero-section {
+    padding: 48px 0 64px 0;
+  }
+  .hero-title {
+    font-size: clamp(2.2rem, 3.2vw, 3.2rem) !important;
+  }
+  .hero-stage-carousel .carousel-item {
+    height: 430px;
+  }
+  .hero-stage-card {
+    padding: 14px 18px;
+    bottom: 18px;
+    left: 16px;
+    right: 16px;
+    gap: 12px;
+  }
+  .hero-stage-title {
+    font-size: 1.05rem;
+  }
+  .hero-stage-subtitle {
+    font-size: 0.78rem;
+  }
+
+  /* Feature Trust Cards */
+  .feature-trust-card {
+    padding: 22px 18px 18px;
+  }
+  .feature-trust-title {
+    font-size: 0.98rem;
+  }
+  .feature-trust-list li {
+    font-size: 0.81rem;
+    gap: 6px;
+  }
+
+  /* Explore by Need 8-Columns */
+  .need-card-clean {
+    padding: 14px 6px;
+  }
+  .need-card-clean .need-icon-circle {
+    width: 44px;
+    height: 44px;
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+  }
+  .need-card-clean span {
+    font-size: 0.78rem;
+  }
+
+  /* Category Clean Cards */
+  .category-card-clean .category-body {
+    padding: 13px 12px;
+  }
+  .category-card-clean .category-title {
+    font-size: 0.88rem;
+  }
+  .category-card-clean .category-desc {
+    font-size: 0.72rem;
+  }
+
+  /* Featured Products & Services */
+  .featured-product-card .product-card-body {
+    padding: 16px;
+  }
+  .featured-product-card .product-card-title {
+    font-size: 0.98rem;
+  }
+
+  /* Health & Wellness Journal in col-12 col-xl-8 */
+  .blog-card .p-3 {
+    padding: 14px 12px !important;
+  }
+  .blog-card h6 {
+    font-size: 0.88rem !important;
+    line-height: 1.35 !important;
+  }
+  .blog-card-img {
+    height: 140px;
+  }
+}
+
+/* ==========================================================================
+   3. Mobile & Tablet Navigation Collapse Drawer (<= 1199.98px)
+   Target: iPad Pro 12.9" Portrait (1024x1366), iPad Pro 11" (834x1194),
+   iPad Air (820x1180), iPad Mini (768x1024), Phones
+   ========================================================================== */
+@media (max-width: 1199.98px) {
   .navbar-collapse {
-    background-color: rgba(253, 253, 253, 0.94);
+    background-color: rgba(253, 253, 253, 0.96);
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
     border-radius: 20px;
     box-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.04);
-    padding: 20px;
+    padding: 20px 24px;
     margin-top: 14px;
     border: 1px solid rgba(229, 231, 235, 0.8);
   }
 
   [data-theme="dark"] .navbar-collapse {
-    background-color: rgba(18, 32, 25, 0.95);
-    border-color: rgba(255, 255, 255, 0.1);
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    background-color: rgba(18, 32, 25, 0.96);
+    border-color: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55);
   }
 
   .navbar-nav .nav-link {
     padding: 10px 16px;
     border-radius: 12px;
+    font-size: 0.94rem;
   }
 
   .navbar-nav .nav-link:hover,
@@ -48,18 +190,111 @@
   }
 
   .header-actions {
-    margin-top: 14px;
-    padding-top: 14px;
+    margin-top: 16px;
+    padding-top: 16px;
     border-top: 1px solid var(--border);
     width: 100%;
-    justify-content: space-between;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
     flex-wrap: wrap;
     gap: 10px;
   }
 
-  /* Hero Section Mobile */
+  /* Catalogue Filter Drawer */
+  .filter-desktop-sidebar {
+    display: none;
+  }
+
+  .filter-mobile-bar {
+    display: flex !important;
+  }
+
+  /* Hero stage card on tablet */
+  .hero-stage-card {
+    padding: 12px 16px;
+    bottom: 14px;
+    left: 14px;
+    right: 14px;
+    gap: 12px;
+  }
+  .hero-stage-title {
+    font-size: 1rem;
+  }
+  .hero-stage-subtitle {
+    font-size: 0.78rem;
+  }
+  .hero-stage-btn {
+    padding: 7px 14px;
+    font-size: 0.78rem;
+  }
+}
+
+@media (min-width: 1200px) {
+  .filter-mobile-bar {
+    display: none !important;
+  }
+}
+
+/* ==========================================================================
+   4. iPad Pro & Tablet Content Layout (768px to 1199.98px)
+   ========================================================================== */
+@media (min-width: 768px) and (max-width: 1199.98px) {
+  .section-py {
+    padding: 56px 0;
+  }
+
   .hero-section {
-    padding: 36px 0 54px 0;
+    padding: 44px 0 60px 0;
+  }
+
+  .hero-stage-carousel .carousel-item {
+    height: 420px;
+  }
+
+  .feature-trust-card {
+    padding: 24px 20px;
+  }
+
+  .need-card-clean {
+    padding: 18px 10px;
+  }
+  .need-card-clean span {
+    font-size: 0.84rem;
+  }
+
+  .about-feature-item {
+    padding: 16px 14px;
+  }
+  .about-feature-text {
+    font-size: 0.86rem;
+  }
+
+  .clean-testimonial-card {
+    padding: 26px;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  .blog-card h6 {
+    font-size: 0.95rem !important;
+    line-height: 1.4 !important;
+  }
+  .blog-card-img {
+    height: 160px;
+  }
+}
+
+/* ==========================================================================
+   5. Mobile Devices & Small Screens (<= 767.98px)
+   ========================================================================== */
+@media (max-width: 767.98px) {
+  .section-py {
+    padding: 46px 0;
+  }
+
+  .hero-section {
+    padding: 32px 0 48px 0;
     text-align: center;
   }
 
@@ -71,50 +306,42 @@
   .hero-lead {
     margin-left: auto;
     margin-right: auto;
+    font-size: 0.96rem !important;
   }
 
   .hero-cta-group {
     justify-content: center;
-  }
-
-  .hero-trust-bar {
-    justify-content: center;
-    gap: 16px;
+    flex-wrap: wrap;
   }
 
   .hero-media-wrapper {
-    margin-top: 40px;
+    margin-top: 32px;
   }
 
-  .hero-image-card img {
+  .hero-stage-carousel .carousel-item {
     height: 380px;
   }
 
-  .hero-floating-card {
-    position: static;
-    margin: -30px auto 0 auto;
-    max-width: 90%;
+  .hero-stage-card {
+    padding: 10px 12px;
+    bottom: 10px;
+    left: 10px;
+    right: 10px;
+    gap: 8px;
   }
 
-  /* Catalogue Filter Drawer */
-  .filter-desktop-sidebar {
+  .hero-stage-title {
+    font-size: 0.92rem;
+  }
+
+  .hero-stage-subtitle {
+    font-size: 0.72rem;
     display: none;
   }
 
-  .filter-mobile-bar {
-    display: flex !important;
-  }
-}
-
-@media (min-width: 992px) {
-  .filter-mobile-bar {
-    display: none !important;
-  }
-}
-
-@media (max-width: 767.98px) {
-  .section-py {
-    padding: 50px 0;
+  .hero-stage-btn {
+    padding: 6px 12px;
+    font-size: 0.75rem;
   }
 
   .product-image-box {
@@ -123,14 +350,17 @@
 
   .product-actions-row {
     grid-template-columns: 1fr;
+    gap: 8px;
   }
 
-  .hero-image-card img {
-    height: 320px;
+  .product-actions-row .btn-veda-outline,
+  .product-actions-row .btn-veda-gold {
+    padding: 9px 14px;
+    font-size: 0.85rem;
   }
 
   .site-footer {
-    padding: 50px 0 20px 0;
+    padding: 46px 0 20px 0;
   }
 
   .footer-bottom {
@@ -149,14 +379,29 @@
   }
 
   .whatsapp-floating {
-    bottom: 16px;
-    right: 16px;
-    width: 50px;
-    height: 50px;
-    font-size: 1.5rem;
+    bottom: 18px;
+    right: 18px;
+    width: 48px;
+    height: 48px;
+    font-size: 1.45rem;
+  }
+
+  .how-step-arrow {
+    display: none;
+  }
+
+  .cta-banner-dark {
+    padding: 36px 20px;
+  }
+
+  .cta-bg-leaves {
+    display: none;
   }
 }
 
+/* ==========================================================================
+   6. Extra Small Phones (<= 575.98px)
+   ========================================================================== */
 @media (max-width: 575.98px) {
   .brand-name {
     font-size: 1.05rem;
@@ -174,26 +419,48 @@
   }
 
   .announcement-bar {
-    font-size: 0.78rem;
+    font-size: 0.76rem;
     text-align: center;
+    padding: 6px 12px;
   }
 
-  .announcement-bar .badge-gold {
+  .announcement-bar .badge-gold,
+  .announcement-bar .badge-mint {
     display: none;
   }
 
-  .need-card {
-    padding: 16px 10px;
+  .hero-stage-card {
+    flex-direction: column;
+    align-items: flex-start;
   }
 
-  .need-icon-wrap {
-    width: 46px;
-    height: 46px;
-    font-size: 1.3rem;
+  .hero-stage-btn {
+    align-self: flex-start;
+    margin-top: 2px;
+  }
+
+  .need-card-clean {
+    padding: 12px 6px;
+  }
+
+  .need-icon-circle {
+    width: 42px;
+    height: 42px;
+    font-size: 1.15rem;
+  }
+
+  .need-card-clean span {
+    font-size: 0.74rem;
+  }
+
+  .feature-trust-card {
+    padding: 20px 16px;
   }
 }
 
-/* Custom 8-column and 5-column grids for Mint Signal layout */
+/* ==========================================================================
+   7. Custom Grid Utilities for Mint Signal layout
+   ========================================================================== */
 @media (min-width: 1200px) {
   .row-cols-xl-8 > * {
     flex: 0 0 auto;
@@ -216,17 +483,13 @@
   }
 }
 
-@media (max-width: 991.98px) {
-  .how-step-arrow {
-    display: none;
-  }
-  .cta-banner-dark {
-    padding: 40px 24px;
-  }
-  .trust-strip-card .row > div:not(:last-child) {
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 12px;
-    margin-bottom: 12px;
-  }
+/* Typography Overflow Prevention */
+.blog-card h6,
+.blog-card-title,
+.product-card-title,
+.category-title,
+.feature-trust-title {
+  word-break: normal;
+  overflow-wrap: break-word;
+  hyphens: none;
 }
-

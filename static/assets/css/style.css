@@ -448,7 +448,7 @@ img {
 }
 
 /* Modern Capsule Navigation Bar (Desktop) */
-@media (min-width: 992px) {
+@media (min-width: 1200px) {
   .navbar-nav {
     background: rgba(243, 244, 246, 0.7);
     backdrop-filter: blur(12px);

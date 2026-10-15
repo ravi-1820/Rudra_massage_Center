@@ -196,7 +196,7 @@ class BmiCalculator {
                     <span class="badge bg-light text-dark border">${item.need}</span>
                   </div>
                 </div>
-                <a href="service-detail.html?id=${item.id}" class="btn-veda-outline btn-veda-sm mt-3 text-center">Explore Device</a>
+                <a href="/service-detail/?id=${item.id}" class="btn-veda-outline btn-veda-sm mt-3 text-center">Explore Device</a>
               </div>
             </div>
           `).join("")}

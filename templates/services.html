@@ -154,7 +154,7 @@
             <!-- Product Cards Grid -->
             <div class="row g-4" id="catalogueGrid">
               {% for service in services %}
-                <div class="col-md-6 col-lg-4 mb-4">
+                <div class="col-sm-6 col-xl-4 mb-4">
                   <div class="product-card h-100 d-flex flex-column">
                     <div class="product-image-box">
                       {% if service.is_featured %}
@@ -187,8 +187,8 @@
                         <a href="{% url 'user:service_detail' %}?slug={{ service.slug }}" class="btn-veda-outline btn-veda-sm text-center">
                           View Details
                         </a>
-                        <a href="{% url 'user:enquiry' %}?service={{ service.id }}" class="btn-veda-gold btn-veda-sm text-center">
-                          Enquire Now
+                        <a href="{% url 'user:appointment' %}?service={{ service.id }}" class="btn-veda-gold btn-veda-sm text-center">
+                          Book Appointment
                         </a>
                       </div>
                     </div>

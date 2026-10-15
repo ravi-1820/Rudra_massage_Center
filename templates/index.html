@@ -105,7 +105,7 @@
     <div class="container">
       <div class="row g-4 justify-content-center">
         <!-- Card 1: Natural Wellness Approach -->
-        <div class="col-12 col-sm-6 col-lg-3">
+        <div class="col-12 col-sm-6 col-xl-3">
           <div class="feature-trust-card">
             <div class="feature-trust-icon">
               <i class="bi bi-flower1"></i>
@@ -123,7 +123,7 @@
           </div>
         </div>
         <!-- Card 2: Modern Therapy Equipment -->
-        <div class="col-12 col-sm-6 col-lg-3">
+        <div class="col-12 col-sm-6 col-xl-3">
           <div class="feature-trust-card">
             <div class="feature-trust-icon">
               <i class="bi bi-cpu"></i>
@@ -141,7 +141,7 @@
           </div>
         </div>
         <!-- Card 3: Expert Guidance & Support -->
-        <div class="col-12 col-sm-6 col-lg-3">
+        <div class="col-12 col-sm-6 col-xl-3">
           <div class="feature-trust-card">
             <div class="feature-trust-icon">
               <i class="bi bi-shield-check"></i>
@@ -159,7 +159,7 @@
           </div>
         </div>
         <!-- Card 4: Home & Centre Usage Options -->
-        <div class="col-12 col-sm-6 col-lg-3">
+        <div class="col-12 col-sm-6 col-xl-3">
           <div class="feature-trust-card">
             <div class="feature-trust-icon">
               <i class="bi bi-house-door"></i>
@@ -276,7 +276,7 @@
         <div class="carousel-inner pb-2">
           <!-- Slide 1: Categories 1 to 5 -->
           <div class="carousel-item active">
-            <div class="row g-4 row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5">
+            <div class="row g-3 g-md-4 row-cols-2 row-cols-sm-3 row-cols-md-3 row-cols-xl-5">
               <!-- Item 1 -->
               <div class="col">
                 <a href="{% url 'user:services' %}?category=Therapy+Machines" class="category-card-clean">
@@ -357,7 +357,7 @@
 
           <!-- Slide 2: Categories 6 to 10 -->
           <div class="carousel-item">
-            <div class="row g-4 row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5">
+            <div class="row g-3 g-md-4 row-cols-2 row-cols-sm-3 row-cols-md-3 row-cols-xl-5">
               <!-- Item 6 -->
               <div class="col">
                 <a href="{% url 'user:services' %}?category=Personal+Care" class="category-card-clean">
@@ -456,7 +456,7 @@
         <p class="section-desc text-muted mb-0">Handpicked solutions for your wellness journey</p>
       </div>
 
-      <div class="row g-4 row-cols-1 row-cols-md-2 row-cols-lg-4">
+      <div class="row g-4 row-cols-1 row-cols-sm-2 row-cols-xl-4">
         <!-- Product Card 1 -->
         <div class="col">
           <div class="featured-product-card">
@@ -473,7 +473,7 @@
                 <span>(42 reviews)</span>
               </div>
               <a href="{% url 'user:service_detail' %}?id=wt-101" class="view-details-link">View Details &rarr;</a>
-              <a href="{% url 'user:enquiry' %}?service=wt-101" class="btn-enquire-full">Enquire Now</a>
+              <a href="{% url 'user:appointment' %}?service=wt-101" class="btn-enquire-full">Book Appointment</a>
             </div>
           </div>
         </div>
@@ -494,7 +494,7 @@
                 <span>(38 reviews)</span>
               </div>
               <a href="{% url 'user:service_detail' %}?id=wt-104" class="view-details-link">View Details &rarr;</a>
-              <a href="{% url 'user:enquiry' %}?service=wt-104" class="btn-enquire-full">Enquire Now</a>
+              <a href="{% url 'user:appointment' %}?service=wt-104" class="btn-enquire-full">Book Appointment</a>
             </div>
           </div>
         </div>
@@ -515,7 +515,7 @@
                 <span>(56 reviews)</span>
               </div>
               <a href="{% url 'user:service_detail' %}?id=wt-103" class="view-details-link">View Details &rarr;</a>
-              <a href="{% url 'user:enquiry' %}?service=wt-103" class="btn-enquire-full">Enquire Now</a>
+              <a href="{% url 'user:appointment' %}?service=wt-103" class="btn-enquire-full">Book Appointment</a>
             </div>
           </div>
         </div>
@@ -536,7 +536,7 @@
                 <span>(64 reviews)</span>
               </div>
               <a href="{% url 'user:service_detail' %}?id=wt-102" class="view-details-link">View Details &rarr;</a>
-              <a href="{% url 'user:enquiry' %}?service=wt-102" class="btn-enquire-full">Enquire Now</a>
+              <a href="{% url 'user:appointment' %}?service=wt-102" class="btn-enquire-full">Book Appointment</a>
             </div>
           </div>
         </div>
@@ -547,16 +547,16 @@
   <!-- About Rudra Massage & Wellness Section (Approved 3-Column Layout) -->
   <section class="section-py section-bg-white border-top border-bottom">
     <div class="container">
-      <div class="row align-items-center g-4 g-lg-5">
+      <div class="row align-items-center g-4 g-xl-5">
         <!-- Left: Large Room Photo -->
-        <div class="col-lg-5">
+        <div class="col-12 col-lg-6 col-xl-5">
           <div class="position-relative">
             <img src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=800&q=80" alt="Rudra Massage & Wellness Centre" class="w-100 rounded-4 shadow-sm" style="height: 380px; object-fit: cover;">
           </div>
         </div>
 
         <!-- Middle: Story & Mission -->
-        <div class="col-lg-4">
+        <div class="col-12 col-lg-6 col-xl-4">
           <h2 class="section-title mb-3" style="font-size: 1.85rem; font-weight: 800;">About Rudra Massage & Wellness</h2>
           <p class="text-muted mb-3" style="font-size: 0.95rem; line-height: 1.65;">
             We bring together the wisdom of traditional wellness and the power of modern therapy to help you feel your best. Our mission is to provide natural, safe and effective wellness solutions for a healthier and more balanced life.
@@ -566,19 +566,27 @@
           </div>
         </div>
 
-        <!-- Right: 3 Feature Cards Stack -->
-        <div class="col-lg-3">
-          <div class="about-feature-item">
-            <div class="about-feature-icon"><i class="bi bi-flower1"></i></div>
-            <p class="about-feature-text">Holistic Wellness Approach</p>
-          </div>
-          <div class="about-feature-item">
-            <div class="about-feature-icon"><i class="bi bi-shield-check"></i></div>
-            <p class="about-feature-text">Trusted Quality Products</p>
-          </div>
-          <div class="about-feature-item">
-            <div class="about-feature-icon"><i class="bi bi-headset"></i></div>
-            <p class="about-feature-text">Expert Support & Guidance</p>
+        <!-- Right: 3 Feature Cards Stack (Responsive on tablet & desktop) -->
+        <div class="col-12 col-xl-3">
+          <div class="row row-cols-1 row-cols-sm-3 row-cols-xl-1 g-3">
+            <div class="col">
+              <div class="about-feature-item mb-0 h-100">
+                <div class="about-feature-icon"><i class="bi bi-flower1"></i></div>
+                <p class="about-feature-text">Holistic Wellness Approach</p>
+              </div>
+            </div>
+            <div class="col">
+              <div class="about-feature-item mb-0 h-100">
+                <div class="about-feature-icon"><i class="bi bi-shield-check"></i></div>
+                <p class="about-feature-text">Trusted Quality Products</p>
+              </div>
+            </div>
+            <div class="col">
+              <div class="about-feature-item mb-0 h-100">
+                <div class="about-feature-icon"><i class="bi bi-headset"></i></div>
+                <p class="about-feature-text">Expert Support & Guidance</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -629,9 +637,9 @@
   <!-- Split Section: What Our Customers Say + Health & Wellness Journal -->
   <section class="section-py section-bg-white border-top border-bottom">
     <div class="container">
-      <div class="row g-5">
-        <!-- Left: What Our Customers Say (col-lg-4) with Modern Testimonial Carousel -->
-        <div class="col-lg-4">
+      <div class="row g-4 g-xl-5">
+        <!-- Left: What Our Customers Say (col-12 col-xl-4) with Modern Testimonial Carousel -->
+        <div class="col-12 col-xl-4">
           <div class="d-flex align-items-center justify-content-between mb-2">
             <h3 class="fw-bold mb-0" style="font-size: 1.35rem;">What Our Customers Say</h3>
             <div class="d-flex gap-2">
@@ -724,22 +732,22 @@
           </div>
         </div>
 
-        <!-- Right: Health & Wellness Journal (col-lg-8) -->
-        <div class="col-lg-8">
+        <!-- Right: Health & Wellness Journal (col-12 col-xl-8) -->
+        <div class="col-12 col-xl-8">
           <div class="d-flex align-items-center justify-content-between mb-2">
             <h3 class="fw-bold mb-0" style="font-size: 1.35rem;">Health & Wellness Journal</h3>
             <a href="{% url 'user:blog' %}" class="text-mint fw-bold small text-decoration-none">View All Articles &rarr;</a>
           </div>
           <p class="text-muted small mb-4">Tips, guides and insights for a healthier you.</p>
 
-          <div class="row g-3 row-cols-1 row-cols-md-3">
+          <div class="row g-3 row-cols-1 row-cols-sm-2 row-cols-md-3">
             <!-- Article 1 -->
             <div class="col">
               <div class="blog-card">
                 <div class="blog-card-img" style="height: 150px;">
                   <img src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=600&q=80" alt="Back Stretches">
                 </div>
-                <div class="p-3 d-flex flex-direction-column flex-grow-1">
+                <div class="p-3 d-flex flex-column flex-grow-1">
                   <span class="badge bg-light text-dark border align-self-start mb-2" style="font-size: 0.7rem;">Wellness</span>
                   <h6 class="fw-bold mb-1" style="font-size: 0.92rem; line-height: 1.35;">Simple Stretches for a Healthier Back</h6>
                   <small class="text-muted d-block mb-3" style="font-size: 0.75rem;">Apr 15, 2026</small>
@@ -754,7 +762,7 @@
                 <div class="blog-card-img" style="height: 150px;">
                   <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=600&q=80" alt="Massage Benefits">
                 </div>
-                <div class="p-3 d-flex flex-direction-column flex-grow-1">
+                <div class="p-3 d-flex flex-column flex-grow-1">
                   <span class="badge bg-light text-dark border align-self-start mb-2" style="font-size: 0.7rem;">Lifestyle</span>
                   <h6 class="fw-bold mb-1" style="font-size: 0.92rem; line-height: 1.35;">The Benefits of Regular Massage</h6>
                   <small class="text-muted d-block mb-3" style="font-size: 0.75rem;">Apr 10, 2026</small>
@@ -769,7 +777,7 @@
                 <div class="blog-card-img" style="height: 150px;">
                   <img src="https://images.unsplash.com/photo-1498837167922-ddd27525d352?auto=format&fit=crop&w=600&q=80" alt="Nutrition Foods">
                 </div>
-                <div class="p-3 d-flex flex-direction-column flex-grow-1">
+                <div class="p-3 d-flex flex-column flex-grow-1">
                   <span class="badge bg-light text-dark border align-self-start mb-2" style="font-size: 0.7rem;">Nutrition</span>
                   <h6 class="fw-bold mb-1" style="font-size: 0.92rem; line-height: 1.35;">Foods for Better Energy & Immunity</h6>
                   <small class="text-muted d-block mb-3" style="font-size: 0.75rem;">Apr 5, 2026</small>
@@ -790,7 +798,7 @@
         <div class="cta-bg-leaves"></div>
         <div class="row align-items-center g-4 position-relative z-1">
           <!-- Left: Call to Action -->
-          <div class="col-lg-7">
+          <div class="col-12 col-lg-7">
             <h2 class="cta-title">Ready to Experience Better Well-being?</h2>
             <p class="cta-lead">Book a consultation or get in touch with our wellness experts today.</p>
             <div class="d-flex align-items-center gap-3 flex-wrap">
@@ -804,7 +812,7 @@
           </div>
 
           <!-- Right: 3 Checked Value Points -->
-          <div class="col-lg-5">
+          <div class="col-12 col-lg-5">
             <ul class="cta-check-list">
               <li><i class="bi bi-check-circle-fill"></i> Personalized Solutions</li>
               <li><i class="bi bi-check-circle-fill"></i> Expert Guidance</li>

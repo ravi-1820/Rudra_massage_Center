@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
           <i class="bi bi-exclamation-triangle-fill fs-5 text-warning"></i>
           <div>
             <strong>Product Not Found:</strong> The requested item <code>${escapeHtml(rawId)}</code> does not exist in our catalogue. Displaying our flagship solution <strong>${escapeHtml(product.name)}</strong> below.
-            <a href="services.html" class="alert-link ms-2">Back to Catalogue &rarr;</a>
+            <a href="/services/" class="alert-link ms-2">Back to Catalogue &rarr;</a>
           </div>
         </div>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -152,12 +152,12 @@ document.addEventListener("DOMContentLoaded", () => {
   // Pre-fill CTAs
   const enquireBtn = document.getElementById("detailEnquireBtn");
   if (enquireBtn) {
-    enquireBtn.href = `enquiry.html?service=${product.id}`;
+    enquireBtn.href = `/enquiry/?service=${product.id}`;
   }
 
   const demoBtn = document.getElementById("detailDemoBtn");
   if (demoBtn) {
-    demoBtn.href = `appointment.html?service=${product.id}`;
+    demoBtn.href = `/appointment/?service=${product.id}`;
   }
 
   // Render Related Products
@@ -180,8 +180,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 <span class="price-save">${p.need}</span>
               </div>
               <div class="product-actions-row">
-                <a href="service-detail.html?id=${p.id}" class="btn-veda-outline btn-veda-sm text-center">View</a>
-                <a href="enquiry.html?service=${p.id}" class="btn-veda-gold btn-veda-sm text-center">Enquire</a>
+                <a href="/service-detail/?id=${p.id}" class="btn-veda-outline btn-veda-sm text-center">View</a>
+                <a href="/appointment/?service=${p.id}" class="btn-veda-gold btn-veda-sm text-center">Book Appointment</a>
               </div>
             </div>
           </div>
