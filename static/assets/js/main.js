@@ -180,8 +180,9 @@ document.addEventListener("DOMContentLoaded", () => {
       const inputEl = document.getElementById("globalSearchInput");
       const query = inputEl ? inputEl.value.trim() : "";
       if (query) {
-        window.location.href = `services.html?q=${encodeURIComponent(query)}`;
+        window.location.href = `/services/?q=${encodeURIComponent(query)}`;
       }
     });
   }
+
 });
