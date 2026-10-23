@@ -30,7 +30,7 @@
               <div>
                 <h6 class="fw-bold text-forest mb-1">Demonstration & Experience Lounge</h6>
                 <p class="text-muted small mb-0">
-                  Rudra Massage & Wellness Centre, S.G. Highway, Bodakdev, Ahmedabad, Gujarat 380054 (Demo Address)
+                  {{ site_settings.business_address|default:"Rudra Massage & Wellness Centre, S.G. Highway, Bodakdev, Ahmedabad, Gujarat 380054" }}
                 </p>
               </div>
             </div>
@@ -40,7 +40,7 @@
               <div>
                 <h6 class="fw-bold text-forest mb-1">Phone Helpline</h6>
                 <p class="text-muted small mb-1">Toll-free Assistance & Orders:</p>
-                <a href="tel:+919825000000" class="fw-bold text-forest text-decoration-underline">+91 98250 00000</a>
+                <a href="tel:{{ site_settings.phone_digits|default:'+919825000000' }}" class="fw-bold text-forest text-decoration-underline">{{ site_settings.primary_phone|default:"+91 98250 00000" }}</a>
               </div>
             </div>
 
@@ -48,7 +48,7 @@
               <div class="quick-action-icon"><i class="bi bi-envelope-fill"></i></div>
               <div>
                 <h6 class="fw-bold text-forest mb-1">Email Inquiries</h6>
-                <a href="mailto:care@rudrawellness-demo.com" class="text-muted small">care@rudrawellness-demo.com</a>
+                <a href="mailto:{{ site_settings.contact_email|default:'care@rudrawellness.com' }}" class="text-muted small">{{ site_settings.contact_email|default:"care@rudrawellness.com" }}</a>
               </div>
             </div>
 
@@ -56,7 +56,7 @@
               <div class="quick-action-icon"><i class="bi bi-clock-fill"></i></div>
               <div>
                 <h6 class="fw-bold text-forest mb-1">Visiting & Consultation Hours</h6>
-                <p class="text-muted small mb-0">Monday to Saturday: 9:30 AM to 7:00 PM<br>Sunday: By Prior Appointment Only</p>
+                <p class="text-muted small mb-0">{{ site_settings.business_hours|default:"Monday to Saturday: 9:30 AM to 7:00 PM | Sunday: By Prior Appointment Only"|linebreaksbr }}</p>
               </div>
             </div>
           </div>
@@ -68,7 +68,7 @@
               <div>
                 <h5 class="fw-bold mb-1">Need Quick Answers?</h5>
                 <p class="small mb-2 text-white-50">Chat with our senior equipment advisor directly on WhatsApp.</p>
-                <a href="https://wa.me/919825000000" target="_blank" class="btn btn-sm btn-light fw-bold text-dark rounded-pill px-3">
+                <a href="https://wa.me/{{ site_settings.whatsapp_digits|default:'919825000000' }}" target="_blank" class="btn btn-sm btn-light fw-bold text-dark rounded-pill px-3">
                   Start WhatsApp Chat &rarr;
                 </a>
               </div>
@@ -80,43 +80,78 @@
         <div class="col-lg-7">
           <div class="card border rounded-4 p-4 p-md-5 shadow-sm">
             <h4 class="fw-bold text-forest mb-2">Send Us a Direct Message</h4>
-            <p class="text-muted small mb-4">Fill out the form below. Client-side validation is active with instant feedback.</p>
+            <p class="text-muted small mb-4">Fill out the form below. Our advisory specialists will get in touch with you promptly.</p>
 
-            <div class="form-error-summary alert alert-danger d-none mb-3"></div>
+            {% if form.errors %}
+              <div class="form-error-summary alert alert-danger mb-3">
+                <strong>Please resolve the following issues:</strong>
+                <ul class="mb-0 mt-1 small">
+                  {% for field in form %}
+                    {% for error in field.errors %}
+                      <li>{{ field.label|default:field.name|title }}: {{ error }}</li>
+                    {% endfor %}
+                  {% endfor %}
+                  {% for error in form.non_field_errors %}
+                    <li>{{ error }}</li>
+                  {% endfor %}
+                </ul>
+              </div>
+            {% endif %}
 
-            <form id="contactForm" novalidate>
+            <form id="contactForm" method="post" action="{% url 'user:contact' %}" data-backend-submit="true" novalidate onsubmit="const b=this.querySelector('button[type=submit]'); if(b){ b.disabled=true; b.innerHTML='<span class=\'spinner-border spinner-border-sm me-2\'></span>Submitting...'; }">
+              {% csrf_token %}
               <div class="row g-3">
                 <div class="col-md-6">
                   <label for="contactName" class="form-veda-label">Your Name *</label>
-                  <input type="text" id="contactName" class="form-veda-control" placeholder="e.g. Smt. Gita Mehta" required>
-                  <div class="invalid-feedback-custom"></div>
+                  <input type="text" name="name" id="contactName" class="form-veda-control {% if form.name.errors %}is-invalid{% endif %}" placeholder="e.g. Smt. Gita Mehta" value="{{ form.name.value|default:'' }}" required>
+                  {% if form.name.errors %}
+                    <div class="invalid-feedback-custom d-block text-danger small mt-1">{{ form.name.errors.0 }}</div>
+                  {% else %}
+                    <div class="invalid-feedback-custom"></div>
+                  {% endif %}
                 </div>
                 <div class="col-md-6">
                   <label for="contactEmail" class="form-veda-label">Email Address *</label>
-                  <input type="email" id="contactEmail" class="form-veda-control" placeholder="gita@example.com" required>
-                  <div class="invalid-feedback-custom"></div>
+                  <input type="email" name="email" id="contactEmail" class="form-veda-control {% if form.email.errors %}is-invalid{% endif %}" placeholder="gita@example.com" value="{{ form.email.value|default:'' }}" required>
+                  {% if form.email.errors %}
+                    <div class="invalid-feedback-custom d-block text-danger small mt-1">{{ form.email.errors.0 }}</div>
+                  {% else %}
+                    <div class="invalid-feedback-custom"></div>
+                  {% endif %}
                 </div>
                 <div class="col-md-6">
                   <label for="contactPhone" class="form-veda-label">Mobile Number (+91) *</label>
-                  <input type="tel" id="contactPhone" class="form-veda-control" data-type="indian-phone" placeholder="98250 12345" required>
-                  <div class="invalid-feedback-custom"></div>
+                  <input type="tel" name="phone" id="contactPhone" class="form-veda-control {% if form.phone.errors %}is-invalid{% endif %}" data-type="indian-phone" placeholder="98250 12345" value="{{ form.phone.value|default:'' }}" required>
+                  {% if form.phone.errors %}
+                    <div class="invalid-feedback-custom d-block text-danger small mt-1">{{ form.phone.errors.0 }}</div>
+                  {% else %}
+                    <div class="invalid-feedback-custom"></div>
+                  {% endif %}
                 </div>
                 <div class="col-md-6">
                   <label for="contactSubject" class="form-veda-label">Subject *</label>
-                  <select id="contactSubject" class="form-veda-select" required>
+                  <select name="subject" id="contactSubject" class="form-veda-select {% if form.subject.errors %}is-invalid{% endif %}" required>
                     <option value="">-- Choose Subject --</option>
-                    <option value="Product Enquiry">Product Specification Enquiry</option>
-                    <option value="Demo Request">Request In-Person Demo</option>
-                    <option value="Clinic Setup">Clinic / Bulk Purchase Setup</option>
-                    <option value="Support">Warranty & Support Request</option>
-                    <option value="Other">Other Feedback</option>
+                    <option value="Product Enquiry" {% if form.subject.value == 'Product Enquiry' %}selected{% endif %}>Product Specification Enquiry</option>
+                    <option value="Demo Request" {% if form.subject.value == 'Demo Request' %}selected{% endif %}>Request In-Person Demo</option>
+                    <option value="Clinic Setup" {% if form.subject.value == 'Clinic Setup' %}selected{% endif %}>Clinic / Bulk Purchase Setup</option>
+                    <option value="Support" {% if form.subject.value == 'Support' %}selected{% endif %}>Warranty & Support Request</option>
+                    <option value="Other" {% if form.subject.value == 'Other' %}selected{% endif %}>Other Feedback</option>
                   </select>
-                  <div class="invalid-feedback-custom"></div>
+                  {% if form.subject.errors %}
+                    <div class="invalid-feedback-custom d-block text-danger small mt-1">{{ form.subject.errors.0 }}</div>
+                  {% else %}
+                    <div class="invalid-feedback-custom"></div>
+                  {% endif %}
                 </div>
                 <div class="col-12">
                   <label for="contactMessage" class="form-veda-label">Message Details *</label>
-                  <textarea id="contactMessage" rows="4" class="form-veda-control" placeholder="Write your questions or notes here..." required></textarea>
-                  <div class="invalid-feedback-custom"></div>
+                  <textarea name="message" id="contactMessage" rows="4" class="form-veda-control {% if form.message.errors %}is-invalid{% endif %}" placeholder="Write your questions or notes here..." required>{{ form.message.value|default:'' }}</textarea>
+                  {% if form.message.errors %}
+                    <div class="invalid-feedback-custom d-block text-danger small mt-1">{{ form.message.errors.0 }}</div>
+                  {% else %}
+                    <div class="invalid-feedback-custom"></div>
+                  {% endif %}
                 </div>
                 <div class="col-12 mt-4">
                   <button type="submit" class="btn-veda-primary btn-veda-lg w-100">
@@ -135,7 +170,7 @@
         <h5 class="fw-bold text-forest mb-3"><i class="bi bi-map-fill text-gold me-2"></i>Location Map (Ahmedabad Experience Centre)</h5>
         <div class="ratio ratio-21x9 rounded-4 overflow-hidden border shadow-sm" style="background-color: #E2E8F0;">
           <iframe 
-            src="https://maps.google.com/maps?q=Bodakdev,%20Ahmedabad,%20Gujarat&t=&z=13&ie=UTF8&iwloc=&output=embed" 
+            src="{{ site_settings.google_maps_url|default:'https://maps.google.com/maps?q=Bodakdev,%20Ahmedabad,%20Gujarat&t=&z=13&ie=UTF8&iwloc=&output=embed' }}" 
             title="Rudra Massage & Wellness Location Map"
             style="border:0;" 
             allowfullscreen="" 

@@ -1,149 +1,317 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Therapy Solution Details | Rudra Massage & Wellness{% endblock %}
+{% block title %}{{ service.name }} | Rudra Massage & Wellness{% endblock %}
+
+{% block extra_css %}
+<style>
+  #detailTabs .nav-link {
+    color: var(--muted-foreground, #525252);
+    background: transparent;
+    border: 1px solid var(--border, #f4f6f8);
+    border-radius: 9999px;
+    padding: 0.6rem 1.4rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+  }
+  #detailTabs .nav-link:hover {
+    color: var(--foreground, #000000);
+    border-color: #51f0a8;
+  }
+  #detailTabs .nav-link.active {
+    color: #000000 !important;
+    background-color: #51f0a8 !important;
+    border-color: #51f0a8 !important;
+    box-shadow: 0 4px 14px rgba(81, 240, 168, 0.35);
+  }
+  .service-detail-img-box {
+    min-height: 380px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #ffffff;
+    border: 1px solid var(--border, #f4f6f8);
+    border-radius: 1.25rem;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  }
+  .service-detail-img-box img {
+    max-height: 400px;
+    width: 100%;
+    object-fit: contain;
+    padding: 1.25rem;
+  }
+</style>
+{% endblock %}
 
 {% block content %}
 <!-- Breadcrumbs Bar -->
-  <section class="py-3 section-bg-ivory border-bottom">
-    <div class="container">
-      <nav aria-label="breadcrumb">
-        <ol class="breadcrumb mb-0 small">
-          <li class="breadcrumb-item"><a href="{% url 'user:home' %}">Home</a></li>
-          <li class="breadcrumb-item"><a href="{% url 'user:services' %}">Catalogue</a></li>
-          <li class="breadcrumb-item active" id="breadcrumbCurrentProduct" aria-current="page">Loading product...</li>
-        </ol>
-      </nav>
-    </div>
-  </section>
+<section class="py-3 section-bg-ivory border-bottom">
+  <div class="container">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb mb-0 small align-items-center">
+        <li class="breadcrumb-item"><a href="{% url 'user:home' %}" class="text-decoration-none">Home</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'user:services' %}" class="text-decoration-none">Catalogue</a></li>
+        <li class="breadcrumb-item">
+          <a href="{% url 'user:services' %}?category={{ service.category.slug }}" class="text-decoration-none">{{ service.category.name }}</a>
+        </li>
+        <li class="breadcrumb-item active text-truncate" aria-current="page" style="max-width: 320px;">{{ service.name }}</li>
+      </ol>
+    </nav>
+  </div>
+</section>
 
-  <!-- Product Hero & Overview -->
-  <section class="section-py section-bg-white border-bottom">
-    <div class="container">
-      <div class="row g-5">
-        
-        <!-- Left: Gallery & Thumbnails -->
-        <div class="col-lg-6">
-          <div class="bg-light p-4 rounded-4 text-center border mb-3 position-relative" style="min-height: 400px; display: flex; align-items: center; justify-content: center;">
-            <span class="badge-custom badge-forest position-absolute top-0 start-0 m-3" id="detailBadge">Bestseller</span>
-            <img src="" id="detailMainImage" alt="Therapy Product" class="img-fluid rounded-3" style="max-height: 380px; object-fit: contain;">
-          </div>
-          <!-- Thumbnail Row -->
-          <div class="d-flex align-items-center gap-2 overflow-auto pb-2" id="detailThumbnails"></div>
+<!-- Product Hero & Overview -->
+<section class="section-py section-bg-white border-bottom">
+  <div class="container">
+    <div class="row g-5 align-items-center">
+      
+      <!-- Left: Service Image -->
+      <div class="col-lg-6">
+        <div class="service-detail-img-box">
+          {% if service.is_featured %}
+            <span class="badge-custom badge-forest position-absolute top-0 start-0 m-3 shadow-sm">
+              <i class="bi bi-star-fill me-1"></i>Featured
+            </span>
+          {% endif %}
+          {% if service.image %}
+            <img src="{{ service.image.url }}" alt="{{ service.name }}" class="img-fluid rounded-3">
+          {% else %}
+            <img src="{% static 'assets/images/rudra-wellness-logo.png' %}" alt="{{ service.name }}" class="img-fluid rounded-3 opacity-75">
+          {% endif %}
         </div>
-
-        <!-- Right: Information & Actions -->
-        <div class="col-lg-6">
-          <div class="d-flex align-items-center gap-2 mb-2">
-            <span class="badge bg-light text-forest border fw-bold" id="detailCategory">Therapy Machines</span>
-            <div class="small" id="detailRating"></div>
-          </div>
-
-          <h1 class="h2 fw-bold text-forest mb-3" id="detailTitle">Loading Title...</h1>
-          <p class="lead fs-6 text-muted mb-4" id="detailShortDesc"></p>
-
-          <!-- Pricing Block -->
-          <div class="p-3 rounded-3 section-bg-ivory border d-flex align-items-baseline gap-3 mb-4">
-            <span class="fs-2 fw-bold text-forest" id="detailPrice">₹0</span>
-            <span class="text-muted text-decoration-line-through fs-5" id="detailOriginalPrice">₹0</span>
-            <span class="badge bg-success-subtle text-success fw-bold px-3 py-1" id="detailDiscount">0% OFF</span>
-          </div>
-
-          <!-- Feature Bullets Preview -->
-          <h5 class="fw-bold text-forest mb-3">Key Therapeutic Highlights:</h5>
-          <ul class="list-unstyled mb-4" id="detailFeaturesList"></ul>
-
-          <!-- CTAs: Enquire Now & Book Demo -->
-          <div class="d-flex gap-3 flex-wrap mb-4">
-            <a href="{% url 'user:enquiry' %}" id="detailEnquireBtn" class="btn-veda-gold btn-veda-lg flex-grow-1 text-center">
-              <i class="bi bi-chat-text-fill me-2"></i> Enquire Now
-            </a>
-            <a href="{% url 'user:appointment' %}" id="detailDemoBtn" class="btn-veda-primary btn-veda-lg flex-grow-1 text-center">
-              <i class="bi bi-calendar2-check-fill me-2"></i> Book Product Demo
-            </a>
-          </div>
-
-          <!-- Tags -->
-          <div class="d-flex align-items-center gap-2 flex-wrap">
-            <span class="small text-muted fw-bold">Tags:</span>
-            <div id="detailTags" class="d-inline-flex flex-wrap"></div>
-          </div>
-        </div>
-
       </div>
+
+      <!-- Right: Information & Actions -->
+      <div class="col-lg-6">
+        <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
+          <a href="{% url 'user:services' %}?category={{ service.category.slug }}" class="badge bg-light text-forest border fw-bold text-decoration-none px-3 py-2">
+            <i class="bi bi-tag-fill me-1"></i>{{ service.category.name }}
+          </a>
+          {% if service.is_featured %}
+            <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2 fw-semibold">
+              <i class="bi bi-patch-check-fill me-1"></i>Signature Wellness Therapy
+            </span>
+          {% endif %}
+        </div>
+
+        <h1 class="h2 fw-bold text-forest mb-3">{{ service.name }}</h1>
+        <p class="lead fs-6 text-muted mb-4">{{ service.short_description }}</p>
+
+        <!-- Taxonomy Tags / Suitability -->
+        {% if service.customer_needs.all or service.body_parts.all or service.service_types.all or service.intended_uses.all %}
+          <div class="p-3 rounded-4 section-bg-ivory border mb-4">
+            <h6 class="fw-bold text-forest small mb-2 text-uppercase" style="letter-spacing: 0.05em;">Therapeutic Scope & Suitability:</h6>
+            <div class="d-flex flex-wrap gap-2">
+              {% for cn in service.customer_needs.all %}
+                <span class="product-tag-pill"><i class="bi bi-heart-pulse-fill me-1"></i>{{ cn.name }}</span>
+              {% endfor %}
+              {% for bp in service.body_parts.all %}
+                <span class="product-tag-pill"><i class="bi bi-geo-alt-fill me-1"></i>{{ bp.name }}</span>
+              {% endfor %}
+              {% for st in service.service_types.all %}
+                <span class="product-tag-pill"><i class="bi bi-gear-wide-connected me-1"></i>{{ st.name }}</span>
+              {% endfor %}
+              {% for iu in service.intended_uses.all %}
+                <span class="product-tag-pill"><i class="bi bi-check2-circle me-1"></i>{{ iu.name }}</span>
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+
+        <!-- CTAs: Book Appointment & Enquire Now -->
+        <div class="d-flex gap-3 flex-wrap mb-4">
+          <a href="{% url 'user:appointment' %}?service={{ service.id }}" class="btn-veda-primary btn-veda-lg flex-grow-1 text-center text-decoration-none">
+            <i class="bi bi-calendar2-check-fill me-2"></i> Book Appointment
+          </a>
+          <a href="{% url 'user:enquiry' %}?service={{ service.id }}" class="btn-veda-gold btn-veda-lg flex-grow-1 text-center text-decoration-none">
+            <i class="bi bi-chat-text-fill me-2"></i> Enquire Now
+          </a>
+        </div>
+
+        <div class="d-flex align-items-center gap-4 text-muted small pt-2 border-top">
+          <div><i class="bi bi-shield-check text-success me-1"></i> Certified Therapists</div>
+          <div><i class="bi bi-flower1 text-success me-1"></i> Pure Herbal Formulations</div>
+          <div><i class="bi bi-clock-history text-success me-1"></i> Custom Consultations</div>
+        </div>
+      </div>
+
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- Deep Dive Tabs: Detailed Specs, Precautions, Usage Instructions -->
-  <section class="section-py section-bg-ivory">
-    <div class="container">
-      <ul class="nav nav-pills justify-content-center mb-4 gap-2" id="detailTabs" role="tablist">
-        <li class="nav-item" role="presentation">
-          <button class="btn btn-outline-dark active px-4 py-2" id="desc-tab" data-bs-toggle="pill" data-bs-target="#descTabContent" type="button" role="tab">Comprehensive Details</button>
-        </li>
-        <li class="nav-item" role="presentation">
-          <button class="btn btn-outline-dark px-4 py-2" id="specs-tab" data-bs-toggle="pill" data-bs-target="#specsTabContent" type="button" role="tab">Specifications</button>
-        </li>
-        <li class="nav-item" role="presentation">
-          <button class="btn btn-outline-dark px-4 py-2" id="precautions-tab" data-bs-toggle="pill" data-bs-target="#precautionsTabContent" type="button" role="tab">Safety & Precautions</button>
-        </li>
-      </ul>
+<!-- Deep Dive Tabs: Detailed Description, Benefits, Precautions, Usage Instructions -->
+<section class="section-py section-bg-ivory">
+  <div class="container">
+    <ul class="nav nav-pills justify-content-center mb-4 gap-2 flex-wrap" id="detailTabs" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="desc-tab" data-bs-toggle="pill" data-bs-target="#descTabContent" type="button" role="tab" aria-controls="descTabContent" aria-selected="true">
+          <i class="bi bi-file-text me-1"></i> Description
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="benefits-tab" data-bs-toggle="pill" data-bs-target="#benefitsTabContent" type="button" role="tab" aria-controls="benefitsTabContent" aria-selected="false">
+          <i class="bi bi-heart-pulse me-1"></i> Benefits
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="usage-tab" data-bs-toggle="pill" data-bs-target="#usageTabContent" type="button" role="tab" aria-controls="usageTabContent" aria-selected="false">
+          <i class="bi bi-card-checklist me-1"></i> Usage Instructions
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="precautions-tab" data-bs-toggle="pill" data-bs-target="#precautionsTabContent" type="button" role="tab" aria-controls="precautionsTabContent" aria-selected="false">
+          <i class="bi bi-shield-exclamation me-1"></i> Safety & Precautions
+        </button>
+      </li>
+    </ul>
 
-      <div class="tab-content bg-white p-4 p-md-5 rounded-4 border shadow-sm" id="detailTabsContent">
-        <!-- Tab 1: Full Description -->
-        <div class="tab-pane fade show active" id="descTabContent" role="tabpanel">
-          <h4 class="fw-bold text-forest mb-3">Therapeutic Mechanism & Background</h4>
-          <p class="text-muted leading-relaxed" id="detailFullDesc"></p>
-          
-          <div class="alert alert-light border mt-4 p-3 d-flex align-items-center gap-3">
-            <i class="bi bi-info-circle-fill text-gold fs-3"></i>
-            <small class="text-muted">
-              <strong>Wellness Advisory:</strong> This apparatus is designed to promote relaxation, posture alignment, and muscle tension release. It is not an invasive surgical device or a replacement for direct medical diagnosis.
-            </small>
-          </div>
+    <div class="tab-content bg-white p-4 p-md-5 rounded-4 border shadow-sm" id="detailTabsContent">
+      <!-- Tab 1: Full Description -->
+      <div class="tab-pane fade show active" id="descTabContent" role="tabpanel" aria-labelledby="desc-tab">
+        <h4 class="fw-bold text-forest mb-3">Therapeutic Mechanism & Overview</h4>
+        <div class="text-muted leading-relaxed" style="font-size: 1.02rem; line-height: 1.8;">
+          {{ service.description|linebreaks }}
         </div>
-
-        <!-- Tab 2: Specifications -->
-        <div class="tab-pane fade" id="specsTabContent" role="tabpanel">
-          <h4 class="fw-bold text-forest mb-3">Technical & Engineering Specifications</h4>
-          <div class="table-responsive">
-            <table class="table table-bordered mb-0">
-              <tbody id="detailSpecsBody"></tbody>
-            </table>
-          </div>
+        
+        <div class="alert alert-light border mt-4 p-3 d-flex align-items-center gap-3 rounded-3">
+          <i class="bi bi-info-circle-fill text-gold fs-3 flex-shrink-0"></i>
+          <small class="text-muted">
+            <strong>Wellness Advisory:</strong> Rudra Massage & Wellness treatments and therapy devices are designed to facilitate holistic relaxation, musculoskeletal relief, and revitalized physical well-being.
+          </small>
         </div>
+      </div>
 
-        <!-- Tab 3: Safety Precautions -->
-        <div class="tab-pane fade" id="precautionsTabContent" role="tabpanel">
-          <h4 class="fw-bold text-forest mb-3">Important Health Precautions</h4>
+      <!-- Tab 2: Benefits -->
+      <div class="tab-pane fade" id="benefitsTabContent" role="tabpanel" aria-labelledby="benefits-tab">
+        <h4 class="fw-bold text-forest mb-3">Therapeutic Benefits</h4>
+        {% if service.benefits %}
+          <div class="text-muted leading-relaxed" style="font-size: 1.02rem; line-height: 1.8;">
+            {{ service.benefits|linebreaks }}
+          </div>
+        {% else %}
+          <p class="text-muted mb-3">
+            This therapy provides comprehensive soothing relief tailored to your unique anatomical constitution. Key advantages typically observed include:
+          </p>
+          <ul class="text-muted leading-relaxed mb-4">
+            <li>Alleviation of localized muscular tension, stiffness, and joint fatigue.</li>
+            <li>Stimulation of micro-circulation and enhanced lymphatic drainage.</li>
+            <li>Promotes deep neuromuscular relaxation, stress reduction, and restorative sleep.</li>
+          </ul>
+          <p class="small text-muted mb-0 fst-italic">
+            <i class="bi bi-stars text-gold me-1"></i>Detailed individual benefits will be curated and discussed during your personal consultation.
+          </p>
+        {% endif %}
+      </div>
+
+      <!-- Tab 3: Usage Instructions -->
+      <div class="tab-pane fade" id="usageTabContent" role="tabpanel" aria-labelledby="usage-tab">
+        <h4 class="fw-bold text-forest mb-3">Usage & Protocol Instructions</h4>
+        {% if service.usage_instructions %}
+          <div class="text-muted leading-relaxed" style="font-size: 1.02rem; line-height: 1.8;">
+            {{ service.usage_instructions|linebreaks }}
+          </div>
+        {% else %}
           <div class="p-3 bg-light rounded-3 border mb-3">
-            <p class="text-muted mb-0" id="detailPrecautions"></p>
+            <h6 class="fw-bold text-forest mb-2"><i class="bi bi-journal-check me-2"></i>Standard Clinical & In-Centre Protocol</h6>
+            <ol class="text-muted mb-0 ps-3 leading-relaxed">
+              <li class="mb-2"><strong>Pre-Therapy Preparation:</strong> Hydrate adequately and arrive 10 minutes prior to relax in our tranquil waiting lounge.</li>
+              <li class="mb-2"><strong>Therapist Guidance:</strong> Our certified practitioners adjust intensity, posture support, and treatment durations specifically to your comfort levels.</li>
+              <li><strong>Post-Session Care:</strong> Rest quietly for 10-15 minutes post-therapy to maximize neural assimilation and circulatory benefits.</li>
+            </ol>
           </div>
           <p class="small text-muted mb-0">
-            For individuals with pacemakers, active fractures, deep vein thrombosis, or unmanaged severe medical conditions, please consult your primary physician or physical therapist prior to use.
+            For home-use wellness products, a comprehensive manufacturer manual and guided orientation is provided upon delivery.
           </p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Related Solutions Recommendation Section -->
-  <section class="section-py section-bg-white border-top">
-    <div class="container">
-      <div class="d-flex align-items-center justify-content-between mb-4">
-        <div>
-          <span class="section-subtitle-tag">COMPLEMENTARY SUPPORT</span>
-          <h3 class="fw-bold text-forest mb-0">Related Therapy Solutions</h3>
-        </div>
-        <a href="{% url 'user:services' %}" class="btn-veda-outline btn-veda-sm">View Full Catalogue &rarr;</a>
+        {% endif %}
       </div>
 
-      <div class="row g-4" id="relatedProductsGrid"></div>
+      <!-- Tab 4: Precautions -->
+      <div class="tab-pane fade" id="precautionsTabContent" role="tabpanel" aria-labelledby="precautions-tab">
+        <h4 class="fw-bold text-forest mb-3">Important Safety & Health Precautions</h4>
+        {% if service.precautions %}
+          <div class="p-3 bg-light rounded-3 border mb-3">
+            <div class="text-muted mb-0 leading-relaxed" style="font-size: 1.02rem; line-height: 1.8;">
+              {{ service.precautions|linebreaks }}
+            </div>
+          </div>
+        {% endif %}
+        <div class="p-3 bg-light rounded-3 border mb-3">
+          <div class="d-flex gap-3 align-items-start">
+            <i class="bi bi-exclamation-triangle-fill text-warning fs-4 flex-shrink-0 mt-1"></i>
+            <div>
+              <h6 class="fw-bold text-forest mb-1">Pre-Treatment Health Considerations</h6>
+              <p class="small text-muted mb-0">
+                Please inform your therapist prior to commencing if you have active fractures, severe cardiac conditions, pacemakers, deep vein thrombosis (DVT), acute skin inflammations, or are pregnant.
+              </p>
+            </div>
+          </div>
+        </div>
+        <p class="small text-muted mb-0">
+          Always consult your physician before starting any rigorous therapy regimen if you are currently under specialized medical care.
+        </p>
+      </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  {% endblock %}
+<!-- Related Solutions Recommendation Section -->
+{% if related_services %}
+<section class="section-py section-bg-white border-top">
+  <div class="container">
+    <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
+      <div>
+        <span class="section-subtitle-tag">COMPLEMENTARY SUPPORT</span>
+        <h3 class="fw-bold text-forest mb-0">Related {{ service.category.name }} Solutions</h3>
+      </div>
+      <a href="{% url 'user:services' %}?category={{ service.category.slug }}" class="btn-veda-outline btn-veda-sm">View Category &rarr;</a>
+    </div>
 
-{% block extra_js %}
-<script src="{% static 'assets/js/service-detail.js' %}"></script>
+    <div class="row g-4">
+      {% for rel in related_services %}
+        <div class="col-md-6 col-lg-4 mb-3">
+          <div class="product-card h-100 d-flex flex-column">
+            <div class="product-image-box">
+              {% if rel.is_featured %}
+                <span class="product-badge-float badge-custom badge-forest">Featured</span>
+              {% endif %}
+              <span class="product-category-tag">{{ rel.category.name }}</span>
+              {% if rel.image %}
+                <img src="{{ rel.image.url }}" alt="{{ rel.name }}" loading="lazy">
+              {% else %}
+                <img src="{% static 'assets/images/rudra-wellness-logo.png' %}" alt="{{ rel.name }}" loading="lazy">
+              {% endif %}
+            </div>
+            <div class="product-body d-flex flex-column flex-grow-1">
+              <h4 class="product-title" title="{{ rel.name }}">{{ rel.name }}</h4>
+              <p class="product-desc">{{ rel.short_description }}</p>
+
+              <div class="product-tags-row mt-auto mb-3">
+                {% for bp in rel.body_parts.all %}
+                  <span class="product-tag-pill"><i class="bi bi-geo-alt-fill me-1"></i>{{ bp.name }}</span>
+                {% endfor %}
+                {% for cn in rel.customer_needs.all %}
+                  <span class="product-tag-pill"><i class="bi bi-heart-pulse-fill me-1"></i>{{ cn.name }}</span>
+                {% endfor %}
+              </div>
+
+              <div class="product-actions-row">
+                <a href="{% url 'user:service_detail' slug=rel.slug %}" class="btn-veda-outline btn-veda-sm text-center">
+                  View Details
+                </a>
+                <a href="{% url 'user:appointment' %}?service={{ rel.id }}" class="btn-veda-gold btn-veda-sm text-center">
+                  Book Appointment
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
 {% endblock %}

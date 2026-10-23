@@ -2441,3 +2441,250 @@
   color: var(--muted-foreground);
   margin-left: 2px;
 }
+
+/* ==========================================================================
+   Wellness Form Design System (Shared for Enquiry & Book Appointment)
+   ========================================================================== */
+.wellness-form-card {
+  background: #ffffff;
+  border: 1px solid rgba(226, 232, 240, 0.85);
+  border-radius: 20px;
+  box-shadow: 0 16px 40px -12px rgba(15, 23, 42, 0.05), 0 2px 8px rgba(15, 23, 42, 0.02);
+  transition: box-shadow 0.3s ease;
+}
+
+[data-theme="dark"] .wellness-form-card {
+  background: #111a15;
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 16px 40px -12px rgba(0, 0, 0, 0.45);
+}
+
+.reassurance-panel-wellness {
+  background: rgba(81, 240, 168, 0.12);
+  border: 1px solid rgba(13, 159, 93, 0.22);
+  border-radius: 14px;
+  padding: 16px 20px;
+}
+
+[data-theme="dark"] .reassurance-panel-wellness {
+  background: rgba(13, 159, 93, 0.15);
+  border-color: rgba(81, 240, 168, 0.3);
+}
+
+.reassurance-icon-box {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(81, 240, 168, 0.35);
+  color: #0d9f5d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+[data-theme="dark"] .reassurance-icon-box {
+  background: rgba(81, 240, 168, 0.2);
+  color: #51f0a8;
+}
+
+/* Form Input with Icon wrapper */
+.form-input-icon-wrap {
+  position: relative;
+}
+
+.form-input-icon-wrap .input-icon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #8a99a8;
+  font-size: 1.05rem;
+  pointer-events: none;
+  z-index: 2;
+  transition: color 0.2s ease;
+}
+
+.form-input-icon-wrap textarea ~ .input-icon,
+.form-input-icon-wrap.textarea-wrap .input-icon {
+  top: 20px;
+  transform: none;
+}
+
+.form-input-icon-wrap .form-veda-control,
+.form-input-icon-wrap .form-veda-select {
+  padding-left: 44px;
+  background-color: #f1f4f6;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 0.92rem;
+  color: #15232b;
+  min-height: 48px;
+  transition: all 0.2s ease;
+  scroll-margin-top: 110px;
+}
+
+[data-theme="dark"] .form-input-icon-wrap .form-veda-control,
+[data-theme="dark"] .form-input-icon-wrap .form-veda-select {
+  background-color: #19241d;
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #fdfdfd;
+}
+
+.form-input-icon-wrap .form-veda-control:focus,
+.form-input-icon-wrap .form-veda-select:focus {
+  background-color: #ffffff;
+  border-color: #51f0a8;
+  box-shadow: 0 0 0 3px rgba(81, 240, 168, 0.35);
+  color: #15232b;
+}
+
+[data-theme="dark"] .form-input-icon-wrap .form-veda-control:focus,
+[data-theme="dark"] .form-input-icon-wrap .form-veda-select:focus {
+  background-color: #1c2a21;
+  color: #ffffff;
+}
+
+.form-input-icon-wrap .form-veda-control:focus ~ .input-icon,
+.form-input-icon-wrap .form-veda-select:focus ~ .input-icon,
+.form-input-icon-wrap:focus-within .input-icon {
+  color: #0d9f5d;
+}
+
+/* Pill Grid for "What do you need help with?" */
+.enquiry-pill-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 10px;
+}
+
+.enquiry-pill-choice {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 0.86rem;
+  color: #15232b;
+  cursor: pointer;
+  margin-bottom: 0;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+[data-theme="dark"] .enquiry-pill-choice {
+  background-color: #17221a;
+  border-color: rgba(255, 255, 255, 0.08);
+  color: #e5e7eb;
+}
+
+.enquiry-pill-choice:hover {
+  border-color: #51f0a8;
+  background-color: rgba(81, 240, 168, 0.05);
+}
+
+.enquiry-pill-choice input[type="radio"] {
+  accent-color: #0d9f5d;
+  width: 17px;
+  height: 17px;
+  margin: 0;
+  flex-shrink: 0;
+}
+
+.enquiry-pill-choice.selected,
+.enquiry-pill-choice:has(input:checked) {
+  border-color: #0d9f5d;
+  background-color: rgba(81, 240, 168, 0.12);
+  font-weight: 600;
+  color: #0b7a48;
+}
+
+[data-theme="dark"] .enquiry-pill-choice.selected,
+[data-theme="dark"] .enquiry-pill-choice:has(input:checked) {
+  border-color: #51f0a8;
+  background-color: rgba(81, 240, 168, 0.15);
+  color: #51f0a8;
+}
+
+/* Inline Contact Method Radios */
+.contact-method-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  padding-top: 6px;
+}
+
+.contact-method-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.88rem;
+  cursor: pointer;
+  margin-bottom: 0;
+  color: #15232b;
+}
+
+[data-theme="dark"] .contact-method-pill {
+  color: #e5e7eb;
+}
+
+.contact-method-pill input[type="radio"] {
+  accent-color: #0d9f5d;
+  width: 16px;
+  height: 16px;
+  margin: 0;
+}
+
+/* Primary CTA Pill Button */
+.btn-wellness-submit {
+  background-color: #51f0a8;
+  color: #000000;
+  font-weight: 700;
+  font-size: 0.98rem;
+  padding: 13px 44px;
+  border-radius: 9999px;
+  border: none;
+  box-shadow: 0 8px 24px rgba(81, 240, 168, 0.45);
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-wellness-submit:hover {
+  background-color: #3de898;
+  color: #000000;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(81, 240, 168, 0.55);
+}
+
+.btn-wellness-submit:active {
+  transform: translateY(0);
+}
+
+/* Header Overlap Prevention */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 1030;
+}
+
+.section-wellness-flow {
+  padding-top: 36px;
+  padding-bottom: 64px;
+  scroll-margin-top: 90px;
+}
+
+@media (max-width: 768px) {
+  .enquiry-pill-grid {
+    grid-template-columns: 1fr;
+  }
+  .section-wellness-flow {
+    padding-top: 24px;
+    padding-bottom: 48px;
+  }
+}
+

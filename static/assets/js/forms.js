@@ -31,7 +31,7 @@ class FormHandler {
 
   static setupForm(formId, successCallback) {
     const form = document.getElementById(formId);
-    if (!form) return;
+    if (!form || form.dataset.backendSubmit === "true") return;
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -130,86 +130,8 @@ class FormHandler {
   }
 }
 
-// Helper to safely persist data to localStorage
-function saveToLocalStorageList(key, item) {
-  try {
-    const existing = JSON.parse(localStorage.getItem(key)) || [];
-    existing.unshift(item);
-    localStorage.setItem(key, JSON.stringify(existing));
-  } catch (err) {
-    console.warn("Storage write failed:", err);
-  }
-}
-
-// Prefill Service from URL Query Parameter '?service=...'
-document.addEventListener("DOMContentLoaded", () => {
-  const urlParams = new URLSearchParams(window.location.search);
-  const serviceParam = urlParams.get("service") || urlParams.get("id");
-  const serviceSelect = document.getElementById("serviceSelect");
-
-  if (serviceSelect && serviceParam && typeof WELLNESS_PRODUCTS !== "undefined") {
-    const matched = WELLNESS_PRODUCTS.find(p => p.id === serviceParam || p.categorySlug === serviceParam);
-    if (matched) {
-      serviceSelect.value = matched.id;
-    }
-  }
-
-  // Auto-init known forms
-  FormHandler.setupForm("enquiryForm", (form) => {
-    // Persist to admin enquiries
-    const name = form.querySelector("input[placeholder*='Shah'], input[type='text']")?.value || "Client";
-    const phone = form.querySelector("[data-type='indian-phone']")?.value || "+91 98250 00000";
-    const email = form.querySelector("input[type='email']")?.value || "";
-    const sSelect = form.querySelector("select");
-    const serviceName = sSelect && sSelect.selectedIndex >= 0 && sSelect.options[sSelect.selectedIndex].text !== "Choose a therapy solution..." ? sSelect.options[sSelect.selectedIndex].text : "General Therapy Consultation";
-    const todayStr = new Date().toISOString().split("T")[0];
-
-    const newEnq = {
-      id: `ENQ-${Math.floor(100 + Math.random() * 900)}`,
-      name,
-      email,
-      phone,
-      service: serviceName,
-      date: todayStr,
-      status: "New"
-    };
-    saveToLocalStorageList("admin_enquiries", newEnq);
-
-    showToast("Enquiry Received", "Thank you! Your request was logged to your demo portal session. Our specialist will respond within 24 hours.", "success");
-    const modalEl = document.getElementById("enquiryModal");
-    if (modalEl && typeof bootstrap !== "undefined") {
-      const modal = bootstrap.Modal.getInstance(modalEl);
-      if (modal) modal.hide();
-    }
-  });
-
-  FormHandler.setupForm("appointmentForm", (form) => {
-    // Persist to admin appointments
-    const name = form.querySelector("input[placeholder*='Shah'], input[type='text']")?.value || "Client";
-    const sSelect = form.querySelector("#serviceSelect") || form.querySelector("select");
-    const serviceName = sSelect && sSelect.selectedIndex >= 0 ? sSelect.options[sSelect.selectedIndex].text : "AyurSpine Lumbar Belt";
-    const dateVal = form.querySelector("input[type='date']")?.value || new Date().toISOString().split("T")[0];
-    const timeVal = form.querySelector("select[name='time'], select#aptTime")?.value || "10:30 AM";
-
-    const newApt = {
-      id: `APT-${Math.floor(400 + Math.random() * 500)}`,
-      client: name,
-      date: dateVal,
-      time: timeVal,
-      type: "Home Demo",
-      service: serviceName,
-      status: "Confirmed"
-    };
-    saveToLocalStorageList("admin_appointments", newApt);
-
-    showToast("Appointment Requested", "Demo consultation slot reserved and logged to admin dashboard! A confirmation demo notification has been recorded.", "success");
-  });
-
+  // Contact form submission feedback
   FormHandler.setupForm("contactForm", () => {
     showToast("Message Sent", "Thank you for reaching out to Rudra Massage & Wellness. We have received your message.", "success");
-  });
-
-  FormHandler.setupForm("supportForm", () => {
-    showToast("Support Ticket Created", "Ticket #RUDRA-8942 logged successfully in demo system.", "gold");
   });
 });

@@ -1,0 +1,169 @@
+{% extends 'custom_admin/admin_base.html' %}
+{% load static %}
+
+{% block title %}Ticket {{ support_request.ticket_number }} | Rudra Massage & Wellness Admin{% endblock %}
+
+{% block nav_support_requests %}active{% endblock %}
+
+{% block topbar_title %}Support Ticket {{ support_request.ticket_number }}{% endblock %}
+
+{% block topbar_actions %}
+<a href="{% url 'custom_admin:support_requests' %}" class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-1">
+  <i class="bi bi-arrow-left"></i> Back to Support Requests
+</a>
+{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+
+  <!-- Left Main Column (Customer Info, Ticket Details, Message) -->
+  <div class="col-lg-7 col-xl-8">
+
+    <!-- Customer Information Card -->
+    <div class="card border rounded-4 p-4 shadow-sm bg-white mb-4">
+      <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
+        <h5 class="fw-bold text-forest mb-0">
+          <i class="bi bi-person-badge me-2 text-gold"></i>Customer Information
+        </h5>
+        <span class="badge {% if support_request.status == 'new' %}bg-primary{% elif support_request.status == 'in_progress' %}bg-warning text-dark{% elif support_request.status == 'resolved' %}bg-success{% else %}bg-secondary{% endif %} px-3 py-2">
+          {{ support_request.get_status_display }}
+        </span>
+      </div>
+
+      <div class="row g-3">
+        <div class="col-sm-6">
+          <label class="text-muted small fw-semibold d-block">Customer Name</label>
+          <div class="fw-bold text-dark fs-6">{{ support_request.name }}</div>
+        </div>
+
+        <div class="col-sm-6">
+          <label class="text-muted small fw-semibold d-block">Telephone / Mobile</label>
+          <div class="fw-bold text-dark fs-6">
+            <a href="tel:{{ support_request.phone }}" class="text-forest text-decoration-none">
+              <i class="bi bi-telephone-outbound me-1"></i>{{ support_request.phone }}
+            </a>
+          </div>
+        </div>
+
+        <div class="col-sm-6">
+          <label class="text-muted small fw-semibold d-block">Email Address</label>
+          <div class="text-dark">
+            <a href="mailto:{{ support_request.email }}" class="text-decoration-none text-forest">
+              <i class="bi bi-envelope me-1"></i>{{ support_request.email }}
+            </a>
+          </div>
+        </div>
+
+        <div class="col-sm-6">
+          <label class="text-muted small fw-semibold d-block">Submission Timestamp</label>
+          <div class="text-dark">{{ support_request.created_at|date:"l, F d, Y" }} at {{ support_request.created_at|time:"h:i A" }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Request Details Card -->
+    <div class="card border rounded-4 p-4 shadow-sm bg-white mb-4">
+      <h5 class="fw-bold text-forest mb-3 pb-2 border-bottom">
+        <i class="bi bi-card-text me-2 text-gold"></i>Request Information
+      </h5>
+
+      <div class="row g-3 mb-3">
+        <div class="col-sm-6">
+          <label class="text-muted small fw-semibold d-block">Request Type</label>
+          <span class="badge bg-light text-dark border px-3 py-2">{{ support_request.get_request_type_display }}</span>
+        </div>
+
+        <div class="col-sm-6">
+          <label class="text-muted small fw-semibold d-block">Subject / Topic</label>
+          <div class="fw-semibold text-dark">{{ support_request.subject|default:"General Inquiry" }}</div>
+        </div>
+
+        {% if support_request.product_name %}
+        <div class="col-12">
+          <label class="text-muted small fw-semibold d-block">Equipment / Product Mentioned</label>
+          <div class="fw-semibold text-dark"><i class="bi bi-gear-fill me-1 text-gold"></i>{{ support_request.product_name }}</div>
+        </div>
+        {% endif %}
+      </div>
+
+      <div class="mt-3">
+        <label class="text-muted small fw-semibold d-block">Customer Message Details</label>
+        <div class="p-3 rounded-3 bg-light border text-dark mt-1" style="white-space: pre-wrap; line-height: 1.6;">
+          {{ support_request.message }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Sidebar Column (Status Management & Internal Notes) -->
+  <div class="col-lg-5 col-xl-4">
+    
+    <!-- Status Management Card -->
+    <div class="card border rounded-4 p-4 shadow-sm bg-white mb-4">
+      <h5 class="fw-bold text-forest mb-3 pb-2 border-bottom">
+        <i class="bi bi-sliders me-2 text-gold"></i>Ticket Management
+      </h5>
+
+      <form method="post" action="{% url 'custom_admin:support_request_detail' support_request.id %}">
+        {% csrf_token %}
+
+        <div class="mb-3">
+          <label for="supportRequestStatusSelect" class="form-veda-label">Workflow Status *</label>
+          <select name="status" id="supportRequestStatusSelect" class="form-select">
+            {% for code, label in status_choices %}
+              <option value="{{ code }}" {% if support_request.status == code %}selected{% endif %}>
+                {{ label }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label for="supportRequestAdminNotes" class="form-veda-label">Private Staff Notes</label>
+          <textarea name="admin_notes" id="supportRequestAdminNotes" rows="5" class="form-control" placeholder="Add confidential internal notes regarding technician review, warranty validity, phone consultations...">{{ support_request.admin_notes }}</textarea>
+          <small class="text-muted d-block mt-1">Staff-only notes. Never displayed to customers.</small>
+        </div>
+
+        <button type="submit" class="btn-veda-primary btn-veda-sm w-100">
+          <i class="bi bi-save me-1"></i> Update Ticket Status
+        </button>
+      </form>
+    </div>
+
+    <!-- Quick Communication Actions -->
+    <div class="card border rounded-4 p-4 shadow-sm bg-white mb-4">
+      <h6 class="fw-bold text-forest mb-3">
+        <i class="bi bi-chat-dots me-2 text-gold"></i>Direct Customer Outreach
+      </h6>
+
+      <div class="d-grid gap-2">
+        <a href="tel:{{ support_request.phone }}" class="btn btn-outline-forest btn-sm d-flex align-items-center justify-content-center gap-2 py-2">
+          <i class="bi bi-telephone-fill"></i> Call {{ support_request.phone }}
+        </a>
+
+        <a href="https://wa.me/{{ support_request.phone|cut:'+'|cut:' '|cut:'-' }}?text=Hello%20{{ support_request.name|urlencode }}%20this%20is%20Rudra%20Massage%20%26%20Wellness%20regarding%20your%20support%20ticket%20{{ support_request.ticket_number }}" target="_blank" class="btn btn-outline-success btn-sm d-flex align-items-center justify-content-center gap-2 py-2">
+          <i class="bi bi-whatsapp"></i> Chat on WhatsApp
+        </a>
+
+        <a href="mailto:{{ support_request.email }}?subject=Support%20Ticket%20{{ support_request.ticket_number }}%20-%20Rudra%20Massage%20%26%20Wellness" class="btn btn-outline-secondary btn-sm d-flex align-items-center justify-content-center gap-2 py-2">
+          <i class="bi bi-envelope-fill"></i> Email Customer
+        </a>
+      </div>
+    </div>
+
+    <!-- Audit Metadata Card -->
+    <div class="card border rounded-4 p-3 shadow-sm bg-light">
+      <div class="d-flex align-items-center justify-content-between small text-muted">
+        <span>Reference Number:</span>
+        <code class="fw-bold">{{ support_request.ticket_number }}</code>
+      </div>
+      <div class="d-flex align-items-center justify-content-between small text-muted mt-2">
+        <span>Last Modified:</span>
+        <span>{{ support_request.updated_at|date:"M d, Y H:i" }}</span>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+{% endblock %}

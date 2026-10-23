@@ -5,106 +5,164 @@
 
 {% block nav_settings %}active{% endblock %}
 
-{% block topbar_title %}Website Configuration & Localization{% endblock %}
+{% block topbar_title %}Website Configuration & Business Profile{% endblock %}
 
 {% block content %}
-<div class="row g-4">
-          <!-- Business Profile -->
-          <div class="col-lg-6">
-            <div class="card border rounded-4 p-4 shadow-sm bg-white h-100">
-              <h5 class="fw-bold text-forest mb-3"><i class="bi bi-building me-2 text-gold"></i>Business & Brand Profile</h5>
-              <form id="brandSettingsForm">
-                <div class="mb-3">
-                  <label for="settingsDisplayName" class="form-veda-label">Business Display Name</label>
-                  <input type="text" id="settingsDisplayName" class="form-veda-control" value="Rudra Massage & Wellness">
-                </div>
-                <div class="mb-3">
-                  <label for="settingsPhone" class="form-veda-label">Official Support Telephone</label>
-                  <input type="tel" id="settingsPhone" class="form-veda-control" value="+91 98250 00000">
-                </div>
-                <div class="mb-3">
-                  <label for="settingsEmail" class="form-veda-label">Official Support Email</label>
-                  <input type="email" id="settingsEmail" class="form-veda-control" value="care@rudrawellness.com">
-                </div>
-                <div class="mb-3">
-                  <label for="settingsAddress" class="form-veda-label">Ahmedabad Centre Physical Address</label>
-                  <textarea id="settingsAddress" class="form-veda-control" rows="2">Rudra Massage & Wellness Centre, S.G. Highway, Bodakdev, Ahmedabad, Gujarat 380054</textarea>
-                </div>
-                <button type="submit" class="btn-veda-primary btn-veda-sm">Save Brand Info</button>
-              </form>
+<form method="post" action="{% url 'custom_admin:settings' %}" novalidate>
+  {% csrf_token %}
+
+  {% if form.errors %}
+    <div class="alert alert-danger rounded-3 shadow-sm mb-4">
+      <h6 class="fw-bold mb-2"><i class="bi bi-exclamation-triangle-fill me-2"></i>Please correct the following errors:</h6>
+      <ul class="mb-0 small">
+        {% for field in form %}
+          {% for error in field.errors %}
+            <li><strong>{{ field.label|default:field.name|title }}:</strong> {{ error }}</li>
+          {% endfor %}
+        {% endfor %}
+        {% for error in form.non_field_errors %}
+          <li>{{ error }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+
+  <div class="row g-4">
+    <!-- Business Profile -->
+    <div class="col-lg-7">
+      <div class="card border rounded-4 p-4 shadow-sm bg-white h-100">
+        <h5 class="fw-bold text-forest mb-3">
+          <i class="bi bi-building me-2 text-gold"></i>Business & Brand Profile
+        </h5>
+        <p class="text-muted small mb-4">
+          This authoritative contact and location information is rendered across public headers, footers, contact pages, and digital profiles.
+        </p>
+
+        <div class="mb-3">
+          <label for="settingsDisplayName" class="form-veda-label">Business Display Name *</label>
+          <input type="text" name="business_name" id="settingsDisplayName" class="form-veda-control {% if form.business_name.errors %}is-invalid{% endif %}" value="{{ form.business_name.value|default:'' }}" required>
+          {% if form.business_name.errors %}
+            <div class="invalid-feedback-custom d-block text-danger small mt-1">{{ form.business_name.errors.0 }}</div>
+          {% endif %}
+        </div>
+
+        <div class="row g-3 mb-3">
+          <div class="col-md-6">
+            <label for="settingsPhone" class="form-veda-label">Official Support Telephone *</label>
+            <input type="tel" name="primary_phone" id="settingsPhone" class="form-veda-control {% if form.primary_phone.errors %}is-invalid{% endif %}" value="{{ form.primary_phone.value|default:'' }}" required>
+            {% if form.primary_phone.errors %}
+              <div class="invalid-feedback-custom d-block text-danger small mt-1">{{ form.primary_phone.errors.0 }}</div>
+            {% endif %}
+          </div>
+          <div class="col-md-6">
+            <label for="settingsWhatsApp" class="form-veda-label">WhatsApp Helpline Number *</label>
+            <input type="tel" name="whatsapp_number" id="settingsWhatsApp" class="form-veda-control {% if form.whatsapp_number.errors %}is-invalid{% endif %}" value="{{ form.whatsapp_number.value|default:'' }}" required>
+            {% if form.whatsapp_number.errors %}
+              <div class="invalid-feedback-custom d-block text-danger small mt-1">{{ form.whatsapp_number.errors.0 }}</div>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="settingsEmail" class="form-veda-label">Official Support Email *</label>
+          <input type="email" name="contact_email" id="settingsEmail" class="form-veda-control {% if form.contact_email.errors %}is-invalid{% endif %}" value="{{ form.contact_email.value|default:'' }}" required>
+          {% if form.contact_email.errors %}
+            <div class="invalid-feedback-custom d-block text-danger small mt-1">{{ form.contact_email.errors.0 }}</div>
+          {% endif %}
+        </div>
+
+        <div class="mb-3">
+          <label for="settingsAddress" class="form-veda-label">Physical Centre Address *</label>
+          <textarea name="business_address" id="settingsAddress" class="form-veda-control {% if form.business_address.errors %}is-invalid{% endif %}" rows="3" required>{{ form.business_address.value|default:'' }}</textarea>
+          {% if form.business_address.errors %}
+            <div class="invalid-feedback-custom d-block text-danger small mt-1">{{ form.business_address.errors.0 }}</div>
+          {% endif %}
+        </div>
+
+        <div class="mb-3">
+          <label for="settingsHours" class="form-veda-label">Operating / Consultation Hours</label>
+          <input type="text" name="business_hours" id="settingsHours" class="form-veda-control {% if form.business_hours.errors %}is-invalid{% endif %}" value="{{ form.business_hours.value|default:'' }}">
+          {% if form.business_hours.errors %}
+            <div class="invalid-feedback-custom d-block text-danger small mt-1">{{ form.business_hours.errors.0 }}</div>
+          {% endif %}
+        </div>
+
+        <div class="mb-3">
+          <label for="settingsMapsUrl" class="form-veda-label">Google Maps Embed URL</label>
+          <input type="url" name="google_maps_url" id="settingsMapsUrl" class="form-veda-control {% if form.google_maps_url.errors %}is-invalid{% endif %}" value="{{ form.google_maps_url.value|default:'' }}">
+          {% if form.google_maps_url.errors %}
+            <div class="invalid-feedback-custom d-block text-danger small mt-1">{{ form.google_maps_url.errors.0 }}</div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Website Display Preferences -->
+    <div class="col-lg-5">
+      <div class="card border rounded-4 p-4 shadow-sm bg-white h-100 d-flex flex-column justify-content-between">
+        <div>
+          <h5 class="fw-bold text-forest mb-3">
+            <i class="bi bi-toggles me-2 text-gold"></i>Display & Visibility Controls
+          </h5>
+          <p class="text-muted small mb-4">
+            Toggle visibility of global components on customer-facing pages.
+          </p>
+
+          <div class="card p-3 rounded-3 bg-light border-0 mb-3">
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" name="enable_announcement_banner" id="announcementToggle" {% if form.enable_announcement_banner.value %}checked{% endif %}>
+              <label class="form-check-label fw-semibold text-forest" for="announcementToggle">Enable Top Announcement Banner</label>
+            </div>
+            <small class="text-muted ps-4 d-block mt-1">Controls the top announcement bar on user pages when an active announcement exists.</small>
+          </div>
+
+          <div class="card p-3 rounded-3 bg-light border-0 mb-3">
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" name="enable_whatsapp_floating" id="whatsappFloatingToggle" {% if form.enable_whatsapp_floating.value %}checked{% endif %}>
+              <label class="form-check-label fw-semibold text-forest" for="whatsappFloatingToggle">Display Floating WhatsApp Contact Button</label>
+            </div>
+            <small class="text-muted ps-4 d-block mt-1">Shows the circular quick WhatsApp floating button in the bottom right corner.</small>
+          </div>
+
+          <div class="card p-3 rounded-3 bg-light border-0 mb-3">
+            <div class="d-flex align-items-center justify-content-between">
+              <div>
+                <span class="fw-semibold text-forest d-block">Currency Standard</span>
+                <small class="text-muted">Indian Rupee (INR ₹)</small>
+              </div>
+              <span class="badge bg-secondary">System Locked</span>
             </div>
           </div>
 
-          <!-- Localization & System Settings -->
-          <div class="col-lg-6">
-            <div class="card border rounded-4 p-4 shadow-sm bg-white h-100">
-              <h5 class="fw-bold text-forest mb-3"><i class="bi bi-translate me-2 text-gold"></i>Localization & Preferences</h5>
-              <form id="preferencesSettingsForm">
-                <div class="mb-3">
-                  <label for="settingsLang" class="form-veda-label">Default Website Language</label>
-                  <select id="settingsLang" class="form-veda-select">
-                    <option value="en" selected>English (Primary)</option>
-                    <option value="gu">ગુજરાતી (Gujarati)</option>
-                  </select>
-                </div>
-                <div class="mb-3">
-                  <label for="settingsCurrency" class="form-veda-label">Currency Symbol</label>
-                  <input type="text" id="settingsCurrency" class="form-veda-control" value="INR (₹)" readonly>
-                </div>
-                <div class="mb-3 form-check form-switch pt-2">
-                  <input class="form-check-input" type="checkbox" id="announcementToggle" checked>
-                  <label class="form-check-label fw-semibold" for="announcementToggle">Enable Top Announcement Banner</label>
-                </div>
-                <div class="mb-3 form-check form-switch">
-                  <input class="form-check-input" type="checkbox" id="whatsappFloatingToggle" checked>
-                  <label class="form-check-label fw-semibold" for="whatsappFloatingToggle">Display Floating WhatsApp Contact Button</label>
-                </div>
-                <button type="submit" class="btn-veda-primary btn-veda-sm">Save Preferences</button>
-              </form>
+          <div class="card p-3 rounded-3 bg-light border-0">
+            <div class="d-flex align-items-center justify-content-between">
+              <div>
+                <span class="fw-semibold text-forest d-block">Last Settings Update</span>
+                <small class="text-muted">{{ site_settings.updated_at|date:"M d, Y H:i"|default:"Initial state" }}</small>
+              </div>
+              <i class="bi bi-clock-history fs-4 text-forest"></i>
             </div>
           </div>
         </div>
+
+        <div class="mt-4 pt-3 border-top">
+          <button type="submit" class="btn-veda-primary btn-veda-lg w-100">
+            <i class="bi bi-check2-circle me-1"></i> Save Website Settings
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
 {% endblock %}
 
 {% block extra_js %}
 <script>
-    (function(){try{var t=localStorage.getItem('rudra_theme');if(t==='dark'||(!t&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)){document.documentElement.classList.add('dark');document.documentElement.setAttribute('data-theme','dark');}}catch(e){}})();
-  </script>
-<script>
-    // Persist brand settings in localStorage
-    document.addEventListener("DOMContentLoaded", () => {
-      try {
-        const savedBrand = JSON.parse(localStorage.getItem("admin_brand_settings"));
-        if (savedBrand) {
-          if (savedBrand.name) document.getElementById("settingsDisplayName").value = savedBrand.name;
-          if (savedBrand.phone) document.getElementById("settingsPhone").value = savedBrand.phone;
-          if (savedBrand.email) document.getElementById("settingsEmail").value = savedBrand.email;
-          if (savedBrand.address) document.getElementById("settingsAddress").value = savedBrand.address;
-        }
-      } catch (e) {}
-
-      const brandForm = document.getElementById("brandSettingsForm");
-      if (brandForm) {
-        brandForm.addEventListener("submit", (e) => {
-          e.preventDefault();
-          const data = {
-            name: document.getElementById("settingsDisplayName").value.trim(),
-            phone: document.getElementById("settingsPhone").value.trim(),
-            email: document.getElementById("settingsEmail").value.trim(),
-            address: document.getElementById("settingsAddress").value.trim()
-          };
-          localStorage.setItem("admin_brand_settings", JSON.stringify(data));
-          showToast("Saved", "Brand settings persisted to demo storage.", "success");
-        });
-      }
-
-      const prefForm = document.getElementById("preferencesSettingsForm");
-      if (prefForm) {
-        prefForm.addEventListener("submit", (e) => {
-          e.preventDefault();
-          showToast("Saved", "Website localization preferences saved.", "success");
-        });
-      }
-    });
-  </script>
+  // Clean up legacy localStorage settings key to ensure database is the sole authoritative source
+  document.addEventListener("DOMContentLoaded", () => {
+    try {
+      localStorage.removeItem("admin_brand_settings");
+    } catch (e) {}
+  });
+</script>
 {% endblock %}

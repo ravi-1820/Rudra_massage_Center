@@ -184,7 +184,7 @@
                       </div>
 
                       <div class="product-actions-row">
-                        <a href="{% url 'user:service_detail' %}?slug={{ service.slug }}" class="btn-veda-outline btn-veda-sm text-center">
+                        <a href="{% url 'user:service_detail' slug=service.slug %}" class="btn-veda-outline btn-veda-sm text-center">
                           View Details
                         </a>
                         <a href="{% url 'user:appointment' %}?service={{ service.id }}" class="btn-veda-gold btn-veda-sm text-center">

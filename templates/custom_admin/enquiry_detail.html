@@ -1,0 +1,219 @@
+{% extends 'custom_admin/admin_base.html' %}
+{% load static %}
+
+{% block title %}Enquiry #ENQ-{{ enquiry.id }} | Rudra Massage & Wellness Admin{% endblock %}
+
+{% block nav_enquiries %}active{% endblock %}
+
+{% block topbar_title %}Enquiry #ENQ-{{ enquiry.id }} — {{ enquiry.name }}{% endblock %}
+
+{% block topbar_actions %}
+<a href="{% url 'custom_admin:enquiries' %}" class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-1">
+  <i class="bi bi-arrow-left"></i> Back to Enquiries
+</a>
+{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+  
+  <!-- Left Main Column (Customer Info, Service Request, Message) -->
+  <div class="col-lg-7 col-xl-8">
+    
+    <!-- Customer Contact Information Card -->
+    <div class="card border rounded-4 p-4 shadow-sm bg-white mb-4">
+      <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
+        <h5 class="fw-bold text-forest mb-0">
+          <i class="bi bi-person-badge me-2 text-gold"></i>Customer Information
+        </h5>
+        <span class="badge {% if enquiry.status == 'new' %}bg-primary{% elif enquiry.status == 'contacted' %}bg-info text-dark{% elif enquiry.status == 'in_discussion' %}bg-warning text-dark{% elif enquiry.status == 'resolved' %}bg-success{% else %}bg-secondary{% endif %} px-3 py-2">
+          {{ enquiry.get_status_display }}
+        </span>
+      </div>
+
+      <div class="row g-3">
+        <!-- Name -->
+        <div class="col-sm-6">
+          <label class="text-muted small fw-semibold d-block">Customer Name</label>
+          <div class="fw-bold text-dark fs-6">{{ enquiry.name }}</div>
+        </div>
+
+        <!-- Phone -->
+        <div class="col-sm-6">
+          <label class="text-muted small fw-semibold d-block">Telephone / Mobile Number</label>
+          <div class="fw-bold text-dark fs-6">
+            <a href="tel:{{ enquiry.phone }}" class="text-forest text-decoration-none">
+              <i class="bi bi-telephone-outbound me-1"></i>{{ enquiry.phone }}
+            </a>
+          </div>
+        </div>
+
+        <!-- Email -->
+        <div class="col-sm-6">
+          <label class="text-muted small fw-semibold d-block">Email Address</label>
+          <div class="text-dark">
+            {% if enquiry.email %}
+              <a href="mailto:{{ enquiry.email }}" class="text-decoration-none text-forest">
+                <i class="bi bi-envelope me-1"></i>{{ enquiry.email }}
+              </a>
+            {% else %}
+              <span class="text-muted fst-italic">Not provided by customer</span>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- City -->
+        <div class="col-sm-6">
+          <label class="text-muted small fw-semibold d-block">City / Location</label>
+          <div class="text-dark fw-semibold">
+            <i class="bi bi-geo-alt me-1 text-danger"></i>{{ enquiry.city }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Therapy Request & Usage Intent Card -->
+    <div class="card border rounded-4 p-4 shadow-sm bg-white mb-4">
+      <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
+        <h5 class="fw-bold text-forest mb-0">
+          <i class="bi bi-heart-pulse me-2 text-gold"></i>Requested Solution & Therapy Interest
+        </h5>
+        {% if enquiry.service %}
+          <a href="{% url 'user:service_detail' slug=enquiry.service.slug %}" target="_blank" class="small text-forest text-decoration-none fw-semibold">
+            View Live Product <i class="bi bi-box-arrow-up-right ms-1"></i>
+          </a>
+        {% endif %}
+      </div>
+
+      <div class="row g-3">
+        <!-- Selected Service -->
+        <div class="col-md-6">
+          <label class="text-muted small fw-semibold d-block">Primary Machine / Solution</label>
+          {% if enquiry.service %}
+            <div class="d-flex align-items-center gap-2 mt-1">
+              {% if enquiry.service.image %}
+                <img src="{{ enquiry.service.image.url }}" alt="{{ enquiry.service.name }}" style="width: 48px; height: 48px; object-fit: cover; border-radius: 8px;">
+              {% endif %}
+              <div>
+                <div class="fw-bold text-dark">{{ enquiry.service.name }}</div>
+                <small class="text-muted">Category: {{ enquiry.service.category.name }}</small>
+              </div>
+            </div>
+          {% elif enquiry.service_name_snapshot %}
+            <div class="fw-bold text-dark">{{ enquiry.service_name_snapshot }}</div>
+            <small class="text-muted fst-italic">Saved snapshot from submission</small>
+          {% else %}
+            <div class="badge bg-light text-secondary border p-2">General Therapy Consultation (No specific machine preselected)</div>
+          {% endif %}
+        </div>
+
+        <!-- Usage Intention -->
+        <div class="col-md-6">
+          <label class="text-muted small fw-semibold d-block">Intended Application</label>
+          <div class="fw-semibold text-dark mt-1">
+            <i class="bi bi-bullseye me-1 text-forest"></i>{{ enquiry.get_usage_intention_display }}
+          </div>
+        </div>
+
+        <!-- Preferred Callback Time -->
+        <div class="col-md-6">
+          <label class="text-muted small fw-semibold d-block">Preferred Telephone Time Slot</label>
+          <div class="fw-semibold text-dark mt-1">
+            <i class="bi bi-clock-history me-1 text-gold"></i>{{ enquiry.get_callback_time_display }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Customer Message Card -->
+    <div class="card border rounded-4 p-4 shadow-sm bg-white">
+      <h5 class="fw-bold text-forest mb-3 pb-2 border-bottom">
+        <i class="bi bi-chat-left-quote me-2 text-gold"></i>Client Message & Symptoms
+      </h5>
+      {% if enquiry.message %}
+        <div class="p-3 border rounded-3 bg-light text-dark font-monospace" style="white-space: pre-line; line-height: 1.6;">
+          {{ enquiry.message }}
+        </div>
+      {% else %}
+        <div class="p-3 border rounded-3 bg-light text-muted fst-italic">
+          No additional notes or symptom description provided by client in the online form.
+        </div>
+      {% endif %}
+    </div>
+
+  </div>
+
+  <!-- Right Sidebar Column (Workflow Status, Staff Notes, Timestamps) -->
+  <div class="col-lg-5 col-xl-4">
+    
+    <!-- Status & Follow-up Notes Form Card -->
+    <div class="card border rounded-4 p-4 shadow-sm bg-white mb-4">
+      <h5 class="fw-bold text-forest mb-3 pb-2 border-bottom">
+        <i class="bi bi-kanban me-2 text-gold"></i>Lead Status & Follow-up
+      </h5>
+
+      <form method="post" novalidate>
+        {% csrf_token %}
+
+        <!-- Status Selection -->
+        <div class="mb-3">
+          <label for="{{ form.status.id_for_label }}" class="form-label fw-semibold small">
+            Workflow Status *
+          </label>
+          {{ form.status }}
+          {% if form.status.errors %}
+            <div class="text-danger small mt-1">{{ form.status.errors.0 }}</div>
+          {% endif %}
+        </div>
+
+        <!-- Staff Admin Notes -->
+        <div class="mb-4">
+          <label for="{{ form.admin_notes.id_for_label }}" class="form-label fw-semibold small">
+            Internal Staff Follow-Up Notes
+          </label>
+          {{ form.admin_notes }}
+          <small class="text-muted" style="font-size: 0.74rem;">Record phone discussion outcomes, customer objections, or scheduled home demo details.</small>
+          {% if form.admin_notes.errors %}
+            <div class="text-danger small mt-1">{{ form.admin_notes.errors.0 }}</div>
+          {% endif %}
+        </div>
+
+        <button type="submit" class="btn btn-veda-primary w-100 py-2 fw-bold shadow-sm">
+          <i class="bi bi-check2-circle me-1"></i> Save Workflow Update
+        </button>
+      </form>
+    </div>
+
+    <!-- Quick Communication Card -->
+    <div class="card border rounded-4 p-4 shadow-sm bg-white mb-4">
+      <h6 class="fw-bold text-forest mb-3">Quick Contact Actions</h6>
+      <div class="d-flex flex-column gap-2">
+        <a href="tel:{{ enquiry.phone }}" class="btn btn-outline-forest btn-sm d-flex align-items-center justify-content-center gap-2 py-2">
+          <i class="bi bi-telephone-fill"></i> Call {{ enquiry.phone }}
+        </a>
+        {% if enquiry.email %}
+          <a href="mailto:{{ enquiry.email }}?subject=Consultation Follow-Up%20-%20Rudra%20Massage%20%26%20Wellness" class="btn btn-outline-secondary btn-sm d-flex align-items-center justify-content-center gap-2 py-2">
+            <i class="bi bi-envelope-fill"></i> Email {{ enquiry.email }}
+          </a>
+        {% endif %}
+        <a href="https://wa.me/91{{ enquiry.phone }}?text=Hello%20{{ enquiry.name|urlencode }},%20this%20is%20Rudra%20Massage%20%26%20Wellness%20following%20up%20on%20your%20therapy%20enquiry." target="_blank" class="btn btn-outline-success btn-sm d-flex align-items-center justify-content-center gap-2 py-2">
+          <i class="bi bi-whatsapp"></i> Chat on WhatsApp
+        </a>
+      </div>
+    </div>
+
+    <!-- Audit Timestamps Card -->
+    <div class="card border rounded-4 p-3 shadow-sm bg-light text-muted small">
+      <div class="d-flex justify-content-between mb-1">
+        <span>Submitted Date:</span>
+        <span class="text-dark fw-semibold">{{ enquiry.created_at|date:"M d, Y H:i" }}</span>
+      </div>
+      <div class="d-flex justify-content-between">
+        <span>Last Modified:</span>
+        <span class="text-dark fw-semibold">{{ enquiry.updated_at|date:"M d, Y H:i" }}</span>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+{% endblock %}

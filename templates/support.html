@@ -46,7 +46,7 @@
             <div class="benefit-icon-box mx-auto"><i class="bi bi-whatsapp"></i></div>
             <h5 class="fw-bold text-forest mb-2">Direct Video Support</h5>
             <p class="small text-muted mb-3">Schedule a 10-minute video troubleshooting session with our biomedical technician.</p>
-            <a href="https://wa.me/919825000000" target="_blank" class="btn-veda-gold btn-veda-sm rounded-pill px-3">WhatsApp Assistance</a>
+            <a href="https://wa.me/{{ site_settings.whatsapp_digits|default:'919825000000' }}" target="_blank" class="btn-veda-gold btn-veda-sm rounded-pill px-3">WhatsApp Assistance</a>
           </div>
         </div>
       </div>
@@ -62,39 +62,76 @@
             <h4 class="fw-bold text-forest mb-1">Submit a Support Request Ticket</h4>
             <p class="text-muted small mb-4">Our support technicians review all tickets within 4 business hours.</p>
 
-            <form id="supportForm" novalidate>
+            {% if form.errors %}
+              <div class="form-error-summary alert alert-danger mb-3">
+                <strong>Please resolve the following errors:</strong>
+                <ul class="mb-0 mt-1 small">
+                  {% for field in form %}
+                    {% for error in field.errors %}
+                      <li>{{ field.label|default:field.name|title }}: {{ error }}</li>
+                    {% endfor %}
+                  {% endfor %}
+                  {% for error in form.non_field_errors %}
+                    <li>{{ error }}</li>
+                  {% endfor %}
+                </ul>
+              </div>
+            {% endif %}
+
+            <form id="supportForm" method="post" action="{% url 'user:support' %}" data-backend-submit="true" novalidate onsubmit="const b=this.querySelector('button[type=submit]'); if(b){ b.disabled=true; b.innerHTML='<span class=\'spinner-border spinner-border-sm me-2\'></span>Generating Ticket...'; }">
+              {% csrf_token %}
               <div class="row g-3">
                 <div class="col-md-6">
                   <label for="supName" class="form-veda-label">Your Full Name *</label>
-                  <input type="text" id="supName" class="form-veda-control" placeholder="Rakesh Vora" required>
-                  <div class="invalid-feedback-custom"></div>
+                  <input type="text" name="name" id="supName" class="form-veda-control {% if form.name.errors %}is-invalid{% endif %}" placeholder="Rakesh Vora" value="{{ form.name.value|default:'' }}" required>
+                  {% if form.name.errors %}
+                    <div class="invalid-feedback-custom d-block text-danger small mt-1">{{ form.name.errors.0 }}</div>
+                  {% else %}
+                    <div class="invalid-feedback-custom"></div>
+                  {% endif %}
                 </div>
                 <div class="col-md-6">
                   <label for="supEmail" class="form-veda-label">Email Address *</label>
-                  <input type="email" id="supEmail" class="form-veda-control" placeholder="rakesh@example.com" required>
-                  <div class="invalid-feedback-custom"></div>
+                  <input type="email" name="email" id="supEmail" class="form-veda-control {% if form.email.errors %}is-invalid{% endif %}" placeholder="rakesh@example.com" value="{{ form.email.value|default:'' }}" required>
+                  {% if form.email.errors %}
+                    <div class="invalid-feedback-custom d-block text-danger small mt-1">{{ form.email.errors.0 }}</div>
+                  {% else %}
+                    <div class="invalid-feedback-custom"></div>
+                  {% endif %}
                 </div>
                 <div class="col-md-6">
                   <label for="supPhone" class="form-veda-label">Phone (+91) *</label>
-                  <input type="tel" id="supPhone" class="form-veda-control" data-type="indian-phone" placeholder="98250 12345" required>
-                  <div class="invalid-feedback-custom"></div>
+                  <input type="tel" name="phone" id="supPhone" class="form-veda-control {% if form.phone.errors %}is-invalid{% endif %}" data-type="indian-phone" placeholder="98250 12345" value="{{ form.phone.value|default:'' }}" required>
+                  {% if form.phone.errors %}
+                    <div class="invalid-feedback-custom d-block text-danger small mt-1">{{ form.phone.errors.0 }}</div>
+                  {% else %}
+                    <div class="invalid-feedback-custom"></div>
+                  {% endif %}
                 </div>
                 <div class="col-md-6">
                   <label for="supProduct" class="form-veda-label">Select Equipment *</label>
-                  <select id="supProduct" class="form-veda-select" required>
+                  <select name="product_name" id="supProduct" class="form-veda-select {% if form.product_name.errors %}is-invalid{% endif %}" required>
                     <option value="">-- Choose Product --</option>
-                    <option value="AyurSpine Belt">AyurSpine Lumbar Belt</option>
-                    <option value="Kansa Vataki">Kansa Vataki Foot Massager</option>
-                    <option value="OrthoRelief Guard">OrthoRelief Knee Guard</option>
-                    <option value="Shirodhara Console">Shirodhara Console</option>
-                    <option value="Other">Other Device</option>
+                    <option value="AyurSpine Belt" {% if form.product_name.value == 'AyurSpine Belt' %}selected{% endif %}>AyurSpine Lumbar Belt</option>
+                    <option value="Kansa Vataki" {% if form.product_name.value == 'Kansa Vataki' %}selected{% endif %}>Kansa Vataki Foot Massager</option>
+                    <option value="OrthoRelief Guard" {% if form.product_name.value == 'OrthoRelief Guard' %}selected{% endif %}>OrthoRelief Knee Guard</option>
+                    <option value="Shirodhara Console" {% if form.product_name.value == 'Shirodhara Console' %}selected{% endif %}>Shirodhara Console</option>
+                    <option value="Other" {% if form.product_name.value == 'Other' %}selected{% endif %}>Other Device</option>
                   </select>
-                  <div class="invalid-feedback-custom"></div>
+                  {% if form.product_name.errors %}
+                    <div class="invalid-feedback-custom d-block text-danger small mt-1">{{ form.product_name.errors.0 }}</div>
+                  {% else %}
+                    <div class="invalid-feedback-custom"></div>
+                  {% endif %}
                 </div>
                 <div class="col-12">
                   <label for="supDesc" class="form-veda-label">Issue Description *</label>
-                  <textarea id="supDesc" rows="4" class="form-veda-control" placeholder="Describe what part requires replacement or guidance..." required></textarea>
-                  <div class="invalid-feedback-custom"></div>
+                  <textarea name="message" id="supDesc" rows="4" class="form-veda-control {% if form.message.errors %}is-invalid{% endif %}" placeholder="Describe what part requires replacement or guidance..." required>{{ form.message.value|default:'' }}</textarea>
+                  {% if form.message.errors %}
+                    <div class="invalid-feedback-custom d-block text-danger small mt-1">{{ form.message.errors.0 }}</div>
+                  {% else %}
+                    <div class="invalid-feedback-custom"></div>
+                  {% endif %}
                 </div>
                 <div class="col-12 mt-4 text-center">
                   <button type="submit" class="btn-veda-primary btn-veda-lg px-5">

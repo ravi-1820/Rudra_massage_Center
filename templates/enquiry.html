@@ -1,130 +1,607 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Submit Enquiry | Rudra Massage & Wellness{% endblock %}
+{% block title %}How Can We Help You? | Rudra Massage & Wellness{% endblock %}
+
+{% block extra_css %}
+<style>
+  /* Wellness Design System - Bulletproof Styles */
+  .site-header {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 1030 !important;
+    background-color: #ffffff !important;
+    border-bottom: 1px solid rgba(229, 231, 235, 0.9) !important;
+    box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05) !important;
+  }
+
+  [data-theme="dark"] .site-header {
+    background-color: #0d1a14 !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+  }
+
+  .section-wellness-flow {
+    padding-top: 40px !important;
+    padding-bottom: 64px !important;
+    background-color: #fdfdfd;
+  }
+
+  [data-theme="dark"] .section-wellness-flow {
+    background-color: #0a0a0a;
+  }
+
+  .wellness-form-card {
+    background: #ffffff !important;
+    border: 1px solid rgba(226, 232, 240, 0.9) !important;
+    border-radius: 20px !important;
+    box-shadow: 0 16px 45px -12px rgba(15, 23, 42, 0.07), 0 2px 10px rgba(15, 23, 42, 0.03) !important;
+  }
+
+  [data-theme="dark"] .wellness-form-card {
+    background: #111a15 !important;
+    border-color: rgba(255, 255, 255, 0.08) !important;
+    box-shadow: 0 16px 45px -12px rgba(0, 0, 0, 0.5) !important;
+  }
+
+  .reassurance-panel-wellness {
+    background: rgba(81, 240, 168, 0.12) !important;
+    border: 1px solid rgba(13, 159, 93, 0.25) !important;
+    border-radius: 14px !important;
+    padding: 16px 20px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 16px !important;
+  }
+
+  [data-theme="dark"] .reassurance-panel-wellness {
+    background: rgba(13, 159, 93, 0.15) !important;
+    border-color: rgba(81, 240, 168, 0.3) !important;
+  }
+
+  .reassurance-icon-box {
+    width: 42px !important;
+    height: 42px !important;
+    border-radius: 50% !important;
+    background: rgba(81, 240, 168, 0.35) !important;
+    color: #0d9f5d !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 1.25rem !important;
+    flex-shrink: 0 !important;
+  }
+
+  [data-theme="dark"] .reassurance-icon-box {
+    background: rgba(81, 240, 168, 0.2) !important;
+    color: #51f0a8 !important;
+  }
+
+  /* Form Input with Icon wrapper */
+  .form-input-icon-wrap {
+    position: relative !important;
+    display: block !important;
+    width: 100% !important;
+  }
+
+  .form-input-icon-wrap .input-icon {
+    position: absolute !important;
+    left: 16px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    color: #8a99a8 !important;
+    font-size: 1.05rem !important;
+    pointer-events: none !important;
+    z-index: 5 !important;
+    line-height: 1 !important;
+  }
+
+  .form-input-icon-wrap.textarea-wrap .input-icon {
+    top: 20px !important;
+    transform: none !important;
+  }
+
+  .form-input-icon-wrap .form-veda-control,
+  .form-input-icon-wrap .form-veda-select {
+    padding-left: 46px !important;
+    background-color: #f1f4f6 !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 12px !important;
+    height: 48px !important;
+    width: 100% !important;
+    color: #15232b !important;
+    font-size: 0.92rem !important;
+    outline: none !important;
+    transition: all 0.2s ease !important;
+    box-sizing: border-box !important;
+    display: block !important;
+  }
+
+  .form-input-icon-wrap textarea.form-veda-control {
+    height: auto !important;
+    min-height: 110px !important;
+    padding-top: 14px !important;
+    padding-left: 46px !important;
+  }
+
+  [data-theme="dark"] .form-input-icon-wrap .form-veda-control,
+  [data-theme="dark"] .form-input-icon-wrap .form-veda-select {
+    background-color: #19241d !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+    color: #fdfdfd !important;
+  }
+
+  .form-input-icon-wrap .form-veda-control:focus,
+  .form-input-icon-wrap .form-veda-select:focus {
+    background-color: #ffffff !important;
+    border-color: #51f0a8 !important;
+    box-shadow: 0 0 0 3px rgba(81, 240, 168, 0.35) !important;
+    color: #15232b !important;
+  }
+
+  [data-theme="dark"] .form-input-icon-wrap .form-veda-control:focus,
+  [data-theme="dark"] .form-input-icon-wrap .form-veda-select:focus {
+    background-color: #1c2a21 !important;
+    color: #ffffff !important;
+  }
+
+  .form-input-icon-wrap:focus-within .input-icon {
+    color: #0d9f5d !important;
+  }
+
+  /* 6-Pill Interactive Grid */
+  .enquiry-pill-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 10px !important;
+  }
+
+  @media (max-width: 991px) {
+    .enquiry-pill-grid {
+      grid-template-columns: repeat(2, 1fr) !important;
+    }
+  }
+
+  @media (max-width: 575px) {
+    .enquiry-pill-grid {
+      grid-template-columns: 1fr !important;
+    }
+  }
+
+  .enquiry-pill-choice {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    padding: 12px 14px !important;
+    background-color: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 12px !important;
+    font-size: 0.86rem !important;
+    color: #15232b !important;
+    cursor: pointer !important;
+    margin: 0 !important;
+    transition: all 0.2s ease !important;
+    user-select: none !important;
+  }
+
+  [data-theme="dark"] .enquiry-pill-choice {
+    background-color: #17221a !important;
+    border-color: rgba(255, 255, 255, 0.08) !important;
+    color: #e5e7eb !important;
+  }
+
+  .enquiry-pill-choice:hover {
+    border-color: #51f0a8 !important;
+    background-color: rgba(81, 240, 168, 0.05) !important;
+  }
+
+  .enquiry-pill-choice input[type="radio"] {
+    accent-color: #0d9f5d !important;
+    width: 17px !important;
+    height: 17px !important;
+    margin: 0 !important;
+    flex-shrink: 0 !important;
+  }
+
+  .enquiry-pill-choice.selected,
+  .enquiry-pill-choice:has(input:checked) {
+    border-color: #0d9f5d !important;
+    background-color: rgba(81, 240, 168, 0.15) !important;
+    font-weight: 600 !important;
+    color: #0b7a48 !important;
+  }
+
+  [data-theme="dark"] .enquiry-pill-choice.selected,
+  [data-theme="dark"] .enquiry-pill-choice:has(input:checked) {
+    border-color: #51f0a8 !important;
+    background-color: rgba(81, 240, 168, 0.18) !important;
+    color: #51f0a8 !important;
+  }
+
+  /* Contact Method Radios */
+  .contact-method-group {
+    display: flex !important;
+    align-items: center !important;
+    gap: 20px !important;
+    padding-top: 8px !important;
+    flex-wrap: wrap !important;
+  }
+
+  .contact-method-pill {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    font-size: 0.9rem !important;
+    cursor: pointer !important;
+    margin: 0 !important;
+    color: #15232b !important;
+  }
+
+  [data-theme="dark"] .contact-method-pill {
+    color: #e5e7eb !important;
+  }
+
+  .contact-method-pill input[type="radio"] {
+    accent-color: #0d9f5d !important;
+    width: 17px !important;
+    height: 17px !important;
+    margin: 0 !important;
+  }
+
+  /* Mint-Green Pill CTA Button */
+  .btn-wellness-submit {
+    background-color: #51f0a8 !important;
+    color: #000000 !important;
+    font-weight: 700 !important;
+    font-size: 1rem !important;
+    padding: 14px 48px !important;
+    border-radius: 9999px !important;
+    border: none !important;
+    box-shadow: 0 8px 24px rgba(81, 240, 168, 0.45) !important;
+    cursor: pointer !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: all 0.22s ease !important;
+    text-decoration: none !important;
+    outline: none !important;
+  }
+
+  .btn-wellness-submit:hover {
+    background-color: #3de898 !important;
+    color: #000000 !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 12px 28px rgba(81, 240, 168, 0.55) !important;
+  }
+
+  .btn-wellness-submit:active {
+    transform: translateY(0) !important;
+  }
+</style>
+{% endblock %}
 
 {% block content %}
-<!-- Banner -->
-  <section class="py-5 section-bg-ivory border-bottom text-center">
-    <div class="container">
-      <span class="section-subtitle-tag">DEDICATED ADVISORY</span>
-      <h1 class="h2 fw-bold text-forest mb-2">Therapy & Equipment Enquiry</h1>
-      <p class="text-muted max-w-md mx-auto mb-0">
-        Submit your enquiry regarding therapy devices, home setups, or clinic bulk orders. Our technical team responds within 24 hours.
+<section class="section-wellness-flow">
+  <div class="container">
+
+    <!-- Page Heading -->
+    <div class="text-center mb-4">
+      <span class="section-subtitle-tag"
+        style="color: #0d9f5d; letter-spacing: 0.12em; font-weight: 700; font-size: 0.78rem;">DEDICATED ADVISORY</span>
+      <h1 class="h2 fw-bold text-dark mt-2 mb-2" style="font-family: var(--font-heading); color: #15232b;">How Can We
+        Help You?</h1>
+      <p class="text-muted mx-auto mb-3" style="max-width: 620px; font-size: 0.95rem;">
+        Get expert guidance on therapy machines, wellness equipment and home or clinic setups.
       </p>
-    </div>
-  </section>
-
-  <!-- Enquiry Form Container -->
-  <section class="section-py section-bg-white">
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col-lg-8">
-          
-          <div class="card border rounded-4 p-4 p-md-5 shadow-sm">
-            <div class="alert alert-light border mb-4 d-flex align-items-center gap-2">
-              <i class="bi bi-info-circle-fill text-gold fs-4"></i>
-              <div class="small text-muted" data-i18n="form.demoNotice">
-                Notice: This form operates in frontend demo mode. Input fields validate in real-time and provide instant mock submission feedback.
-              </div>
-            </div>
-
-            <div class="form-error-summary alert alert-danger d-none mb-4"></div>
-
-            <form id="enquiryForm" novalidate>
-              <div class="row g-3">
-                <!-- Full Name -->
-                <div class="col-md-6">
-                  <label for="fullName" class="form-veda-label" data-i18n="form.fullName">Full Name *</label>
-                  <input type="text" id="fullName" class="form-veda-control" placeholder="e.g. Ramesh Patel" required>
-                  <div class="invalid-feedback-custom"></div>
-                </div>
-
-                <!-- Email -->
-                <div class="col-md-6">
-                  <label for="email" class="form-veda-label" data-i18n="form.email">Email Address *</label>
-                  <input type="email" id="email" class="form-veda-control" placeholder="ramesh@example.com" required>
-                  <div class="invalid-feedback-custom"></div>
-                </div>
-
-                <!-- Phone (Indian) -->
-                <div class="col-md-6">
-                  <label for="phone" class="form-veda-label" data-i18n="form.phone">Mobile Number (+91) *</label>
-                  <input type="tel" id="phone" class="form-veda-control" data-type="indian-phone" placeholder="98250 12345" required>
-                  <div class="invalid-feedback-custom"></div>
-                </div>
-
-                <!-- City -->
-                <div class="col-md-6">
-                  <label for="city" class="form-veda-label" data-i18n="form.city">City / Location *</label>
-                  <input type="text" id="city" class="form-veda-control" placeholder="e.g. Ahmedabad, Surat, Rajkot" required>
-                  <div class="invalid-feedback-custom"></div>
-                </div>
-
-                <!-- Service Selection -->
-                <div class="col-12">
-                  <label for="serviceSelect" class="form-veda-label" data-i18n="form.service">Therapy Solution of Interest *</label>
-                  <select id="serviceSelect" class="form-veda-select" required>
-                    <option value="">-- Choose Equipment / Service --</option>
-                    <option value="wt-101">AyurSpine Deep Shiatsu Lumbar & Back Decompression Belt</option>
-                    <option value="wt-102">Pure Vedic Bronze (Kansa) Vataki Foot Therapy Massager</option>
-                    <option value="wt-103">OrthoRelief Infrared Heated Knee & Joint Guard</option>
-                    <option value="wt-104">CervicalFlex Smart Trapezius & Neck Massager</option>
-                    <option value="wt-105">OcuRest Smart Air-Pressure Eye Care Massager</option>
-                    <option value="wt-106">AyurShiro Shirodhara Automated Drip Console</option>
-                    <option value="wt-107">VedaRoot Scalp Red Light Therapy Helmet</option>
-                    <option value="wt-108">PranaFlow Sequential Leg Compression Boots</option>
-                    <option value="wt-109">AgniFit Whole Body Vibration Platform</option>
-                    <option value="wt-112">DharaSteam Ayurvedic Herbal Steam Generator</option>
-                    <option value="general">General Wellness Consultation / Other Solution</option>
-                  </select>
-                  <div class="invalid-feedback-custom"></div>
-                </div>
-
-                <!-- Enquiry Type -->
-                <div class="col-md-6">
-                  <label class="form-veda-label">Usage Intention</label>
-                  <select class="form-veda-select" id="usageIntention">
-                    <option value="personal">Personal / Family Home Use</option>
-                    <option value="clinic">Physiotherapy / Wellness Clinic</option>
-                    <option value="elderly">Specialized Senior Citizen Care</option>
-                    <option value="distribution">Bulk Dealership / Reselling</option>
-                  </select>
-                </div>
-
-                <!-- Preferred Callback Time -->
-                <div class="col-md-6">
-                  <label class="form-veda-label">Preferred Callback Time</label>
-                  <select class="form-veda-select" id="callbackTime">
-                    <option value="morning">Morning (10:00 AM - 1:00 PM)</option>
-                    <option value="afternoon">Afternoon (2:00 PM - 5:00 PM)</option>
-                    <option value="evening">Evening (5:00 PM - 8:00 PM)</option>
-                  </select>
-                </div>
-
-                <!-- Message -->
-                <div class="col-12">
-                  <label for="message" class="form-veda-label" data-i18n="form.message">Specific Questions / Discomfort Details</label>
-                  <textarea id="message" rows="4" class="form-veda-control" placeholder="Please describe any specific pain symptoms, questions regarding dimensions, or request for customized advice..."></textarea>
-                </div>
-
-                <!-- Submit Button -->
-                <div class="col-12 mt-4 text-center">
-                  <button type="submit" class="btn-veda-primary btn-veda-lg px-5" data-i18n="btn.submitEnquiry">
-                    Submit Enquiry
-                  </button>
-                </div>
-              </div>
-            </form>
-          </div>
-
-        </div>
+      <div class="d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill small fw-semibold"
+        style="background: rgba(81, 240, 168, 0.15); color: #0b7a48; border: 1px solid rgba(81, 240, 168, 0.4);">
+        <i class="bi bi-clock"></i> Our team typically responds within one business day.
       </div>
     </div>
-  </section>
 
-  {% endblock %}
+    <!-- Form Container -->
+    <div class="row justify-content-center">
+      <div class="col-lg-9 col-xl-8">
+
+        <div class="card wellness-form-card p-4 p-md-5">
+
+          <!-- Reassurance Notice Panel -->
+          <div class="reassurance-panel-wellness mb-4">
+            <div class="reassurance-icon-box">
+              <i class="bi bi-shield-check"></i>
+            </div>
+            <div>
+              <h6 class="fw-bold mb-1 text-dark" style="font-size: 0.92rem;">Your details are handled with care</h6>
+              <p class="small text-muted mb-0" style="font-size: 0.84rem;">
+                We use your information to respond to your enquiry and coordinate follow-up.
+              </p>
+            </div>
+          </div>
+
+          <!-- Django Messages -->
+          {% if messages %}
+          {% for message in messages %}
+          <div
+            class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show rounded-3 mb-4 shadow-sm d-flex align-items-center"
+            role="alert">
+            {% if message.tags == 'success' %}
+            <i class="bi bi-check-circle-fill text-success me-2 fs-5"></i>
+            {% elif message.tags == 'error' or message.tags == 'danger' %}
+            <i class="bi bi-exclamation-triangle-fill text-danger me-2 fs-5"></i>
+            {% else %}
+            <i class="bi bi-info-circle-fill text-primary me-2 fs-5"></i>
+            {% endif %}
+            <div class="flex-grow-1">{{ message }}</div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+          {% endfor %}
+          {% endif %}
+
+          <!-- Form Errors Summary -->
+          {% if form.errors %}
+          <div class="alert alert-danger rounded-3 mb-4 shadow-sm" role="alert">
+            <div class="d-flex align-items-center gap-2 mb-2">
+              <i class="bi bi-exclamation-circle-fill fs-5"></i>
+              <strong>Please correct the following errors before submitting:</strong>
+            </div>
+            <ul class="mb-0 ps-3 small">
+              {% for field, errors in form.errors.items %}
+              {% for error in errors %}
+              <li>{{ error }}</li>
+              {% endfor %}
+              {% endfor %}
+            </ul>
+          </div>
+          {% endif %}
+
+          <form id="enquiryForm" method="POST" action="{% url 'user:enquiry' %}" data-backend-submit="true" novalidate>
+            {% csrf_token %}
+            <div class="row g-3">
+
+              <!-- Full Name -->
+              <div class="col-md-6">
+                <label for="fullName" class="form-veda-label">
+                  <span data-i18n="form.fullName">Full Name</span> <span class="text-danger">*</span>
+                </label>
+                <div class="form-input-icon-wrap">
+                  <i class="bi bi-person input-icon"></i>
+                  <input type="text" name="name" id="fullName"
+                    class="form-veda-control {% if form.name.errors %}is-invalid{% endif %}"
+                    placeholder="Enter Name" value="{{ form.name.value|default:'' }}" required>
+                </div>
+                {% if form.name.errors %}
+                <div class="invalid-feedback-custom text-danger small mt-1">{{ form.name.errors.0 }}</div>
+                {% endif %}
+              </div>
+
+              <!-- Email Address -->
+              <div class="col-md-6">
+                <label for="email" class="form-veda-label">
+                  <span data-i18n="form.email">Email Address</span> <span class="text-muted fw-normal"
+                    style="font-size: 0.8rem;">(Optional)</span>
+                </label>
+                <div class="form-input-icon-wrap">
+                  <i class="bi bi-envelope input-icon"></i>
+                  <input type="email" name="email" id="email"
+                    class="form-veda-control {% if form.email.errors %}is-invalid{% endif %}"
+                    placeholder="Enter Email" value="{{ form.email.value|default:'' }}">
+                </div>
+                {% if form.email.errors %}
+                <div class="invalid-feedback-custom text-danger small mt-1">{{ form.email.errors.0 }}</div>
+                {% endif %}
+              </div>
+
+              <!-- Mobile Number -->
+              <div class="col-md-6">
+                <label for="phone" class="form-veda-label">
+                  <span data-i18n="form.phone">Mobile Number (+91)</span> <span class="text-danger">*</span>
+                </label>
+                <div class="form-input-icon-wrap">
+                  <i class="bi bi-telephone input-icon"></i>
+                  <input type="tel" name="phone" id="phone"
+                    class="form-veda-control {% if form.phone.errors %}is-invalid{% endif %}" data-type="indian-phone"
+                    placeholder="Enter Mobile Number" value="{{ form.phone.value|default:'' }}" required>
+                </div>
+                {% if form.phone.errors %}
+                <div class="invalid-feedback-custom text-danger small mt-1">{{ form.phone.errors.0 }}</div>
+                {% endif %}
+              </div>
+
+              <!-- City -->
+              <div class="col-md-6">
+                <label for="city" class="form-veda-label">
+                  <span data-i18n="form.city">City</span> <span class="text-danger">*</span>
+                </label>
+                <div class="form-input-icon-wrap">
+                  <i class="bi bi-geo-alt input-icon"></i>
+                  <input type="text" name="city" id="city"
+                    class="form-veda-control {% if form.city.errors %}is-invalid{% endif %}"
+                    placeholder="Enter City" value="{{ form.city.value|default:'' }}" required>
+                </div>
+                {% if form.city.errors %}
+                <div class="invalid-feedback-custom text-danger small mt-1">{{ form.city.errors.0 }}</div>
+                {% endif %}
+              </div>
+
+              <!-- What do you need help with? -->
+              <div class="col-12 mt-3">
+                <label class="form-veda-label">
+                  What do you need help with? <span class="text-muted fw-normal"
+                    style="font-size: 0.8rem;">(Optional)</span>
+                </label>
+                <div class="enquiry-pill-grid mt-1">
+                  <label class="enquiry-pill-choice {% if form.enquiry_type.value == 'therapy_machine' or not form.enquiry_type.value %}selected{% endif %}">
+                    <input type="radio" name="enquiry_type" value="therapy_machine" {% if form.enquiry_type.value == 'therapy_machine' or not form.enquiry_type.value %}checked{% endif %}>
+                    <span>Therapy machine / wellness product</span>
+                  </label>
+                  <label class="enquiry-pill-choice {% if form.enquiry_type.value == 'home_setup' %}selected{% endif %}">
+                    <input type="radio" name="enquiry_type" value="home_setup" {% if form.enquiry_type.value == 'home_setup' %}checked{% endif %}>
+                    <span>Home wellness setup</span>
+                  </label>
+                  <label class="enquiry-pill-choice {% if form.enquiry_type.value == 'clinic_setup' %}selected{% endif %}">
+                    <input type="radio" name="enquiry_type" value="clinic_setup" {% if form.enquiry_type.value == 'clinic_setup' %}checked{% endif %}>
+                    <span>Clinic / professional setup</span>
+                  </label>
+                  <label class="enquiry-pill-choice {% if form.enquiry_type.value == 'bulk_business' %}selected{% endif %}">
+                    <input type="radio" name="enquiry_type" value="bulk_business" {% if form.enquiry_type.value == 'bulk_business' %}checked{% endif %}>
+                    <span>Bulk or business enquiry</span>
+                  </label>
+                  <label class="enquiry-pill-choice {% if form.enquiry_type.value == 'product_support' %}selected{% endif %}">
+                    <input type="radio" name="enquiry_type" value="product_support" {% if form.enquiry_type.value == 'product_support' %}checked{% endif %}>
+                    <span>Existing product support</span>
+                  </label>
+                  <label class="enquiry-pill-choice {% if form.enquiry_type.value == 'guidance' %}selected{% endif %}">
+                    <input type="radio" name="enquiry_type" value="guidance" {% if form.enquiry_type.value == 'guidance' %}checked{% endif %}>
+                    <span>Not sure — I need guidance</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Service Selection -->
+              <div class="col-md-6 mt-3">
+                <label for="serviceSelect" class="form-veda-label">
+                  <span data-i18n="form.service">Select Service / Machine</span> <span class="text-muted fw-normal" style="font-size: 0.8rem;">(Optional)</span>
+                </label>
+                <div class="form-input-icon-wrap">
+                  <i class="bi bi-search input-icon"></i>
+                  <select id="serviceSelect" name="service"
+                    class="form-veda-select {% if form.service.errors %}is-invalid{% endif %}">
+                    <option value="">-- Search for a service or product... --</option>
+                    {% for s in services %}
+                    <option value="{{ s.id }}" {% if form.service.value|stringformat:'s' == s.id|stringformat:'s' or selected_service_id == s.id %}selected{% endif %}>
+                      {{ s.name }} ({{ s.category.name }})
+                    </option>
+                    {% endfor %}
+                  </select>
+                </div>
+                {% if form.service.errors %}
+                <div class="invalid-feedback-custom text-danger small mt-1">{{ form.service.errors.0 }}</div>
+                {% endif %}
+              </div>
+
+              <!-- Usage Intention -->
+              <div class="col-md-6 mt-3">
+                <label for="usageIntention" class="form-veda-label">
+                  Usage Intention <span class="text-muted fw-normal" style="font-size: 0.8rem;">(Optional)</span>
+                </label>
+                <div class="form-input-icon-wrap">
+                  <i class="bi bi-compass input-icon"></i>
+                  <select class="form-veda-select" id="usageIntention" name="usage_intention">
+                    <option value="personal" {% if form.usage_intention.value == 'personal' or not form.usage_intention.value %}selected{% endif %}>Personal / Family Home Use</option>
+                    <option value="clinic" {% if form.usage_intention.value == 'clinic' %}selected{% endif %}>Physiotherapy / Wellness Clinic</option>
+                    <option value="elderly" {% if form.usage_intention.value == 'elderly' %}selected{% endif %}>Specialized Senior Citizen Care</option>
+                    <option value="distribution" {% if form.usage_intention.value == 'distribution' %}selected{% endif %}>Bulk Dealership / Reselling</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Preferred Callback Time -->
+              <div class="col-md-6">
+                <label for="callbackTime" class="form-veda-label">
+                  Preferred Callback Time <span class="text-muted fw-normal" style="font-size: 0.8rem;">(Optional)</span>
+                </label>
+                <div class="form-input-icon-wrap">
+                  <i class="bi bi-clock input-icon"></i>
+                  <select class="form-veda-select" id="callbackTime" name="callback_time">
+                    <option value="morning" {% if form.callback_time.value == 'morning' or not form.callback_time.value %}selected{% endif %}>Morning (10:00 AM - 1:00 PM)</option>
+                    <option value="afternoon" {% if form.callback_time.value == 'afternoon' %}selected{% endif %}>Afternoon (2:00 PM - 5:00 PM)</option>
+                    <option value="evening" {% if form.callback_time.value == 'evening' %}selected{% endif %}>Evening (5:00 PM - 8:00 PM)</option>
+                    <option value="anytime" {% if form.callback_time.value == 'anytime' %}selected{% endif %}>Anytime</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Preferred Contact Method -->
+              <div class="col-md-6">
+                <label class="form-veda-label">
+                  Preferred Contact Method <span class="text-muted fw-normal" style="font-size: 0.8rem;">(Optional)</span>
+                </label>
+                <div class="contact-method-group">
+                  <label class="contact-method-pill">
+                    <input type="radio" name="preferred_contact_method" value="phone" {% if form.preferred_contact_method.value == 'phone' or not form.preferred_contact_method.value %}checked{% endif %}>
+                    <i class="bi bi-telephone text-success"></i> Phone
+                  </label>
+                  <label class="contact-method-pill">
+                    <input type="radio" name="preferred_contact_method" value="whatsapp" {% if form.preferred_contact_method.value == 'whatsapp' %}checked{% endif %}>
+                    <i class="bi bi-whatsapp text-success"></i> WhatsApp
+                  </label>
+                  <label class="contact-method-pill">
+                    <input type="radio" name="preferred_contact_method" value="email" {% if form.preferred_contact_method.value == 'email' %}checked{% endif %}>
+                    <i class="bi bi-envelope text-primary"></i> Email
+                  </label>
+                </div>
+              </div>
+
+              <!-- Message -->
+              <div class="col-12 mt-3">
+                <label for="message" class="form-veda-label">
+                  <span data-i18n="form.message">Your Message / Specific Concerns</span> <span
+                    class="text-muted fw-normal" style="font-size: 0.8rem;">(Optional)</span>
+                </label>
+                <div class="form-input-icon-wrap textarea-wrap position-relative">
+                  <i class="bi bi-chat-left-text input-icon"></i>
+                  <textarea id="message" name="message" rows="4" maxlength="1000"
+                    class="form-veda-control {% if form.message.errors %}is-invalid{% endif %}"
+                    placeholder="Enter Your Message">{{ form.message.value|default:'' }}</textarea>
+                  <div class="text-end text-muted mt-1" style="font-size: 0.75rem;" id="charCounter">0/1000</div>
+                </div>
+                {% if form.message.errors %}
+                <div class="invalid-feedback-custom text-danger small mt-1">{{ form.message.errors.0 }}</div>
+                {% endif %}
+              </div>
+
+              <!-- Submit Button -->
+              <div class="col-12 mt-4 text-center">
+                <button type="submit" class="btn-wellness-submit" id="submitEnquiryBtn">
+                  <i class="bi bi-send-fill me-2"></i> <span data-i18n="btn.submitEnquiry">Send Enquiry</span>
+                </button>
+                <div class="text-center text-muted small mt-3">
+                  <i class="bi bi-lock-fill me-1"></i> Your information is secure and will only be used to respond to
+                  your enquiry.
+                </div>
+              </div>
+
+            </div>
+          </form>
+
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+{% endblock %}
 
 {% block extra_js %}
 <script src="{% static 'assets/js/forms.js' %}"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Make entire pill choice clickable & update selected class
+    const pillLabels = document.querySelectorAll('.enquiry-pill-choice');
+    pillLabels.forEach(label => {
+      const radio = label.querySelector('input[type="radio"]');
+      label.addEventListener('click', function () {
+        pillLabels.forEach(l => l.classList.remove('selected'));
+        this.classList.add('selected');
+        if (radio) radio.checked = true;
+      });
+      if (radio) {
+        radio.addEventListener('change', function () {
+          pillLabels.forEach(l => l.classList.remove('selected'));
+          if (this.checked) label.classList.add('selected');
+        });
+      }
+    });
+
+    const msgArea = document.getElementById('message');
+    const counter = document.getElementById('charCounter');
+    if (msgArea && counter) {
+      const updateCount = () => {
+        counter.textContent = `${msgArea.value.length}/1000`;
+      };
+      msgArea.addEventListener('input', updateCount);
+      updateCount();
+    }
+  });
+</script>
 {% endblock %}

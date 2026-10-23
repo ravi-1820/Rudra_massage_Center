@@ -1,4 +1,8 @@
+import re
+import uuid
+from django.core.exceptions import ValidationError
 from django.db import models
+from django.utils import timezone
 from django.utils.text import slugify
 
 # Create your models here.
@@ -18,6 +22,17 @@ class Category(models.Model):
 
     class Meta:
         ordering = ["display_order", "name"]
+        verbose_name = "Category"
+        verbose_name_plural = "Categories"
+
+    def clean(self):
+        if self.name and not self.name.strip():
+            raise ValidationError({"name": "Category name cannot be only whitespace."})
+
+    def save(self, *args, **kwargs):
+        if not self.slug and self.name:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name
@@ -78,6 +93,19 @@ class Service(models.Model):
 
     class Meta:
         ordering = ["display_order", "name"]
+        verbose_name = "Product / Service"
+        verbose_name_plural = "Products & Services"
+
+    def clean(self):
+        if self.name and not self.name.strip():
+            raise ValidationError({"name": "Service name cannot be only whitespace."})
+        if self.short_description and not self.short_description.strip():
+            raise ValidationError({"short_description": "Short description cannot be only whitespace."})
+
+    def save(self, *args, **kwargs):
+        if not self.slug and self.name:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name
@@ -87,6 +115,11 @@ class CustomerNeed(models.Model):
     name = models.CharField(max_length=100, unique=True)
     slug = models.SlugField(unique=True)
     is_active = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ["name"]
+        verbose_name = "Customer Need"
+        verbose_name_plural = "Customer Needs"
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -102,6 +135,11 @@ class BodyPart(models.Model):
     slug = models.SlugField(unique=True)
     is_active = models.BooleanField(default=True)
 
+    class Meta:
+        ordering = ["name"]
+        verbose_name = "Body Part"
+        verbose_name_plural = "Body Parts"
+
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.name)
@@ -115,6 +153,11 @@ class ServiceType(models.Model):
     name = models.CharField(max_length=100, unique=True)
     slug = models.SlugField(unique=True)
     is_active = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ["name"]
+        verbose_name = "Service Type"
+        verbose_name_plural = "Service Types"
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -130,6 +173,11 @@ class IntendedUse(models.Model):
     slug = models.SlugField(unique=True)
     is_active = models.BooleanField(default=True)
 
+    class Meta:
+        ordering = ["name"]
+        verbose_name = "Intended Use"
+        verbose_name_plural = "Intended Uses"
+
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.name)
@@ -138,4 +186,519 @@ class IntendedUse(models.Model):
     def __str__(self):
         return self.name
 
+
+class Offer(models.Model):
+    title = models.CharField(max_length=200)
+    badge_tag = models.CharField(
+        max_length=50,
+        blank=True,
+        help_text="e.g. 'Festive Exclusive', 'Elders First'",
+    )
+    discount_title = models.CharField(
+        max_length=100,
+        help_text="e.g. 'Flat 25% OFF', 'Extra ₹1,500 OFF'",
+    )
+    description = models.TextField()
+    promo_code = models.CharField(
+        max_length=50,
+        blank=True,
+        help_text="e.g. 'FESTIVE25'",
+    )
+    validity_text = models.CharField(
+        max_length=150,
+        blank=True,
+        help_text="e.g. 'Valid till November 15, 2026' or 'Ongoing Community Senior Offer'",
+    )
+    valid_from = models.DateTimeField(
+        null=True,
+        blank=True,
+        help_text="Start date/time for scheduled activation (optional)",
+    )
+    valid_until = models.DateTimeField(
+        null=True,
+        blank=True,
+        help_text="End date/time for expiration (optional)",
+    )
+    is_active = models.BooleanField(default=True)
+    display_order = models.PositiveIntegerField(default=0)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["display_order", "-created_at"]
+        verbose_name = "Special Offer"
+        verbose_name_plural = "Special Offers"
+
+    def clean(self):
+        if self.valid_from and self.valid_until and self.valid_from > self.valid_until:
+            raise ValidationError({"valid_until": "End date/time cannot be earlier than start date/time."})
+
+    @property
+    def is_currently_valid(self):
+        if not self.is_active:
+            return False
+        now = timezone.now()
+        if self.valid_from and self.valid_from > now:
+            return False
+        if self.valid_until and self.valid_until < now:
+            return False
+        return True
+
+    def __str__(self):
+        return self.title
+
+
+class Announcement(models.Model):
+    message = models.CharField(
+        max_length=300,
+        help_text="Primary announcement text displayed in top banner",
+    )
+    badge_text = models.CharField(
+        max_length=50,
+        blank=True,
+        default="Special Offer",
+        help_text="Prefix badge label e.g. 'Special Offer'",
+    )
+    link_text = models.CharField(
+        max_length=100,
+        blank=True,
+        default="Shop Now →",
+    )
+    link_url = models.CharField(
+        max_length=255,
+        blank=True,
+        default="/offers/",
+    )
+    valid_from = models.DateTimeField(
+        null=True,
+        blank=True,
+        help_text="Start date/time for scheduled activation (optional)",
+    )
+    valid_until = models.DateTimeField(
+        null=True,
+        blank=True,
+        help_text="End date/time for expiration (optional)",
+    )
+    is_active = models.BooleanField(default=True)
+    display_order = models.PositiveIntegerField(default=0)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["display_order", "-created_at"]
+        verbose_name = "Announcement Banner"
+        verbose_name_plural = "Announcement Banners"
+
+    def clean(self):
+        if self.valid_from and self.valid_until and self.valid_from > self.valid_until:
+            raise ValidationError({"valid_until": "End date/time cannot be earlier than start date/time."})
+
+    @property
+    def is_currently_valid(self):
+        if not self.is_active:
+            return False
+        now = timezone.now()
+        if self.valid_from and self.valid_from > now:
+            return False
+        if self.valid_until and self.valid_until < now:
+            return False
+        return True
+
+    def __str__(self):
+        return self.message[:50]
+
+
+class Enquiry(models.Model):
+    class Status(models.TextChoices):
+        NEW = "new", "New"
+        CONTACTED = "contacted", "Contacted"
+        IN_DISCUSSION = "in_discussion", "In Discussion"
+        RESOLVED = "resolved", "Resolved"
+        CLOSED = "closed", "Closed"
+
+    class UsageIntention(models.TextChoices):
+        PERSONAL = "personal", "Personal / Family Home Use"
+        CLINIC = "clinic", "Physiotherapy / Wellness Clinic"
+        ELDERLY = "elderly", "Specialized Senior Citizen Care"
+        DISTRIBUTION = "distribution", "Bulk Dealership / Reselling"
+
+    class CallbackTime(models.TextChoices):
+        MORNING = "morning", "Morning (10:00 AM - 1:00 PM)"
+        AFTERNOON = "afternoon", "Afternoon (2:00 PM - 5:00 PM)"
+        EVENING = "evening", "Evening (5:00 PM - 8:00 PM)"
+        ANYTIME = "anytime", "Anytime"
+
+    class EnquiryType(models.TextChoices):
+        THERAPY_MACHINE = "therapy_machine", "Therapy machine / wellness product"
+        HOME_SETUP = "home_setup", "Home wellness setup"
+        CLINIC_SETUP = "clinic_setup", "Clinic / professional setup"
+        BULK_BUSINESS = "bulk_business", "Bulk or business enquiry"
+        PRODUCT_SUPPORT = "product_support", "Existing product support"
+        GUIDANCE = "guidance", "Not sure — I need guidance"
+
+    class ContactMethod(models.TextChoices):
+        PHONE = "phone", "Phone"
+        WHATSAPP = "whatsapp", "WhatsApp"
+        EMAIL = "email", "Email"
+
+    name = models.CharField(max_length=150)
+    phone = models.CharField(max_length=20)
+    email = models.EmailField(max_length=254, blank=True)
+    city = models.CharField(max_length=100)
+
+    enquiry_type = models.CharField(
+        max_length=40,
+        choices=EnquiryType.choices,
+        default=EnquiryType.THERAPY_MACHINE,
+        blank=True,
+        help_text="Primary requirement / reason for enquiry",
+    )
+    preferred_contact_method = models.CharField(
+        max_length=20,
+        choices=ContactMethod.choices,
+        default=ContactMethod.PHONE,
+        blank=True,
+    )
+
+    service = models.ForeignKey(
+        "Service",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="enquiries",
+        help_text="Selected therapy service/machine (optional)",
+    )
+    service_name_snapshot = models.CharField(
+        max_length=200,
+        blank=True,
+        help_text="Archived service name at time of submission",
+    )
+
+    usage_intention = models.CharField(
+        max_length=30,
+        choices=UsageIntention.choices,
+        default=UsageIntention.PERSONAL,
+        blank=True,
+    )
+    callback_time = models.CharField(
+        max_length=30,
+        choices=CallbackTime.choices,
+        default=CallbackTime.MORNING,
+        blank=True,
+    )
+    message = models.TextField(blank=True)
+
+    status = models.CharField(
+        max_length=20,
+        choices=Status.choices,
+        default=Status.NEW,
+    )
+    admin_notes = models.TextField(
+        blank=True,
+        help_text="Internal notes added by staff during telephone follow-up",
+    )
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+        verbose_name = "Customer Enquiry"
+        verbose_name_plural = "Customer Enquiries"
+
+    def clean(self):
+        if self.name and not self.name.strip():
+            raise ValidationError({"name": "Customer name cannot be only whitespace."})
+        if self.city and not self.city.strip():
+            raise ValidationError({"city": "City cannot be only whitespace."})
+
+    def save(self, *args, **kwargs):
+        if self.service and not self.service_name_snapshot:
+            self.service_name_snapshot = self.service.name
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.name} - {self.phone} ({self.get_status_display()})"
+
+
+class Appointment(models.Model):
+    class Status(models.TextChoices):
+        PENDING = "pending", "Pending Confirmation"
+        CONFIRMED = "confirmed", "Confirmed"
+        COMPLETED = "completed", "Completed"
+        CANCELLED = "cancelled", "Cancelled"
+
+    class TimeSlot(models.TextChoices):
+        MORNING = "morning", "Morning (10:00 AM - 1:00 PM)"
+        MIDDAY = "midday", "Midday (1:00 PM - 3:00 PM)"
+        AFTERNOON = "afternoon", "Afternoon (3:00 PM - 5:00 PM)"
+        EVENING = "evening", "Evening (5:00 PM - 7:30 PM)"
+
+    class DemoFormat(models.TextChoices):
+        CENTRE = "centre", "Centre Visit (Ahmedabad Demonstration Facility)"
+        HOME = "home", "Home Doorstep Demo (Selected Cities)"
+        VIDEO = "video", "Virtual Guided Video Consultation"
+
+    booking_reference = models.CharField(
+        max_length=32,
+        unique=True,
+        blank=True,
+        help_text="Unique booking reference code",
+    )
+    name = models.CharField(max_length=150)
+    phone = models.CharField(max_length=20)
+    email = models.EmailField(max_length=254, blank=True)
+    city = models.CharField(max_length=100)
+
+    service = models.ForeignKey(
+        "Service",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="appointments",
+        help_text="Selected therapy machine or solution",
+    )
+    service_name_snapshot = models.CharField(
+        max_length=200,
+        blank=True,
+        help_text="Archived service name at time of booking request",
+    )
+
+    appointment_date = models.DateField(
+        help_text="Preferred date requested by the customer",
+    )
+    time_slot = models.CharField(
+        max_length=30,
+        choices=TimeSlot.choices,
+        default=TimeSlot.MORNING,
+    )
+    demo_format = models.CharField(
+        max_length=30,
+        choices=DemoFormat.choices,
+        default=DemoFormat.CENTRE,
+    )
+    notes = models.TextField(
+        blank=True,
+        help_text="Doorstep address or special discomfort notes",
+    )
+
+    status = models.CharField(
+        max_length=20,
+        choices=Status.choices,
+        default=Status.PENDING,
+    )
+    admin_notes = models.TextField(
+        blank=True,
+        help_text="Internal staff notes regarding slot confirmation or logistics",
+    )
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["-appointment_date", "-created_at"]
+        verbose_name = "Appointment Request"
+        verbose_name_plural = "Appointment Requests"
+
+    def clean(self):
+        if self.name and not self.name.strip():
+            raise ValidationError({"name": "Customer name cannot be only whitespace."})
+        if self.city and not self.city.strip():
+            raise ValidationError({"city": "City cannot be only whitespace."})
+        if self.appointment_date and self.appointment_date < timezone.localdate():
+            raise ValidationError({"appointment_date": "Appointment date cannot be in the past."})
+
+    def save(self, *args, **kwargs):
+        if self.service and not self.service_name_snapshot:
+            self.service_name_snapshot = self.service.name
+        if not self.booking_reference:
+            import uuid
+            self.booking_reference = f"APT-{timezone.now().strftime('%Y%m%d')}-{uuid.uuid4().hex[:6].upper()}"
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.booking_reference}: {self.name} on {self.appointment_date} ({self.get_status_display()})"
+
+
+class SiteSettings(models.Model):
+    business_name = models.CharField(
+        max_length=200,
+        default="Rudra Massage & Wellness",
+        help_text="Official business / brand display name",
+    )
+    primary_phone = models.CharField(
+        max_length=30,
+        default="+91 98250 00000",
+        help_text="Primary customer care / helpline phone number",
+    )
+    contact_email = models.EmailField(
+        max_length=254,
+        default="care@rudrawellness.com",
+        help_text="Primary support / inquiries email address",
+    )
+    whatsapp_number = models.CharField(
+        max_length=30,
+        default="+91 98250 00000",
+        help_text="WhatsApp support number (with country code)",
+    )
+    business_address = models.TextField(
+        default="Rudra Massage & Wellness Centre, S.G. Highway, Bodakdev, Ahmedabad, Gujarat 380054",
+        help_text="Physical experience centre address",
+    )
+    google_maps_url = models.URLField(
+        max_length=500,
+        blank=True,
+        default="https://maps.google.com/maps?q=Bodakdev,%20Ahmedabad,%20Gujarat&t=&z=13&ie=UTF8&iwloc=&output=embed",
+        help_text="Google Maps embed or location URL",
+    )
+    business_hours = models.CharField(
+        max_length=255,
+        default="Mon - Sat: 9:30 AM - 7:00 PM | Sun: By Prior Appointment",
+        help_text="Operating / consultation hours",
+    )
+    enable_announcement_banner = models.BooleanField(
+        default=True,
+        help_text="Enable top announcement banner across site",
+    )
+    enable_whatsapp_floating = models.BooleanField(
+        default=True,
+        help_text="Display floating WhatsApp contact button",
+    )
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Site Settings"
+        verbose_name_plural = "Site Settings"
+
+    def clean(self):
+        if self.business_name and not self.business_name.strip():
+            raise ValidationError({"business_name": "Business name cannot be only whitespace."})
+        if self.primary_phone and not self.primary_phone.strip():
+            raise ValidationError({"primary_phone": "Primary phone cannot be only whitespace."})
+        if self.contact_email and not self.contact_email.strip():
+            raise ValidationError({"contact_email": "Contact email cannot be only whitespace."})
+        if self.business_address and not self.business_address.strip():
+            raise ValidationError({"business_address": "Business address cannot be only whitespace."})
+
+    def save(self, *args, **kwargs):
+        # Enforce singleton pattern: single authoritative record at pk=1
+        self.pk = 1
+        super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        # Protect the singleton settings record from accidental deletion
+        pass
+
+    @classmethod
+    def load(cls):
+        """
+        Safely fetch the singleton settings record or initialize with default values.
+        """
+        obj, created = cls.objects.get_or_create(
+            pk=1,
+            defaults={
+                "business_name": "Rudra Massage & Wellness",
+                "primary_phone": "+91 98250 00000",
+                "contact_email": "care@rudrawellness.com",
+                "whatsapp_number": "+91 98250 00000",
+                "business_address": "Rudra Massage & Wellness Centre, S.G. Highway, Bodakdev, Ahmedabad, Gujarat 380054",
+                "google_maps_url": "https://maps.google.com/maps?q=Bodakdev,%20Ahmedabad,%20Gujarat&t=&z=13&ie=UTF8&iwloc=&output=embed",
+                "business_hours": "Mon - Sat: 9:30 AM - 7:00 PM | Sun: By Prior Appointment",
+                "enable_announcement_banner": True,
+                "enable_whatsapp_floating": True,
+            },
+        )
+        return obj
+
+    @property
+    def phone_digits(self):
+        cleaned = re.sub(r"[^\d+]", "", self.primary_phone or "")
+        return cleaned
+
+    @property
+    def whatsapp_digits(self):
+        cleaned = re.sub(r"\D", "", self.whatsapp_number or "")
+        return cleaned
+
+    def __str__(self):
+        return f"Site Settings ({self.business_name})"
+
+
+class SupportRequest(models.Model):
+    class Status(models.TextChoices):
+        NEW = "new", "New"
+        IN_PROGRESS = "in_progress", "In Progress"
+        RESOLVED = "resolved", "Resolved"
+        CLOSED = "closed", "Closed"
+
+    class RequestType(models.TextChoices):
+        CONTACT = "contact", "Contact / General Inquiry"
+        PRODUCT_SUPPORT = "product_support", "Product / Warranty Support"
+        DEMO_REQUEST = "demo_request", "Demo Request"
+        CLINIC_SETUP = "clinic_setup", "Clinic / Bulk Setup"
+        FEEDBACK = "feedback", "Feedback / Other"
+
+    ticket_number = models.CharField(
+        max_length=32,
+        unique=True,
+        blank=True,
+        help_text="Unique reference ticket number",
+    )
+    name = models.CharField(max_length=150)
+    email = models.EmailField(max_length=254)
+    phone = models.CharField(max_length=20)
+
+    request_type = models.CharField(
+        max_length=30,
+        choices=RequestType.choices,
+        default=RequestType.CONTACT,
+        blank=True,
+    )
+    subject = models.CharField(
+        max_length=200,
+        blank=True,
+        help_text="User selected subject or request category",
+    )
+    product_name = models.CharField(
+        max_length=150,
+        blank=True,
+        help_text="Relevant equipment or device model (if applicable)",
+    )
+    message = models.TextField(
+        help_text="Customer message or issue description",
+    )
+
+    status = models.CharField(
+        max_length=20,
+        choices=Status.choices,
+        default=Status.NEW,
+    )
+    admin_notes = models.TextField(
+        blank=True,
+        help_text="Private internal staff follow-up and resolution notes",
+    )
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+        verbose_name = "Support Request"
+        verbose_name_plural = "Support Requests"
+
+    def clean(self):
+        if self.name and not self.name.strip():
+            raise ValidationError({"name": "Name cannot be only whitespace."})
+        if self.message and not self.message.strip():
+            raise ValidationError({"message": "Message cannot be only whitespace."})
+
+    def save(self, *args, **kwargs):
+        if not self.ticket_number:
+            self.ticket_number = f"SR-{timezone.now().strftime('%Y%m%d')}-{uuid.uuid4().hex[:6].upper()}"
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.ticket_number}: {self.name} - {self.subject or self.get_request_type_display()} ({self.get_status_display()})"
 

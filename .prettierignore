@@ -1,0 +1,3 @@
+# Ignore templates so auto-formatters do not split Django tags
+templates/**
+*.html

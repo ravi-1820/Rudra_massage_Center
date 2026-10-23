@@ -1,19 +1,28 @@
 
+from datetime import timedelta
 import logging
 
+from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db import DatabaseError
 from django.db.models import Q
 from django.http import Http404
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, redirect, render
+from django.utils import timezone
 
+from .forms import AppointmentForm, ContactForm, EnquiryForm, SupportTicketForm
 from .models import (
-    Category,
-    Service,
-    CustomerNeed,
+    Appointment,
     BodyPart,
-    ServiceType,
+    Category,
+    CustomerNeed,
+    Enquiry,
     IntendedUse,
+    Offer,
+    Service,
+    ServiceType,
+    SiteSettings,
+    SupportRequest,
 )
 
 
@@ -22,7 +31,31 @@ SERVICES_PER_PAGE = 9
 
 
 def home(request):
-    return render(request, "index.html")
+    featured_services = (
+        Service.objects.filter(
+            is_active=True,
+            category__is_active=True,
+            is_featured=True,
+        )
+        .select_related("category")
+        .order_by("display_order", "name")[:4]
+    )
+    if not featured_services.exists():
+        featured_services = (
+            Service.objects.filter(
+                is_active=True,
+                category__is_active=True,
+            )
+            .select_related("category")
+            .order_by("display_order", "name")[:4]
+        )
+    return render(
+        request,
+        "index.html",
+        {
+            "featured_services": featured_services,
+        },
+    )
 
 
 def about(request):
@@ -207,15 +240,22 @@ def services(request):
         raise
 
 
-def service_detail(request):
-    service_slug = request.GET.get("slug", "").strip()
+def service_detail(request, slug=None):
+    service_slug = (slug or request.GET.get("slug", "")).strip()
     service_id = request.GET.get("id", "").strip()
 
-    active_services = Service.objects.select_related(
-        "category"
-    ).filter(
-        is_active=True,
-        category__is_active=True,
+    active_services = (
+        Service.objects.select_related("category")
+        .prefetch_related(
+            "customer_needs",
+            "body_parts",
+            "service_types",
+            "intended_uses",
+        )
+        .filter(
+            is_active=True,
+            category__is_active=True,
+        )
     )
 
     if service_slug:
@@ -231,17 +271,21 @@ def service_detail(request):
     else:
         raise Http404("Service not found")
 
-    related_services = Service.objects.filter(
-        category=service.category,
-        is_active=True,
-        category__is_active=True,
-    ).exclude(
-        id=service.id
-    ).order_by(
-        "-is_featured",
-        "display_order",
-        "name",
-    )[:4]
+    related_services = (
+        Service.objects.filter(
+            category=service.category,
+            is_active=True,
+            category__is_active=True,
+        )
+        .exclude(id=service.id)
+        .select_related("category")
+        .prefetch_related("customer_needs", "body_parts", "intended_uses")
+        .order_by(
+            "-is_featured",
+            "display_order",
+            "name",
+        )[:3]
+    )
 
     return render(
         request,
@@ -254,8 +298,98 @@ def service_detail(request):
 
 
 def appointment(request):
-    return render(request, "appointment.html")
+    try:
+        active_services = (
+            Service.objects.filter(
+                is_active=True,
+                category__is_active=True,
+            )
+            .select_related("category")
+            .order_by("category__name", "display_order", "name")
+        )
 
+        selected_service = None
+        service_param = (
+            request.GET.get("service") or request.GET.get("id") or ""
+        ).strip()
+        if service_param:
+            if service_param.isdigit():
+                selected_service = active_services.filter(
+                    id=int(service_param)
+                ).first()
+            else:
+                selected_service = active_services.filter(
+                    slug=service_param
+                ).first()
+
+        if request.method == "POST":
+            form = AppointmentForm(request.POST)
+            if form.is_valid():
+                cleaned_phone = form.cleaned_data.get("phone")
+                cleaned_service = form.cleaned_data.get("service")
+                cleaned_date = form.cleaned_data.get("appointment_date")
+
+                # Duplicate submission check within 2 minutes
+                recent_cutoff = timezone.now() - timedelta(minutes=2)
+                recent_duplicate = Appointment.objects.filter(
+                    phone=cleaned_phone,
+                    service=cleaned_service,
+                    appointment_date=cleaned_date,
+                    created_at__gte=recent_cutoff,
+                ).first()
+
+                if recent_duplicate:
+                    messages.info(
+                        request,
+                        f"We have already received an appointment request for this date and machine ({recent_duplicate.booking_reference}). Our coordinator will contact you shortly!",
+                    )
+                    return redirect("user:appointment")
+
+                appointment_obj = form.save()
+                messages.success(
+                    request,
+                    f"Thank you, {appointment_obj.name}! Your appointment request ({appointment_obj.booking_reference}) has been received. Our wellness coordinator will contact you shortly to confirm schedule availability.",
+                )
+                return redirect("user:appointment")
+            else:
+                messages.error(
+                    request,
+                    "Please correct the errors in the appointment form before submitting.",
+                )
+        else:
+            initial_data = {}
+            if selected_service:
+                initial_data["service"] = selected_service.id
+            form = AppointmentForm(initial=initial_data)
+
+        context = {
+            "form": form,
+            "services": active_services,
+            "selected_service": selected_service,
+            "selected_service_id": (
+                selected_service.id if selected_service else None
+            ),
+            "today_date": timezone.localdate().strftime("%Y-%m-%d"),
+        }
+        return render(request, "appointment.html", context)
+
+    except DatabaseError as e:
+        logger.error(f"Database error loading appointments page: {e}", exc_info=True)
+        messages.error(
+            request,
+            "A temporary database error occurred. Please try again in a few moments.",
+        )
+        return render(
+            request,
+            "appointment.html",
+            {
+                "form": AppointmentForm(),
+                "services": Service.objects.none(),
+                "selected_service": None,
+                "selected_service_id": None,
+                "today_date": timezone.localdate().strftime("%Y-%m-%d"),
+            },
+        )
 
 def blog(request):
     return render(request, "blog.html")
@@ -274,7 +408,43 @@ def certificates(request):
 
 
 def contact(request):
-    return render(request, "contact.html")
+    if request.method == "POST":
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            cleaned_phone = form.cleaned_data.get("phone")
+            cleaned_message = form.cleaned_data.get("message", "").strip()
+
+            # Duplicate submission check within 2 minutes
+            recent_cutoff = timezone.now() - timedelta(minutes=2)
+            recent_duplicate = SupportRequest.objects.filter(
+                phone=cleaned_phone,
+                message=cleaned_message,
+                created_at__gte=recent_cutoff,
+            ).first()
+
+            if recent_duplicate:
+                messages.info(
+                    request,
+                    f"We have already received your message recently (Ticket: {recent_duplicate.ticket_number}). Our team is reviewing it and will get back to you shortly.",
+                )
+                return redirect("user:contact")
+
+            support_obj = form.save()
+            messages.success(
+                request,
+                f"Thank you, {support_obj.name}! Your message has been received (Ticket: {support_obj.ticket_number}). Our wellness care advisory team will contact you shortly.",
+            )
+            return redirect("user:contact")
+        else:
+            messages.error(
+                request,
+                "Please correct the errors in the contact form before submitting.",
+            )
+    else:
+        form = ContactForm()
+
+    return render(request, "contact.html", {"form": form})
+
 
 
 def digital_profile(request):
@@ -282,7 +452,83 @@ def digital_profile(request):
 
 
 def enquiry(request):
-    return render(request, "enquiry.html")
+    try:
+        active_services = (
+            Service.objects.filter(
+                is_active=True,
+                category__is_active=True,
+            )
+            .select_related("category")
+            .order_by("category__name", "display_order", "name")
+        )
+
+        selected_service = None
+        service_param = (
+            request.GET.get("service") or request.GET.get("id") or ""
+        ).strip()
+        if service_param:
+            if service_param.isdigit():
+                selected_service = active_services.filter(
+                    id=int(service_param)
+                ).first()
+            else:
+                selected_service = active_services.filter(
+                    slug=service_param
+                ).first()
+
+        if request.method == "POST":
+            form = EnquiryForm(request.POST)
+            if form.is_valid():
+                cleaned_phone = form.cleaned_data.get("phone")
+                cleaned_service = form.cleaned_data.get("service")
+
+                # Duplicate submission check within 2 minutes
+                recent_cutoff = timezone.now() - timedelta(minutes=2)
+                recent_duplicate = Enquiry.objects.filter(
+                    phone=cleaned_phone,
+                    service=cleaned_service,
+                    created_at__gte=recent_cutoff,
+                ).first()
+
+                if recent_duplicate:
+                    messages.info(
+                        request,
+                        "We have already received your enquiry recently. Our therapy advisory team will contact you shortly!",
+                    )
+                    return redirect("user:enquiry")
+
+                enquiry_obj = form.save()
+                messages.success(
+                    request,
+                    f"Thank you, {enquiry_obj.name}! Your enquiry has been received. Our wellness specialist will contact you within 24 hours.",
+                )
+                return redirect("user:enquiry")
+            else:
+                messages.error(
+                    request,
+                    "Please correct the errors in the enquiry form before submitting.",
+                )
+        else:
+            initial_data = {}
+            if selected_service:
+                initial_data["service"] = selected_service.id
+            form = EnquiryForm(initial=initial_data)
+
+        context = {
+            "form": form,
+            "services": active_services,
+            "selected_service": selected_service,
+            "selected_service_id": (
+                selected_service.id if selected_service else None
+            ),
+        }
+        return render(request, "enquiry.html", context)
+
+    except DatabaseError:
+        logger.exception(
+            "Database error occurred while processing customer enquiry."
+        )
+        raise
 
 
 def faq(request):
@@ -294,11 +540,58 @@ def gallery(request):
 
 
 def offers(request):
-    return render(request, "offers.html")
+    try:
+        now = timezone.now()
+        active_offers = (
+            Offer.objects.filter(is_active=True)
+            .filter(Q(valid_from__isnull=True) | Q(valid_from__lte=now))
+            .filter(Q(valid_until__isnull=True) | Q(valid_until__gte=now))
+            .order_by("display_order", "-created_at")
+        )
+        return render(request, "offers.html", {"offers": active_offers})
+    except DatabaseError:
+        logger.exception("Failed to load offers.")
+        raise
 
 
 def support(request):
-    return render(request, "support.html")
+    if request.method == "POST":
+        form = SupportTicketForm(request.POST)
+        if form.is_valid():
+            cleaned_phone = form.cleaned_data.get("phone")
+            cleaned_message = form.cleaned_data.get("message", "").strip()
+
+            # Duplicate submission check within 2 minutes
+            recent_cutoff = timezone.now() - timedelta(minutes=2)
+            recent_duplicate = SupportRequest.objects.filter(
+                phone=cleaned_phone,
+                message=cleaned_message,
+                created_at__gte=recent_cutoff,
+            ).first()
+
+            if recent_duplicate:
+                messages.info(
+                    request,
+                    f"We have already received this support ticket recently (Ticket: {recent_duplicate.ticket_number}). Our technicians are reviewing your issue.",
+                )
+                return redirect("user:support")
+
+            ticket_obj = form.save()
+            messages.success(
+                request,
+                f"Thank you, {ticket_obj.name}! Your support ticket ({ticket_obj.ticket_number}) has been created. Our technical support team reviews all requests within 4 business hours.",
+            )
+            return redirect("user:support")
+        else:
+            messages.error(
+                request,
+                "Please correct the highlighted errors before submitting the support ticket.",
+            )
+    else:
+        form = SupportTicketForm()
+
+    return render(request, "support.html", {"form": form})
+
 
 
 def testimonials(request):

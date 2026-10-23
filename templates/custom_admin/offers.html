@@ -8,35 +8,116 @@
 {% block topbar_title %}Offers & Seasonal Promotions{% endblock %}
 
 {% block content %}
+<!-- Active Promotional Campaigns -->
+<div class="admin-table-card mb-4">
+  <div class="admin-card-header">
+    <div>
+      <h5 class="mb-0">Active Promotional Campaigns</h5>
+      <small class="text-muted">Promo codes and discount vouchers from database</small>
+    </div>
+  </div>
+  <div class="admin-table-responsive">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Voucher Code</th>
+          <th>Campaign Title</th>
+          <th>Discount Value</th>
+          <th>Validity</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for offer in offers %}
+        <tr>
+          <td class="fw-bold text-forest"><code>{{ offer.promo_code }}</code></td>
+          <td>
+            <strong>{{ offer.title }}</strong>
+            {% if offer.badge_tag %}<br><span class="badge bg-warning text-dark">{{ offer.badge_tag }}</span>{% endif %}
+          </td>
+          <td class="fw-semibold">{{ offer.discount_title }}</td>
+          <td>
+            {% if offer.validity_text %}
+              {{ offer.validity_text }}
+            {% elif offer.valid_until %}
+              Valid till {{ offer.valid_until|date:"d M Y" }}
+            {% else %}
+              Ongoing
+            {% endif %}
+          </td>
+          <td>
+            <span class="badge {% if offer.is_active %}bg-success{% else %}bg-secondary{% endif %}">
+              {% if offer.is_active %}Active{% else %}Inactive{% endif %}
+            </span>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="5" class="text-center py-4 text-muted">No promotional offers found in database.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Published Banner Announcements -->
 <div class="admin-table-card">
-          <div class="admin-card-header">
-            <div>
-              <h5>Active Promotional Campaigns</h5>
-              <small class="text-muted">Promo codes and top banner announcements</small>
-            </div>
-            <button class="btn btn-sm btn-veda-gold" onclick="window.adminApp.openAddOfferModal()">
-              <i class="bi bi-plus-lg me-1"></i> Create Offer Voucher
-            </button>
-          </div>
-          <div class="admin-table-responsive">
-            <table class="admin-table">
-              <thead>
-                <tr>
-                  <th>Voucher Code</th>
-                  <th>Campaign Title</th>
-                  <th>Discount Value</th>
-                  <th>Validity Status</th>
-                  <th class="text-end">Action</th>
-                </tr>
-              </thead>
-              <tbody id="adminOffersTbody"></tbody>
-            </table>
-          </div>
-        </div>
+  <div class="admin-card-header">
+    <div>
+      <h5 class="mb-0">Published Top Banner Announcements</h5>
+      <small class="text-muted">Global top-bar notifications from database</small>
+    </div>
+  </div>
+  <div class="admin-table-responsive">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Badge</th>
+          <th>Announcement Message</th>
+          <th>Link Destination</th>
+          <th>Validity Period</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for ann in announcements %}
+        <tr>
+          <td><span class="badge bg-forest text-white">{{ ann.badge_text }}</span></td>
+          <td class="fw-semibold">{{ ann.message }}</td>
+          <td>
+            {% if ann.link_url %}
+              <a href="{{ ann.link_url }}" target="_blank" class="small text-decoration-none">{{ ann.link_text|default:ann.link_url }} <i class="bi bi-box-arrow-up-right"></i></a>
+            {% else %}
+              <span class="text-muted small">—</span>
+            {% endif %}
+          </td>
+          <td class="small text-muted">
+            {% if ann.valid_from or ann.valid_until %}
+              {{ ann.valid_from|date:"d M"|default:"Immediate" }} - {{ ann.valid_until|date:"d M Y"|default:"Indefinite" }}
+            {% else %}
+              Permanent
+            {% endif %}
+          </td>
+          <td>
+            <span class="badge {% if ann.is_active %}bg-success{% else %}bg-secondary{% endif %}">
+              {% if ann.is_active %}Active{% else %}Inactive{% endif %}
+            </span>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="5" class="text-center py-4 text-muted">No announcements found in database.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
 {% endblock %}
 
 {% block extra_js %}
 <script>
-    (function(){try{var t=localStorage.getItem('rudra_theme');if(t==='dark'||(!t&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)){document.documentElement.classList.add('dark');document.documentElement.setAttribute('data-theme','dark');}}catch(e){}})();
-  </script>
+  (function(){try{var t=localStorage.getItem('rudra_theme');if(t==='dark'||(!t&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)){document.documentElement.classList.add('dark');document.documentElement.setAttribute('data-theme','dark');}}catch(e){}})();
+</script>
 {% endblock %}

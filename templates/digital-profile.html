@@ -183,10 +183,10 @@
 
           <!-- Core Call Actions -->
           <div class="d-flex justify-content-center gap-2 mb-4">
-            <a href="tel:+919825000000" class="btn-veda-primary btn-veda-sm flex-grow-1">
+            <a href="tel:{{ site_settings.phone_digits|default:'+919825000000' }}" class="btn-veda-primary btn-veda-sm flex-grow-1">
               <i class="bi bi-telephone-fill me-1"></i> Call Now
             </a>
-            <a href="https://wa.me/919825000000?text=Hi%20Rudra%20Massage%20%26%20Wellness%20I%20scanned%20your%20digital%20visiting%20card" target="_blank" class="btn-veda-gold btn-veda-sm flex-grow-1">
+            <a href="https://wa.me/{{ site_settings.whatsapp_digits|default:'919825000000' }}?text=Hi%20{{ site_settings.business_name|urlencode }}%20I%20scanned%20your%20digital%20visiting%20card" target="_blank" class="btn-veda-gold btn-veda-sm flex-grow-1">
               <i class="bi bi-whatsapp me-1"></i> WhatsApp
             </a>
             <button class="btn btn-outline-dark btn-sm rounded-3" id="shareProfileBtn" title="Share Profile">
@@ -196,11 +196,11 @@
 
           <!-- Direct Links / Actions -->
           <div class="text-start mb-4">
-            <a href="mailto:care@rudrawellness.com" class="quick-action-pill">
+            <a href="mailto:{{ site_settings.contact_email|default:'care@rudrawellness.com' }}" class="quick-action-pill">
               <div class="quick-action-icon"><i class="bi bi-envelope-fill"></i></div>
               <div>
                 <div class="small text-muted">Email Us</div>
-                <div>care@rudrawellness.com</div>
+                <div>{{ site_settings.contact_email|default:"care@rudrawellness.com" }}</div>
               </div>
             </a>
 
@@ -313,13 +313,13 @@
       const vcardContent = `BEGIN:VCARD
 VERSION:3.0
 N:Wellness;Rudra Massage &;;;
-FN:Rudra Massage & Wellness
-ORG:Rudra Massage & Wellness
+FN:{{ site_settings.business_name|default:'Rudra Massage & Wellness' }}
+ORG:{{ site_settings.business_name|default:'Rudra Massage & Wellness' }}
 TITLE:Ayurvedic & Physiotherapy Equipment
-TEL;TYPE=WORK,VOICE:+919825000000
-EMAIL;TYPE=PREF,INTERNET:care@rudrawellness.com
+TEL;TYPE=WORK,VOICE:{{ site_settings.primary_phone|default:'+919825000000' }}
+EMAIL;TYPE=PREF,INTERNET:{{ site_settings.contact_email|default:'care@rudrawellness.com' }}
 URL:${window.location.origin}
-ADR;TYPE=WORK:;;S.G. Highway Bodakdev;Ahmedabad;Gujarat;380054;India
+ADR;TYPE=WORK:;;{{ site_settings.business_address|default:'S.G. Highway Bodakdev;Ahmedabad;Gujarat;380054;India'|escapejs }}
 END:VCARD`;
 
       const blob = new Blob([vcardContent], { type: "text/vcard;charset=utf-8" });

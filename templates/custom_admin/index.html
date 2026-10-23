@@ -7,18 +7,7 @@
 
 {% block topbar_title %}Overview Dashboard{% endblock %}
 
-{% block topbar_actions %}
-<button class="btn btn-sm btn-outline-secondary rounded-pill" onclick="showToast('Demo Alert', 'No unread system alerts in demo state.', 'gold');">
-            <i class="bi bi-bell"></i>
-          </button>
-          <div class="admin-user-profile">
-            <div class="admin-user-avatar">AD</div>
-            <div class="d-none d-md-block text-start" style="line-height: 1.2;">
-              <small class="fw-bold text-dark d-block">Admin User</small>
-              <small class="text-muted" style="font-size: 0.72rem;">Lead Coordinator</small>
-            </div>
-          </div>
-{% endblock %}
+
 
 {% block content %}
 <!-- Metric Stat Cards Row -->
@@ -27,7 +16,8 @@
             <div class="admin-stat-card">
               <div class="admin-stat-info">
                 <span>Total Enquiries</span>
-                <h3 id="statTotalEnquiries">4</h3>
+                <h3 id="statTotalEnquiries">{{ total_enquiries|default:"0" }}</h3>
+                <small class="text-warning fw-bold" style="font-size: 0.73rem;">{{ followup_enquiries_count|default:"0" }} follow-up pending</small>
               </div>
               <div class="admin-stat-icon stat-icon-green">
                 <i class="bi bi-chat-text"></i>
@@ -39,7 +29,8 @@
             <div class="admin-stat-card">
               <div class="admin-stat-info">
                 <span>Booked Demos</span>
-                <h3 id="statTotalAppointments">3</h3>
+                <h3 id="statTotalAppointments">{{ total_appointments|default:"0" }}</h3>
+                <small class="text-muted" style="font-size: 0.73rem;">Confirmed & requests</small>
               </div>
               <div class="admin-stat-icon stat-icon-gold">
                 <i class="bi bi-calendar2-check"></i>
@@ -51,7 +42,8 @@
             <div class="admin-stat-card">
               <div class="admin-stat-info">
                 <span>Active Solutions</span>
-                <h3 id="statTotalServices">6</h3>
+                <h3 id="statTotalServices">{{ active_services_count|default:"0" }}</h3>
+                <small class="text-muted" style="font-size: 0.73rem;">{{ total_services|default:"0" }} in catalogue</small>
               </div>
               <div class="admin-stat-icon stat-icon-blue">
                 <i class="bi bi-grid-fill"></i>
@@ -62,11 +54,12 @@
           <div class="col-sm-6 col-xl-3">
             <div class="admin-stat-card">
               <div class="admin-stat-info">
-                <span>Avg Rating</span>
-                <h3>4.9★</h3>
+                <span>Active Offers</span>
+                <h3>{{ total_offers|default:"0" }}</h3>
+                <small class="text-muted" style="font-size: 0.73rem;">Promotional campaigns</small>
               </div>
               <div class="admin-stat-icon stat-icon-orange">
-                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-tags-fill"></i>
               </div>
             </div>
           </div>
@@ -80,8 +73,7 @@
               <small class="text-muted">Inbound leads awaiting consultation follow-up</small>
             </div>
             <div class="d-flex align-items-center gap-2">
-              <input type="text" id="adminEnquiriesSearch" class="form-control form-control-sm" placeholder="Filter enquiries..." style="width: 200px;" aria-label="Filter enquiries">
-              <a href="{% url 'custom_admin:enquiries' %}" class="btn btn-sm btn-outline-dark">View All</a>
+              <a href="{% url 'custom_admin:enquiries' %}" class="btn btn-sm btn-outline-dark">View All Enquiries</a>
             </div>
           </div>
           <div class="admin-table-responsive">
@@ -93,9 +85,48 @@
                   <th>Therapy Solution</th>
                   <th>Date</th>
                   <th>Workflow Status</th>
+                  <th class="text-end">Action</th>
                 </tr>
               </thead>
-              <tbody id="adminEnquiriesTbody"></tbody>
+              <tbody id="adminEnquiriesTbody">
+                {% for enq in recent_enquiries %}
+                  <tr>
+                    <td>
+                      <a href="{% url 'custom_admin:enquiry_detail' enq.id %}" class="fw-bold text-forest text-decoration-none">
+                        #ENQ-{{ enq.id }}
+                      </a>
+                    </td>
+                    <td>
+                      <div class="fw-bold text-dark">{{ enq.name }}</div>
+                      <small class="text-muted">{{ enq.phone }} ({{ enq.city }})</small>
+                    </td>
+                    <td>
+                      {% if enq.service %}
+                        <span class="badge bg-light text-forest border">{{ enq.service.name }}</span>
+                      {% elif enq.service_name_snapshot %}
+                        <span class="badge bg-light text-forest border">{{ enq.service_name_snapshot }}</span>
+                      {% else %}
+                        <span class="text-muted small">General Enquiry</span>
+                      {% endif %}
+                    </td>
+                    <td>{{ enq.created_at|date:"M d, Y" }}</td>
+                    <td>
+                      <span class="badge {% if enq.status == 'new' %}bg-primary{% elif enq.status == 'contacted' %}bg-info text-dark{% elif enq.status == 'in_discussion' %}bg-warning text-dark{% elif enq.status == 'resolved' %}bg-success{% else %}bg-secondary{% endif %}">
+                        {{ enq.get_status_display }}
+                      </span>
+                    </td>
+                    <td class="text-end">
+                      <a href="{% url 'custom_admin:enquiry_detail' enq.id %}" class="btn btn-sm btn-outline-forest">
+                        <i class="bi bi-eye"></i>
+                      </a>
+                    </td>
+                  </tr>
+                {% empty %}
+                  <tr>
+                    <td colspan="6" class="text-center py-4 text-muted">No client enquiries received yet.</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
             </table>
           </div>
         </div>
@@ -119,23 +150,74 @@
                   <th>Requested Machine</th>
                   <th>Format</th>
                   <th>Status</th>
+                  <th class="text-end">Action</th>
                 </tr>
               </thead>
-              <tbody id="adminAppointmentsTbody"></tbody>
+              <tbody id="adminAppointmentsTbody" data-server-rendered="true">
+                {% for apt in recent_appointments %}
+                <tr>
+                  <td class="fw-bold">
+                    <a href="{% url 'custom_admin:appointment_detail' apt.id %}" class="text-forest text-decoration-none">
+                      {{ apt.booking_reference }}
+                    </a>
+                  </td>
+                  <td>
+                    <a href="{% url 'custom_admin:appointment_detail' apt.id %}" class="text-dark text-decoration-none">
+                      <strong>{{ apt.name }}</strong>
+                    </a>
+                    <br><small class="text-muted">{{ apt.phone }}</small>
+                  </td>
+                  <td>
+                    {{ apt.appointment_date|date:"d M Y" }}
+                    <br><small class="text-muted">{{ apt.get_time_slot_display }}</small>
+                  </td>
+                  <td>
+                    {% if apt.service %}
+                      {{ apt.service.name }}
+                    {% else %}
+                      {{ apt.service_name_snapshot|default:"—" }}
+                    {% endif %}
+                  </td>
+                  <td>
+                    <span class="badge bg-light text-dark border">{{ apt.get_demo_format_display }}</span>
+                  </td>
+                  <td>
+                    {% if apt.status == 'pending' %}
+                      <span class="badge bg-warning text-dark">Pending</span>
+                    {% elif apt.status == 'confirmed' %}
+                      <span class="badge bg-success">Confirmed</span>
+                    {% elif apt.status == 'completed' %}
+                      <span class="badge bg-info text-dark">Completed</span>
+                    {% elif apt.status == 'cancelled' %}
+                      <span class="badge bg-danger">Cancelled</span>
+                    {% endif %}
+                  </td>
+                  <td class="text-end">
+                    <a href="{% url 'custom_admin:appointment_detail' apt.id %}" class="btn btn-sm btn-outline-forest" title="View Appointment Details">
+                      <i class="bi bi-eye"></i>
+                    </a>
+                  </td>
+                </tr>
+                {% empty %}
+                <tr>
+                  <td colspan="7" class="text-center py-4 text-muted">No scheduled demo appointments yet.</td>
+                </tr>
+                {% endfor %}
+              </tbody>
             </table>
           </div>
         </div>
 
         <!-- Quick Catalogue Preview & Action -->
         <div class="admin-table-card">
-          <div class="admin-card-header">
+          <div class="admin-card-header d-flex align-items-center justify-content-between">
             <div>
               <h5>Featured Products Management</h5>
               <small class="text-muted">Quick access to catalogue records</small>
             </div>
-            <button class="btn btn-sm btn-veda-gold" onclick="window.adminApp.openAddServiceModal()">
-              <i class="bi bi-plus-lg me-1"></i> Add New Solution
-            </button>
+            <a href="{% url 'custom_admin:service_create' %}" class="btn btn-sm btn-veda-gold d-inline-flex align-items-center gap-1 shadow-sm">
+              <i class="bi bi-plus-lg"></i> Add New Solution
+            </a>
           </div>
           <div class="admin-table-responsive">
             <table class="admin-table">
@@ -143,56 +225,37 @@
                 <tr>
                   <th>Product Name</th>
                   <th>Category</th>
-                  <th>Price</th>
                   <th>Status</th>
                   <th class="text-end">Actions</th>
                 </tr>
               </thead>
-              <tbody id="adminServicesTbody"></tbody>
+              <tbody data-server-rendered="true">
+                {% for svc in featured_services %}
+                <tr>
+                  <td class="fw-bold text-forest">
+                    <a href="{% url 'custom_admin:service_edit' svc.id %}" class="text-forest text-decoration-none">
+                      {{ svc.name }}
+                    </a>
+                  </td>
+                  <td><span class="badge bg-light text-dark border">{{ svc.category.name }}</span></td>
+                  <td>
+                    <span class="badge {% if svc.is_active %}bg-success{% else %}bg-secondary{% endif %}">
+                      {% if svc.is_active %}Active{% else %}Deactivated{% endif %}
+                    </span>
+                  </td>
+                  <td class="text-end">
+                    <a href="{% url 'custom_admin:service_edit' svc.id %}" class="btn btn-sm btn-outline-secondary me-1" title="Edit Service">
+                      <i class="bi bi-pencil"></i>
+                    </a>
+                  </td>
+                </tr>
+                {% empty %}
+                <tr>
+                  <td colspan="4" class="text-center py-4 text-muted">No therapy solutions in catalogue yet.</td>
+                </tr>
+                {% endfor %}
+              </tbody>
             </table>
           </div>
         </div>
-
-<!-- Add / Edit Service Modal -->
-  <div class="modal fade" id="serviceModal" tabindex="-1" aria-labelledby="serviceModalTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content rounded-4 border-0 shadow-lg">
-        <div class="modal-header border-bottom">
-          <h5 class="modal-title fw-bold text-forest" id="modalServiceTitle">Add Therapy Solution</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body p-4">
-          <form id="serviceModalForm">
-            <input type="hidden" id="modalServiceId">
-            <div class="mb-3">
-              <label for="modalServiceName" class="form-veda-label">Solution / Machine Name *</label>
-              <input type="text" id="modalServiceName" class="form-veda-control" placeholder="e.g. Lumbar Traction Decompression Unit" required>
-            </div>
-            <div class="mb-3">
-              <label for="modalServiceCategory" class="form-veda-label">Category *</label>
-              <select id="modalServiceCategory" class="form-veda-select" required>
-                <option value="Therapy Machines">Therapy Machines</option>
-                <option value="Kansa Therapy">Kansa Therapy</option>
-                <option value="Massagers">Massagers</option>
-                <option value="Exercise Equipment">Exercise Equipment</option>
-                <option value="Surgical & Support Products">Surgical & Support Products</option>
-              </select>
-            </div>
-            <div class="mb-3">
-              <label for="modalServicePrice" class="form-veda-label">Price (INR ₹) *</label>
-              <input type="number" id="modalServicePrice" class="form-veda-control" placeholder="4999" required>
-            </div>
-            <div class="mb-3">
-              <label for="modalServiceStatus" class="form-veda-label">Publication Status *</label>
-              <select id="modalServiceStatus" class="form-veda-select" required>
-                <option value="Active">Active</option>
-                <option value="Draft">Draft</option>
-              </select>
-            </div>
-            <button type="submit" class="btn-veda-primary w-100 py-2">Save Solution (Mock State)</button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
 {% endblock %}

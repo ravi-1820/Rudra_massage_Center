@@ -457,89 +457,30 @@
       </div>
 
       <div class="row g-4 row-cols-1 row-cols-sm-2 row-cols-xl-4">
-        <!-- Product Card 1 -->
+        {% for svc in featured_services %}
         <div class="col">
           <div class="featured-product-card">
-            <span class="product-badge-pill">Therapy Machine</span>
+            <span class="product-badge-pill">{{ svc.category.name }}</span>
             <div class="product-img-wrap">
-              <img src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80" alt="Pulse Massager Pro" loading="lazy">
+              {% if svc.image %}
+                <img src="{{ svc.image.url }}" alt="{{ svc.name }}" loading="lazy">
+              {% else %}
+                <img src="{% static 'assets/images/rudra-wellness-logo.png' %}" alt="{{ svc.name }}" loading="lazy" class="opacity-75 p-3">
+              {% endif %}
             </div>
             <div class="product-card-body">
-              <h5 class="product-card-title">Pulse Massager Pro</h5>
-              <p class="product-card-desc">Advanced pulse therapy for muscle relaxation and comfort.</p>
-              <div class="product-card-rating">
-                <i class="bi bi-star-fill"></i>
-                <span class="fw-bold">4.9</span>
-                <span>(42 reviews)</span>
-              </div>
-              <a href="{% url 'user:service_detail' %}?id=wt-101" class="view-details-link">View Details &rarr;</a>
-              <a href="{% url 'user:appointment' %}?service=wt-101" class="btn-enquire-full">Book Appointment</a>
+              <h5 class="product-card-title">{{ svc.name }}</h5>
+              <p class="product-card-desc">{{ svc.short_description }}</p>
+              <a href="{% url 'user:service_detail' slug=svc.slug %}" class="view-details-link">View Details &rarr;</a>
+              <a href="{% url 'user:appointment' %}?service={{ svc.id }}" class="btn-enquire-full">Book Appointment</a>
             </div>
           </div>
         </div>
-
-        <!-- Product Card 2 -->
-        <div class="col">
-          <div class="featured-product-card">
-            <span class="product-badge-pill">Massager</span>
-            <div class="product-img-wrap">
-              <img src="https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=600&q=80" alt="Full Body Massage Chair" loading="lazy">
-            </div>
-            <div class="product-card-body">
-              <h5 class="product-card-title">Full Body Massage Chair</h5>
-              <p class="product-card-desc">Experience deep relaxation at home or centre.</p>
-              <div class="product-card-rating">
-                <i class="bi bi-star-fill"></i>
-                <span class="fw-bold">4.9</span>
-                <span>(38 reviews)</span>
-              </div>
-              <a href="{% url 'user:service_detail' %}?id=wt-104" class="view-details-link">View Details &rarr;</a>
-              <a href="{% url 'user:appointment' %}?service=wt-104" class="btn-enquire-full">Book Appointment</a>
-            </div>
-          </div>
+        {% empty %}
+        <div class="col-12 text-center py-4 text-muted">
+          <p class="mb-0">Explore our full therapy solutions in the <a href="{% url 'user:services' %}" class="text-forest fw-semibold">Services Catalogue</a>.</p>
         </div>
-
-        <!-- Product Card 3 -->
-        <div class="col">
-          <div class="featured-product-card">
-            <span class="product-badge-pill">Exercise Equipment</span>
-            <div class="product-img-wrap">
-              <img src="https://images.unsplash.com/photo-1576678927484-cc907957088c?auto=format&fit=crop&w=600&q=80" alt="Foldable Treadmill" loading="lazy">
-            </div>
-            <div class="product-card-body">
-              <h5 class="product-card-title">Foldable Treadmill</h5>
-              <p class="product-card-desc">Stay fit with a compact and powerful design.</p>
-              <div class="product-card-rating">
-                <i class="bi bi-star-fill"></i>
-                <span class="fw-bold">4.8</span>
-                <span>(56 reviews)</span>
-              </div>
-              <a href="{% url 'user:service_detail' %}?id=wt-103" class="view-details-link">View Details &rarr;</a>
-              <a href="{% url 'user:appointment' %}?service=wt-103" class="btn-enquire-full">Book Appointment</a>
-            </div>
-          </div>
-        </div>
-
-        <!-- Product Card 4 -->
-        <div class="col">
-          <div class="featured-product-card">
-            <span class="product-badge-pill">Kansa Therapy</span>
-            <div class="product-img-wrap">
-              <img src="https://images.unsplash.com/photo-1519823551278-64ac92734fb1?auto=format&fit=crop&w=600&q=80" alt="Kansa Wand Set" loading="lazy">
-            </div>
-            <div class="product-card-body">
-              <h5 class="product-card-title">Kansa Wand Set</h5>
-              <p class="product-card-desc">Traditional therapy for natural healing.</p>
-              <div class="product-card-rating">
-                <i class="bi bi-star-fill"></i>
-                <span class="fw-bold">4.9</span>
-                <span>(64 reviews)</span>
-              </div>
-              <a href="{% url 'user:service_detail' %}?id=wt-102" class="view-details-link">View Details &rarr;</a>
-              <a href="{% url 'user:appointment' %}?service=wt-102" class="btn-enquire-full">Book Appointment</a>
-            </div>
-          </div>
-        </div>
+        {% endfor %}
       </div>
     </div>
   </section>

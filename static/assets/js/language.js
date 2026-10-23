@@ -63,7 +63,8 @@ const TRANSLATIONS = {
     "btn.allCategories": "View All 18 Categories",
     "btn.fullCatalogue": "Open Full Catalogue",
     "btn.submitEnquiry": "Send Enquiry",
-    "btn.bookAppointment": "Confirm Appointment",
+    "btn.bookAppointment": "Request Appointment",
+    "btn.requestAppointment": "Request Appointment",
     "btn.calculateBmi": "Calculate My BMI",
     "btn.clearFilters": "Clear All Filters",
     "btn.copyCode": "Copy Promo Code",
@@ -77,7 +78,7 @@ const TRANSLATIONS = {
     "form.time": "Preferred Time",
     "form.service": "Select Service / Machine",
     "form.message": "Your Message / Specific Concerns",
-    "form.demoNotice": "Notice: This form runs client-side demo validation. Form data will be logged and demo feedback displayed.",
+    "form.demoNotice": "Notice: Requests are received securely and coordinated directly by our wellness advisory team.",
 
     // Footer
     "footer.tagline": "Empowering healthier families through genuine Ayurvedic metallurgy and modern physiotherapy technology.",
@@ -144,7 +145,8 @@ const TRANSLATIONS = {
     "btn.allCategories": "તમામ 18 શ્રેણીઓ",
     "btn.fullCatalogue": "સંપૂર્ણ સૂચિ ખોલો",
     "btn.submitEnquiry": "પૂછપરછ મોકલો",
-    "btn.bookAppointment": "મુલાકાત કન્ફર્મ કરો",
+    "btn.bookAppointment": "મુલાકાત વિનંતી મોકલો",
+    "btn.requestAppointment": "મુલાકાત વિનંતી મોકલો",
     "btn.calculateBmi": "મારું BMI ગણો",
     "btn.clearFilters": "ફિલ્ટર્સ દૂર કરો",
     "btn.copyCode": "કોડ કૉપી કરો",
@@ -158,7 +160,7 @@ const TRANSLATIONS = {
     "form.time": "પસંદગીનો સમય",
     "form.service": "સાધન અથવા સેવા પસંદ કરો",
     "form.message": "તમારો સંદેશ અથવા વિગત",
-    "form.demoNotice": "નોંધ: આ ફોર્મ ક્લાયન્ટ સાઈડ ડેમો છે. ડેટા બ્રાઉઝરમાં ચકાસણી સાથે દર્શાવાશે.",
+    "form.demoNotice": "નોંધ: વિનંતીઓ સુરક્ષિત રીતે પ્રાપ્ત થાય છે અને ટીમ દ્વારા સંપર્ક કરવામાં આવે છે.",
 
     // Footer
     "footer.tagline": "શુદ્ધ કાંસા ધાતુ અને આધુનિક ફિઝિયોથેરાપી દ્વારા પરિવારોને સ્વસ્થ બનાવવાનો સંકલ્પ.",
@@ -199,7 +201,25 @@ class LanguageManager {
     document.querySelectorAll("[data-i18n]").forEach(el => {
       const key = el.getAttribute("data-i18n");
       if (dict[key]) {
-        el.textContent = dict[key];
+        const textSpan = el.querySelector(".i18n-text");
+        if (textSpan) {
+          textSpan.textContent = dict[key];
+        } else if (el.children.length === 0) {
+          el.textContent = dict[key];
+        } else {
+          // Preserve icons and badges: update only text nodes
+          let replaced = false;
+          for (let node of el.childNodes) {
+            if (node.nodeType === Node.TEXT_NODE && node.textContent.trim().length > 0) {
+              node.textContent = (node.textContent.startsWith(" ") ? " " : "") + dict[key] + (node.textContent.endsWith(" ") ? " " : "");
+              replaced = true;
+              break;
+            }
+          }
+          if (!replaced) {
+            el.textContent = dict[key];
+          }
+        }
       }
     });
 
