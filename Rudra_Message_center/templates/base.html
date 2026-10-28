@@ -31,9 +31,6 @@
     }
   </style>
 
-  <script>
-    (function(){try{var t=localStorage.getItem('rudra_theme');if(t==='dark'||(!t&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)){document.documentElement.classList.add('dark');document.documentElement.setAttribute('data-theme','dark');}}catch(e){}})();
-  </script>
   {% block extra_css %}{% endblock %}
 </head>
 <body>
@@ -114,11 +111,6 @@
             <!-- Search Button Trigger -->
             <button class="header-search-btn" id="globalSearchBtn" aria-label="Search catalogue" data-i18n-title="search.placeholder">
               <i class="bi bi-search"></i>
-            </button>
-
-            <!-- Theme Toggle (Mint Signal Light / Dark) -->
-            <button class="theme-toggle-btn" id="themeToggleBtn" aria-label="Toggle dark mode" title="Toggle theme">
-              <i class="bi bi-moon-stars"></i>
             </button>
 
             <!-- Language Switcher Pill -->

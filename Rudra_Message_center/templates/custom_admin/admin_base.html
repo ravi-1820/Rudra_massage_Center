@@ -11,9 +11,6 @@
   <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
   <link rel="stylesheet" href="{% static 'assets/css/components.css' %}">
   <link rel="stylesheet" href="{% static 'assets/css/admin.css' %}">
-  <script>
-    (function(){try{var t=localStorage.getItem('rudra_theme');if(t==='dark'||(!t&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)){document.documentElement.classList.add('dark');document.documentElement.setAttribute('data-theme','dark');}}catch(e){}})();
-  </script>
   {% block extra_css %}{% endblock %}
 </head>
 <body>
@@ -113,9 +110,6 @@
         </div>
 
         <div class="admin-topbar-actions">
-          <button class="theme-toggle-btn" id="themeToggleBtn" aria-label="Toggle dark mode" title="Toggle theme">
-            <i class="bi bi-moon-stars"></i>
-          </button>
           {% block topbar_actions %}
           <!-- Search Bar -->
           <div class="admin-topbar-search d-none d-md-flex">

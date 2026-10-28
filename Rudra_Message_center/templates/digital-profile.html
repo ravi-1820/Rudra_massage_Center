@@ -148,9 +148,6 @@
       font-size: 1.2rem;
     }
   </style>
-  <script>
-    (function(){try{var t=localStorage.getItem('rudra_theme');if(t==='dark'||(!t&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)){document.documentElement.classList.add('dark');document.documentElement.setAttribute('data-theme','dark');}}catch(e){}})();
-  </script>
 </head>
 <body class="section-bg-ivory py-4">
 
@@ -159,9 +156,6 @@
       <a href="{% url 'user:home' %}" class="btn btn-sm btn-outline-dark rounded-pill">
         <i class="bi bi-arrow-left me-1"></i> Return to Main Website
       </a>
-      <button class="theme-toggle-btn" id="themeToggleBtn" aria-label="Toggle dark mode" title="Toggle theme">
-        <i class="bi bi-moon-stars"></i>
-      </button>
     </div>
 
     <div class="digital-card-container">

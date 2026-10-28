@@ -14,71 +14,18 @@
   });
 })();
 
-// Theme Controller for Admin Portal (Mint Signal)
+// Theme Controller for Admin Portal (Enforcing Light Theme)
 const AdminThemeController = {
-  storageKey: "rudra_theme",
-
-  getPreferredTheme() {
+  applyTheme() {
     try {
-      const stored = localStorage.getItem(this.storageKey);
-      if (stored === "dark" || stored === "light") return stored;
-      if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
-        return "dark";
-      }
-    } catch (e) {
-      console.warn("Storage access failed for theme preference:", e);
-    }
-    return "light";
-  },
-
-  applyTheme(theme) {
-    const isDark = theme === "dark";
-    if (isDark) {
-      document.documentElement.classList.add("dark");
-      document.documentElement.setAttribute("data-theme", "dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-      document.documentElement.setAttribute("data-theme", "light");
-    }
-
-    document.querySelectorAll(".theme-toggle-btn, #themeToggleBtn").forEach(btn => {
-      btn.innerHTML = isDark ? '<i class="bi bi-sun-fill"></i>' : '<i class="bi bi-moon-stars"></i>';
-      btn.setAttribute("aria-label", isDark ? "Switch to light mode" : "Switch to dark mode");
-      btn.setAttribute("title", isDark ? "Switch to light mode" : "Switch to dark mode");
-    });
-  },
-
-  setTheme(theme) {
-    try {
-      localStorage.setItem(this.storageKey, theme);
-    } catch (e) {
-      console.warn("Unable to save theme to localStorage:", e);
-    }
-    this.applyTheme(theme);
-  },
-
-  toggle() {
-    const current = document.documentElement.classList.contains("dark") ? "dark" : "light";
-    const next = current === "dark" ? "light" : "dark";
-    this.setTheme(next);
-    if (typeof showToast === "function") {
-      showToast("Theme Updated", `Switched to ${next === "dark" ? "Dark" : "Light"} Mint Signal theme`, "gold");
-    }
+      localStorage.removeItem("rudra_theme");
+    } catch (e) {}
+    document.documentElement.classList.remove("dark");
+    document.documentElement.setAttribute("data-theme", "light");
   },
 
   init() {
-    if (window.ThemeController) {
-      window.ThemeController.init();
-      return;
-    }
-    const theme = this.getPreferredTheme();
-    this.applyTheme(theme);
-
-    document.querySelectorAll(".theme-toggle-btn, #themeToggleBtn").forEach(btn => {
-      if (btn._hasThemeListener) return;
-      btn._hasThemeListener = true;
-      btn.addEventListener("click", () => this.toggle());
-    });
+    this.applyTheme();
   }
 };
 

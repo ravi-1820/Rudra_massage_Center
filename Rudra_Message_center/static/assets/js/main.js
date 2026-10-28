@@ -82,87 +82,25 @@ function showToast(title, message, type = "success") {
 window.showToast = showToast;
 
 
-// Theme Controller (Mint Signal Light / Dark Theme)
+// Theme Controller (Enforcing Light Theme)
 const ThemeController = {
-  storageKey: "rudra_theme",
-
-  getPreferredTheme() {
+  applyTheme() {
     try {
-      const stored = localStorage.getItem(this.storageKey);
-      if (stored === "dark" || stored === "light") return stored;
-      if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
-        return "dark";
-      }
-    } catch (e) {
-      console.warn("Storage access failed for theme preference:", e);
-    }
-    return "light";
-  },
-
-  applyTheme(theme) {
-    const isDark = theme === "dark";
-    if (isDark) {
-      document.documentElement.classList.add("dark");
-      document.documentElement.setAttribute("data-theme", "dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-      document.documentElement.setAttribute("data-theme", "light");
-    }
-
-    // Update all toggle buttons
-    document.querySelectorAll(".theme-toggle-btn, #themeToggleBtn").forEach(btn => {
-      btn.innerHTML = isDark ? '<i class="bi bi-sun-fill"></i>' : '<i class="bi bi-moon-stars"></i>';
-      btn.setAttribute("aria-label", isDark ? "Switch to light mode" : "Switch to dark mode");
-      btn.setAttribute("title", isDark ? "Switch to light mode" : "Switch to dark mode");
-    });
-  },
-
-  setTheme(theme) {
-    try {
-      localStorage.setItem(this.storageKey, theme);
-    } catch (e) {
-      console.warn("Unable to save theme to localStorage:", e);
-    }
-    this.applyTheme(theme);
-  },
-
-  toggle() {
-    const current = document.documentElement.classList.contains("dark") ? "dark" : "light";
-    const next = current === "dark" ? "light" : "dark";
-    this.setTheme(next);
-    showToast("Theme Updated", `Switched to ${next === "dark" ? "Dark" : "Light"} Mint Signal theme`, "gold");
+      localStorage.removeItem("rudra_theme");
+    } catch (e) {}
+    document.documentElement.classList.remove("dark");
+    document.documentElement.setAttribute("data-theme", "light");
   },
 
   init() {
-    const theme = this.getPreferredTheme();
-    this.applyTheme(theme);
-
-    // Bind event listeners to all theme toggle buttons safely
-    document.querySelectorAll(".theme-toggle-btn, #themeToggleBtn").forEach(btn => {
-      if (btn._hasThemeListener) return;
-      btn._hasThemeListener = true;
-      btn.addEventListener("click", () => this.toggle());
-    });
-
-    // Listen to OS system preference changes if user hasn't explicitly set a preference
-    if (window.matchMedia) {
-      window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (e) => {
-        try {
-          if (!localStorage.getItem(this.storageKey)) {
-            this.applyTheme(e.matches ? "dark" : "light");
-          }
-        } catch (err) {}
-      });
-    }
+    this.applyTheme();
   }
 };
 
 window.ThemeController = ThemeController;
 
-// Apply theme immediately on script execution to prevent FOUC
 try {
-  const initialTheme = ThemeController.getPreferredTheme();
-  ThemeController.applyTheme(initialTheme);
+  ThemeController.applyTheme();
 } catch (e) {}
 
 document.addEventListener("DOMContentLoaded", () => {
