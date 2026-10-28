@@ -75,8 +75,7 @@ Open `http://127.0.0.1:8000/` in your browser.
 - **Username:** admin
 - **Email:** admin@gmail.com
 - **Password:** admin
-- **Admin Portal:** http://127.0.0.1:8000/admin/login/
-- **Django Admin:** http://127.0.0.1:8000/django-admin/
+
 
 ## Screenshots
 
