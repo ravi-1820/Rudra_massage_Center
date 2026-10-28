@@ -74,6 +74,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'user.context_processors.announcement_context',
                 'user.context_processors.site_settings_context',
+                'user.context_processors.admin_notifications_context',
             ],
         },
     },

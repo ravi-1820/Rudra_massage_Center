@@ -57,5 +57,8 @@ urlpatterns = [
     path('google-sheets/', views.google_sheets_sync_monitor, name='google_sheets_sync'),
     path('google-sheets/<int:sync_id>/retry/', views.google_sheets_retry_action, name='google_sheets_retry'),
     path('google-sheets/retry-all-failed/', views.google_sheets_retry_all_failed, name='google_sheets_retry_all_failed'),
+
+    # Live Notifications API
+    path('api/notifications/', views.notifications_api, name='notifications_api'),
 ]
 

@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from django.core.paginator import Paginator
 from django.db.models import Count, Q
-from django.http import HttpResponseForbidden, HttpResponseNotAllowed
+from django.http import HttpResponseForbidden, HttpResponseNotAllowed, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
@@ -1172,4 +1172,144 @@ def google_sheets_retry_all_failed(request):
     )
 
     return redirect("custom_admin:google_sheets_sync")
+
+
+@staff_required
+def notifications_api(request):
+    """
+    Staff-authorized JSON endpoint returning live unread notifications for
+    appointments, customer enquiries, and support tickets.
+    """
+    from django.utils.timesince import timesince
+
+    pending_appointments = list(
+        Appointment.objects.filter(status='pending').select_related('service').order_by('-created_at')[:8]
+    )
+    new_enquiries = list(
+        Enquiry.objects.filter(status='new').select_related('service').order_by('-created_at')[:8]
+    )
+    new_support_requests = list(
+        SupportRequest.objects.filter(status='new').order_by('-created_at')[:8]
+    )
+
+    pending_count = Appointment.objects.filter(status='pending').count()
+    enquiry_count = Enquiry.objects.filter(status='new').count()
+    support_count = SupportRequest.objects.filter(status='new').count()
+    total_count = pending_count + enquiry_count + support_count
+
+    items = []
+
+    for appt in pending_appointments:
+        service_title = appt.service.name if appt.service else "General Booking"
+        items.append({
+            "type": "appointment",
+            "title": "New Booking Request",
+            "name": appt.name,
+            "detail": f"{service_title} • {appt.appointment_date}",
+            "time_ago": f"{timesince(appt.created_at)} ago" if appt.created_at else "",
+            "url": reverse("custom_admin:appointment_detail", args=[appt.id]),
+            "status": "Pending",
+            "is_unread": True,
+            "icon": "bi-calendar-check",
+            "badge_color": "warning",
+            "timestamp": appt.created_at.isoformat() if appt.created_at else "",
+        })
+
+    for enq in new_enquiries:
+        enq_sub = (
+            enq.service.name
+            if enq.service
+            else (enq.get_enquiry_type_display() if hasattr(enq, "get_enquiry_type_display") else "Enquiry")
+        )
+        items.append({
+            "type": "enquiry",
+            "title": "New Customer Enquiry",
+            "name": enq.name,
+            "detail": f"{enq_sub} • {enq.phone}",
+            "time_ago": f"{timesince(enq.created_at)} ago" if enq.created_at else "",
+            "url": reverse("custom_admin:enquiry_detail", args=[enq.id]),
+            "status": "New",
+            "is_unread": True,
+            "icon": "bi-envelope-paper",
+            "badge_color": "primary",
+            "timestamp": enq.created_at.isoformat() if enq.created_at else "",
+        })
+
+    for sup in new_support_requests:
+        items.append({
+            "type": "support",
+            "title": f"Support Ticket #{sup.ticket_number}",
+            "name": sup.name,
+            "detail": f"{sup.subject} • {sup.phone}",
+            "time_ago": f"{timesince(sup.created_at)} ago" if sup.created_at else "",
+            "url": reverse("custom_admin:support_request_detail", args=[sup.id]),
+            "status": "New",
+            "is_unread": True,
+            "icon": "bi-headset",
+            "badge_color": "info",
+            "timestamp": sup.created_at.isoformat() if sup.created_at else "",
+        })
+
+    # If unread count is less than 5, backfill with most recent records for quick access
+    if len(items) < 5:
+        recent_appts = Appointment.objects.exclude(status='pending').select_related('service').order_by('-created_at')[:3]
+        for appt in recent_appts:
+            service_title = appt.service.name if appt.service else "General Booking"
+            items.append({
+                "type": "appointment",
+                "title": "Booking Record",
+                "name": appt.name,
+                "detail": f"{service_title} • {appt.appointment_date}",
+                "time_ago": f"{timesince(appt.created_at)} ago" if appt.created_at else "",
+                "url": reverse("custom_admin:appointment_detail", args=[appt.id]),
+                "status": appt.status.title(),
+                "is_unread": False,
+                "icon": "bi-calendar-check",
+                "badge_color": "secondary",
+                "timestamp": appt.created_at.isoformat() if appt.created_at else "",
+            })
+
+        recent_enqs = Enquiry.objects.exclude(status='new').select_related('service').order_by('-created_at')[:3]
+        for enq in recent_enqs:
+            items.append({
+                "type": "enquiry",
+                "title": "Customer Enquiry",
+                "name": enq.name,
+                "detail": enq.phone,
+                "time_ago": f"{timesince(enq.created_at)} ago" if enq.created_at else "",
+                "url": reverse("custom_admin:enquiry_detail", args=[enq.id]),
+                "status": enq.status.title(),
+                "is_unread": False,
+                "icon": "bi-envelope-paper",
+                "badge_color": "secondary",
+                "timestamp": enq.created_at.isoformat() if enq.created_at else "",
+            })
+
+        recent_sups = SupportRequest.objects.exclude(status='new').order_by('-created_at')[:3]
+        for sup in recent_sups:
+            items.append({
+                "type": "support",
+                "title": f"Support Ticket #{sup.ticket_number}",
+                "name": sup.name,
+                "detail": sup.subject,
+                "time_ago": f"{timesince(sup.created_at)} ago" if sup.created_at else "",
+                "url": reverse("custom_admin:support_request_detail", args=[sup.id]),
+                "status": sup.status.title(),
+                "is_unread": False,
+                "icon": "bi-headset",
+                "badge_color": "secondary",
+                "timestamp": sup.created_at.isoformat() if sup.created_at else "",
+            })
+
+    items.sort(key=lambda x: x["timestamp"], reverse=True)
+
+    return JsonResponse({
+        "success": True,
+        "total_count": total_count,
+        "pending_count": pending_count,
+        "enquiry_count": enquiry_count,
+        "support_count": support_count,
+        "notifications": items[:10],
+    })
+
 

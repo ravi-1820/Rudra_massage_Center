@@ -122,11 +122,183 @@
             <i class="bi bi-search admin-topbar-search-icon"></i>
             <input type="text" class="admin-topbar-search-input" placeholder="Search anything…" aria-label="Search">
           </div>
-          <!-- Notification Bell -->
-          <div class="admin-topbar-icon-btn" onclick="showToast('Notifications', 'No unread alerts at the moment.', 'gold');" title="Notifications" tabindex="0" role="button" aria-label="Notifications">
-            <i class="bi bi-bell"></i>
-            <span class="admin-topbar-badge">3</span>
+          <!-- Notification Bell Dropdown -->
+          <div class="dropdown">
+            <button class="btn admin-topbar-icon-btn position-relative border-0 bg-transparent p-0 dropdown-toggle no-caret"
+                    type="button"
+                    id="adminNotificationDropdown"
+                    data-bs-toggle="dropdown"
+                    data-bs-auto-close="true"
+                    aria-expanded="false"
+                    title="Notifications ({{ total_notifications_count|default:0 }} New)"
+                    onclick="handleNotificationClick();">
+              <i class="bi bi-bell"></i>
+              {% if total_notifications_count > 0 %}
+                <span class="admin-topbar-badge">{{ total_notifications_count }}</span>
+              {% endif %}
+            </button>
+            <div class="dropdown-menu dropdown-menu-end shadow-lg border mt-2 p-0 notification-dropdown-menu"
+                 aria-labelledby="adminNotificationDropdown"
+                 style="width: 380px; max-width: 92vw; border-radius: 16px; overflow: hidden; z-index: 1060;">
+              
+              <!-- Header -->
+              <div class="p-3 bg-light border-bottom d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center gap-2">
+                  <i class="bi bi-bell-fill text-emerald"></i>
+                  <span class="fw-bold fs-6">Notifications</span>
+                  {% if total_notifications_count > 0 %}
+                    <span class="badge bg-danger rounded-pill">{{ total_notifications_count }} New</span>
+                  {% else %}
+                    <span class="badge bg-secondary rounded-pill">0 New</span>
+                  {% endif %}
+                </div>
+                <small class="text-muted">Live Alerts</small>
+              </div>
+
+              <!-- Notification Items List (Loaded dynamically) -->
+              <div class="notification-list-body" id="notificationItemsList" style="max-height: 380px; overflow-y: auto;">
+                <div class="p-4 text-center text-muted">
+                  <div class="spinner-border spinner-border-sm text-success mb-2" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
+                  <p class="mb-0 small fw-medium">Loading notifications…</p>
+                </div>
+              </div>
+
+              <!-- Quick Links Footer -->
+              <div class="p-2 bg-light border-top d-flex justify-content-around text-center small" id="notificationQuickLinks">
+                <a href="{% url 'custom_admin:appointments' %}" class="text-decoration-none text-muted py-1 px-2 fw-medium">
+                  <i class="bi bi-calendar-check me-1"></i>Bookings (<span id="notifFootBookings">{{ pending_appointments_count|default:0 }}</span>)
+                </a>
+                <span class="text-muted">|</span>
+                <a href="{% url 'custom_admin:enquiries' %}" class="text-decoration-none text-muted py-1 px-2 fw-medium">
+                  <i class="bi bi-envelope me-1"></i>Enquiries (<span id="notifFootEnquiries">{{ new_enquiries_count|default:0 }}</span>)
+                </a>
+                <span class="text-muted">|</span>
+                <a href="{% url 'custom_admin:support_requests' %}" class="text-decoration-none text-muted py-1 px-2 fw-medium">
+                  <i class="bi bi-headset me-1"></i>Support (<span id="notifFootSupport">{{ new_support_count|default:0 }}</span>)
+                </a>
+              </div>
+            </div>
           </div>
+
+          <script>
+            let notificationsLoaded = false;
+
+            function escapeHtml(str) {
+              if (!str) return '';
+              const div = document.createElement('div');
+              div.textContent = str;
+              return div.innerHTML;
+            }
+
+            async function fetchAndRenderNotifications(showToastPopup = true) {
+              const listContainer = document.getElementById("notificationItemsList");
+              const notifUrl = "{% url 'custom_admin:notifications_api' %}";
+
+              try {
+                const res = await fetch(notifUrl, {
+                  headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                });
+                if (!res.ok) throw new Error("Network error loading notifications");
+                const data = await res.json();
+
+                // Update badge and footer counts
+                const total = data.total_count || 0;
+                const pending = data.pending_count || 0;
+                const enq = data.enquiry_count || 0;
+                const sup = data.support_count || 0;
+
+                const footBookings = document.getElementById("notifFootBookings");
+                if (footBookings) footBookings.textContent = pending;
+                const footEnquiries = document.getElementById("notifFootEnquiries");
+                if (footEnquiries) footEnquiries.textContent = enq;
+                const footSupport = document.getElementById("notifFootSupport");
+                if (footSupport) footSupport.textContent = sup;
+
+                const bellBadge = document.querySelector("#adminNotificationDropdown .admin-topbar-badge");
+                if (bellBadge) {
+                  if (total > 0) {
+                    bellBadge.textContent = total;
+                    bellBadge.style.display = "";
+                  } else {
+                    bellBadge.style.display = "none";
+                  }
+                }
+
+                if (data.notifications && data.notifications.length > 0) {
+                  let html = "";
+                  data.notifications.forEach(n => {
+                    const unreadClass = n.is_unread ? "bg-light-subtle fw-medium" : "";
+                    html += `
+                      <a href="${escapeHtml(n.url)}" class="dropdown-item p-3 border-bottom d-flex align-items-start gap-3 ${unreadClass} text-wrap" style="transition: background 0.15s ease;">
+                        <div class="notification-icon-wrap rounded-circle p-2 bg-${escapeHtml(n.badge_color)}-subtle text-${escapeHtml(n.badge_color)} flex-shrink-0 d-flex align-items-center justify-content-center" style="width: 38px; height: 38px;">
+                          <i class="bi ${escapeHtml(n.icon)} fs-6"></i>
+                        </div>
+                        <div class="flex-grow-1 min-w-0">
+                          <div class="d-flex align-items-center justify-content-between mb-1">
+                            <span class="fw-bold small text-dark">${escapeHtml(n.title)}</span>
+                            <span class="badge bg-${escapeHtml(n.badge_color)} text-white" style="font-size: 0.68rem;">${escapeHtml(n.status)}</span>
+                          </div>
+                          <p class="mb-1 small text-dark text-truncate fw-semibold">${escapeHtml(n.name)}</p>
+                          ${n.detail ? `<p class="mb-1 text-muted text-truncate" style="font-size: 0.76rem;">${escapeHtml(n.detail)}</p>` : ''}
+                          <small class="text-muted d-block" style="font-size: 0.7rem;">
+                            <i class="bi bi-clock me-1"></i>${escapeHtml(n.time_ago)}
+                          </small>
+                        </div>
+                      </a>
+                    `;
+                  });
+                  listContainer.innerHTML = html;
+                } else {
+                  listContainer.innerHTML = `
+                    <div class="p-4 text-center text-muted">
+                      <i class="bi bi-check2-circle fs-2 text-success d-block mb-2"></i>
+                      <p class="mb-0 small fw-semibold">No notifications</p>
+                      <small>All enquiries, bookings, and support tickets are resolved.</small>
+                    </div>
+                  `;
+                }
+
+                if (showToastPopup && typeof showToast === "function") {
+                  if (total > 0) {
+                    const parts = [];
+                    if (pending > 0) parts.push(`${pending} booking${pending > 1 ? 's' : ''}`);
+                    if (enq > 0) parts.push(`${enq} enquiry${enq > 1 ? 's' : ''}`);
+                    if (sup > 0) parts.push(`${sup} support ticket${sup > 1 ? 's' : ''}`);
+                    showToast("Live Notifications", `You have ${total} unread: ${parts.join(', ')}.`, "gold");
+                  } else {
+                    showToast("Notifications", "No unread alerts at the moment.", "info");
+                  }
+                }
+                notificationsLoaded = true;
+              } catch (err) {
+                console.error("Failed to load notifications:", err);
+                listContainer.innerHTML = `
+                  <div class="p-3 text-center text-muted small">
+                    <i class="bi bi-exclamation-circle text-warning d-block mb-1 fs-5"></i>
+                    Could not refresh notifications.
+                  </div>
+                `;
+              }
+            }
+
+            function handleNotificationClick() {
+              fetchAndRenderNotifications(true);
+            }
+
+            // Pre-load on page load quietly so dropdown is instant when clicked
+            document.addEventListener("DOMContentLoaded", function() {
+              const dropdownBtn = document.getElementById("adminNotificationDropdown");
+              if (dropdownBtn) {
+                dropdownBtn.addEventListener("show.bs.dropdown", function() {
+                  if (!notificationsLoaded) {
+                    fetchAndRenderNotifications(false);
+                  }
+                });
+              }
+            });
+          </script>
           <!-- Settings Quick Access -->
           <a href="{% url 'custom_admin:settings' %}" class="admin-topbar-icon-btn" title="Settings" aria-label="Portal Settings">
             <i class="bi bi-gear"></i>
