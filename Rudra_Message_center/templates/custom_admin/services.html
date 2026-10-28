@@ -1,0 +1,261 @@
+{% extends 'custom_admin/admin_base.html' %}
+{% load static %}
+
+{% block title %}Manage Services Catalogue | Rudra Massage & Wellness Admin{% endblock %}
+
+{% block nav_services %}active{% endblock %}
+
+{% block topbar_title %}Products & Therapy Services Management{% endblock %}
+
+{% block topbar_actions %}
+<a href="{% url 'custom_admin:service_create' %}" class="btn btn-sm btn-veda-gold d-flex align-items-center gap-1 shadow-sm">
+  <i class="bi bi-plus-lg"></i> Add New Solution
+</a>
+{% endblock %}
+
+{% block content %}
+<!-- Metric Stat Cards Row -->
+<div class="row g-3 mb-4">
+  <div class="col-sm-4">
+    <div class="admin-stat-card py-3">
+      <div class="admin-stat-info">
+        <span class="text-muted small">Total Solutions</span>
+        <h3 class="mb-0 fs-4">{{ total_count }}</h3>
+      </div>
+      <div class="admin-stat-icon stat-icon-blue">
+        <i class="bi bi-grid-fill"></i>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-4">
+    <div class="admin-stat-card py-3">
+      <div class="admin-stat-info">
+        <span class="text-muted small">Active on Public Site</span>
+        <h3 class="mb-0 fs-4 text-success">{{ active_count }}</h3>
+      </div>
+      <div class="admin-stat-icon stat-icon-green">
+        <i class="bi bi-check-circle-fill"></i>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-4">
+    <div class="admin-stat-card py-3">
+      <div class="admin-stat-info">
+        <span class="text-muted small">Deactivated / Draft</span>
+        <h3 class="mb-0 fs-4 text-secondary">{{ inactive_count }}</h3>
+      </div>
+      <div class="admin-stat-icon stat-icon-gold">
+        <i class="bi bi-archive-fill"></i>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Main Services Table Card -->
+<div class="admin-table-card">
+  <div class="admin-card-header d-flex flex-wrap align-items-center justify-content-between gap-3">
+    <div>
+      <h5 class="mb-0">Services Catalogue</h5>
+      <small class="text-muted">Manage products, therapy solutions, and active classifications</small>
+    </div>
+
+    <!-- Search & Filter Controls -->
+    <form method="get" class="d-flex flex-wrap align-items-center gap-2">
+      <!-- Search Input -->
+      <div class="input-group input-group-sm" style="width: 220px;">
+        <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
+        <input type="text" name="q" value="{{ search_query }}" class="form-control border-start-0" placeholder="Search title, desc..." aria-label="Search services">
+      </div>
+
+      <!-- Category Filter -->
+      <select name="category" class="form-select form-select-sm" style="width: 170px;" onchange="this.form.submit()">
+        <option value="">All Categories</option>
+        {% for cat in categories %}
+          <option value="{{ cat.slug }}" {% if selected_category == cat.slug %}selected{% endif %}>{{ cat.name }}</option>
+        {% endfor %}
+      </select>
+
+      <!-- Status Filter -->
+      <select name="status" class="form-select form-select-sm" style="width: 130px;" onchange="this.form.submit()">
+        <option value="">All Statuses</option>
+        <option value="active" {% if selected_status == "active" %}selected{% endif %}>Active Only</option>
+        <option value="inactive" {% if selected_status == "inactive" %}selected{% endif %}>Deactivated</option>
+      </select>
+
+      <!-- Submit Filter -->
+      <button type="submit" class="btn btn-sm btn-outline-dark">Filter</button>
+
+      {% if search_query or selected_category or selected_status %}
+        <a href="{% url 'custom_admin:services' %}" class="btn btn-sm btn-outline-secondary" title="Clear filters">Reset</a>
+      {% endif %}
+    </form>
+  </div>
+
+  <!-- Table Responsive -->
+  <div class="admin-table-responsive">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th style="width: 70px;">Thumbnail</th>
+          <th>Product / Machine Name</th>
+          <th>Category</th>
+          <th>Classifications</th>
+          <th style="width: 80px;" class="text-center">Order</th>
+          <th style="width: 110px;" class="text-center">Status</th>
+          <th style="width: 130px;" class="text-end">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for svc in services %}
+          <tr>
+            <!-- Thumbnail -->
+            <td>
+              {% if svc.image %}
+                <img src="{{ svc.image.url }}" alt="{{ svc.name }}" style="width: 46px; height: 46px; object-fit: cover; border-radius: 8px; border: 1px solid #dce5df;">
+              {% else %}
+                <div class="bg-light d-flex align-items-center justify-content-center text-muted" style="width: 46px; height: 46px; border-radius: 8px; border: 1px dashed #ced4da;">
+                  <i class="bi bi-image" style="font-size: 1.2rem;"></i>
+                </div>
+              {% endif %}
+            </td>
+
+            <!-- Name & Slug -->
+            <td>
+              <div class="fw-bold text-dark">{{ svc.name }}</div>
+              <div class="small text-muted text-truncate" style="max-width: 280px;">{{ svc.short_description }}</div>
+              <div class="small text-muted" style="font-size: 0.75rem;">
+                Slug: <code>{{ svc.slug }}</code>
+                {% if svc.is_featured %}
+                  <span class="badge bg-warning text-dark ms-1">Featured</span>
+                {% endif %}
+              </div>
+            </td>
+
+            <!-- Category -->
+            <td>
+              <span class="badge bg-light text-forest border px-2 py-1">
+                {{ svc.category.name }}
+              </span>
+            </td>
+
+            <!-- Classifications (Pills) -->
+            <td>
+              <div class="d-flex flex-wrap gap-1" style="max-width: 250px;">
+                {% for need in svc.customer_needs.all %}
+                  <span class="badge bg-light text-secondary border" style="font-size: 0.7rem;">{{ need.name }}</span>
+                {% empty %}
+                {% endfor %}
+                {% for body in svc.body_parts.all %}
+                  <span class="badge bg-light text-info border" style="font-size: 0.7rem;">{{ body.name }}</span>
+                {% empty %}
+                {% endfor %}
+                {% if not svc.customer_needs.all and not svc.body_parts.all %}
+                  <span class="text-muted small">-</span>
+                {% endif %}
+              </div>
+            </td>
+
+            <!-- Order -->
+            <td class="text-center fw-semibold text-muted">
+              {{ svc.display_order }}
+            </td>
+
+            <!-- Active Status Toggle -->
+            <td class="text-center">
+              <form method="post" action="{% url 'custom_admin:service_toggle_active' svc.id %}">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                {% if svc.is_active %}
+                  <button type="submit" class="btn btn-sm btn-outline-success rounded-pill px-2 py-1" style="font-size: 0.75rem; font-weight: 600;" title="Click to deactivate">
+                    <i class="bi bi-check-circle me-1"></i> Active
+                  </button>
+                {% else %}
+                  <button type="submit" class="btn btn-sm btn-outline-secondary rounded-pill px-2 py-1" style="font-size: 0.75rem;" title="Click to activate">
+                    <i class="bi bi-x-circle me-1"></i> Inactive
+                  </button>
+                {% endif %}
+              </form>
+            </td>
+
+            <!-- Actions -->
+            <td class="text-end">
+              <div class="d-inline-flex gap-1">
+                <a href="{% url 'custom_admin:service_edit' svc.id %}" class="btn btn-sm btn-outline-dark" title="Edit Service" aria-label="Edit Service">
+                  <i class="bi bi-pencil"></i>
+                </a>
+                <a href="{% url 'user:service_detail' slug=svc.slug %}" target="_blank" class="btn btn-sm btn-outline-secondary" title="Preview on public site" aria-label="Preview">
+                  <i class="bi bi-box-arrow-up-right"></i>
+                </a>
+                <button type="button" class="btn btn-sm btn-outline-danger btn-delete-trigger" 
+                        title="Delete Service" aria-label="Delete Service"
+                        data-bs-toggle="modal" data-bs-target="#deleteConfirmModal"
+                        data-record-type="Therapy Solution"
+                        data-record-name="{{ svc.name }}"
+                        data-delete-url="{% url 'custom_admin:service_delete' svc.id %}"
+                        data-next="{{ request.get_full_path }}">
+                  <i class="bi bi-trash3"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="7" class="text-center py-5">
+              <div class="text-muted mb-2">
+                <i class="bi bi-grid text-secondary" style="font-size: 2.2rem;"></i>
+              </div>
+              <h6 class="fw-semibold">No therapy services found</h6>
+              <p class="text-muted small mb-3">No catalogue items match your current filter criteria.</p>
+              <a href="{% url 'custom_admin:service_create' %}" class="btn btn-sm btn-veda-gold">
+                <i class="bi bi-plus-lg me-1"></i> Add Your First Solution
+              </a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination Controls -->
+  {% if page_obj.has_other_pages %}
+    <div class="admin-card-header d-flex align-items-center justify-content-between border-top py-3">
+      <small class="text-muted">
+        Showing {{ page_obj.start_index }} to {{ page_obj.end_index }} of {{ page_obj.paginator.count }} items
+      </small>
+      <nav aria-label="Services pagination">
+        <ul class="pagination pagination-sm mb-0">
+          {% if page_obj.has_previous %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if pagination_querystring %}&{{ pagination_querystring }}{% endif %}">
+                Previous
+              </a>
+            </li>
+          {% else %}
+            <li class="page-item disabled"><span class="page-link">Previous</span></li>
+          {% endif %}
+
+          {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+              <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{ num }}{% if pagination_querystring %}&{{ pagination_querystring }}{% endif %}">{{ num }}</a>
+              </li>
+            {% endif %}
+          {% endfor %}
+
+          {% if page_obj.has_next %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if pagination_querystring %}&{{ pagination_querystring }}{% endif %}">
+                Next
+              </a>
+            </li>
+          {% else %}
+            <li class="page-item disabled"><span class="page-link">Next</span></li>
+          {% endif %}
+        </ul>
+      </nav>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

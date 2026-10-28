@@ -1,0 +1,845 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Portal Login | Rudra Massage & Wellness</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="{% static 'assets/images/rudra-wellness-emblem.png' %}">
+
+  <!-- Google Fonts: Cormorant Garamond, Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+
+  <!-- Bootstrap 5 & Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
+  <style>
+    :root {
+      --deep-forest: #123D2E;
+      --primary-emerald: #176B4D;
+      --emerald-hover: #124A34;
+      --emerald-dark: #0E3525;
+      --champagne-gold: #C49A52;
+      --soft-sage: #DCE8DD;
+      --sage-subtle: #E8F2EB;
+      --warm-ivory: #FAF8F1;
+      --text-dark: #1E2B24;
+      --text-muted: #70817A;
+      --border-subtle: #DCE8DD;
+      --card-bg: #FFFFFF;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: var(--text-dark);
+      background-color: var(--warm-ivory);
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Fullscreen Viewport */
+    .spa-viewport {
+      min-height: 100vh;
+      width: 100%;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background-color: #F8F6F0;
+      background-image: url("{% static 'assets/images/admin-login-bg.jpg' %}");
+      background-size: cover;
+      background-position: left bottom;
+      background-repeat: no-repeat;
+      padding: 100px 30px 50px 30px;
+    }
+
+    /* Soft Translucent Spa Gradient Overlay */
+    .spa-viewport::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        105deg,
+        rgba(255, 255, 255, 0.15) 0%,
+        rgba(250, 248, 241, 0.55) 45%,
+        rgba(250, 248, 241, 0.88) 100%
+      );
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Top Left Floating Brand Tab - Modern Luxury Glass Bar */
+    .top-brand-tab {
+      position: absolute;
+      top: 0;
+      left: 60px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      padding: 10px 30px 14px 30px;
+      border-radius: 0 0 24px 24px;
+      box-shadow: 0 8px 24px rgba(18, 61, 46, 0.08), 0 2px 6px rgba(0, 0, 0, 0.03);
+      border: 1px solid rgba(220, 232, 221, 0.7);
+      border-top: none;
+      z-index: 10;
+      display: inline-flex;
+      align-items: center;
+      transition: all 0.25s ease;
+      text-decoration: none;
+    }
+
+    .top-brand-tab:hover {
+      transform: translateY(2px);
+      background: #FFFFFF;
+      box-shadow: 0 12px 30px rgba(18, 61, 46, 0.12), 0 3px 8px rgba(0, 0, 0, 0.04);
+    }
+
+    .top-brand-logo {
+      height: 48px;
+      width: auto;
+      max-width: 220px;
+      object-fit: contain;
+      display: block;
+      filter: drop-shadow(0 2px 4px rgba(18, 61, 46, 0.05));
+    }
+
+    /* Top Right Tagline ("Better Care for a Healthier You") */
+    .top-tagline-wrap {
+      position: absolute;
+      top: 24px;
+      right: 60px;
+      z-index: 10;
+      text-align: right;
+    }
+
+    .top-tagline-text {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-style: italic;
+      font-size: 1.45rem;
+      font-weight: 600;
+      color: var(--primary-emerald);
+      line-height: 1.18;
+      letter-spacing: 0.02em;
+    }
+
+    .top-tagline-ornament {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 5px;
+    }
+
+    .top-tagline-line {
+      width: 36px;
+      height: 1.5px;
+      background: linear-gradient(to right, transparent, var(--champagne-gold));
+      border-radius: 2px;
+    }
+
+    .top-tagline-icon {
+      color: var(--primary-emerald);
+      font-size: 0.95rem;
+      line-height: 1;
+    }
+
+    /* Bottom Right Decorative Fluid Waves */
+    .bottom-corner-accent {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 280px;
+      height: 280px;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    /* Main Grid Layout */
+    .spa-grid-container {
+      position: relative;
+      z-index: 4;
+      width: 100%;
+      max-width: 1320px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.15fr 0.95fr;
+      align-items: center;
+      gap: 60px;
+    }
+
+    /* Left Section: Brand Experience */
+    .brand-experience-wrap {
+      padding-right: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .brand-eyebrow {
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--primary-emerald);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand-heading-primary {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 3.35rem;
+      font-weight: 700;
+      color: var(--deep-forest);
+      line-height: 1.12;
+      letter-spacing: -0.015em;
+      margin-bottom: 18px;
+    }
+
+    .brand-support-text {
+      font-size: 1.05rem;
+      font-weight: 500;
+      color: #3F574C;
+      line-height: 1.5;
+      margin-bottom: 34px;
+    }
+
+    .brand-support-text span.dot {
+      color: var(--champagne-gold);
+      margin: 0 8px;
+      font-size: 0.95rem;
+    }
+
+    /* 4 Wellness Pillar Items */
+    .wellness-pillars-row {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+
+    .pillar-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 10px;
+    }
+
+    .pillar-circle {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      background: #FFFFFF;
+      border: 1.5px solid rgba(220, 232, 221, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary-emerald);
+      box-shadow: 0 6px 16px rgba(18, 61, 46, 0.06);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .pillar-circle svg {
+      width: 24px;
+      height: 24px;
+      fill: currentColor;
+      transition: transform 0.3s ease;
+    }
+
+    .pillar-card:hover .pillar-circle {
+      transform: translateY(-3px);
+      border-color: var(--primary-emerald);
+      box-shadow: 0 10px 22px rgba(23, 107, 77, 0.16);
+      color: var(--deep-forest);
+    }
+
+    .pillar-card:hover .pillar-circle svg {
+      transform: scale(1.08);
+    }
+
+    .pillar-name {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #2D4137;
+      letter-spacing: 0.01em;
+    }
+
+    /* Right Section: Admin Login Card */
+    .login-card-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+    }
+
+    .admin-glass-card {
+      background: #FFFFFF;
+      width: 100%;
+      max-width: 480px;
+      border-radius: 26px;
+      padding: 44px 42px 42px 42px;
+      border: 1px solid rgba(220, 232, 221, 0.85);
+      box-shadow:
+        0 12px 30px -5px rgba(18, 61, 46, 0.08),
+        0 30px 65px -12px rgba(0, 0, 0, 0.12);
+      position: relative;
+      z-index: 5;
+      transition: box-shadow 0.3s ease, transform 0.3s ease;
+    }
+
+    .admin-glass-card:hover {
+      box-shadow:
+        0 16px 36px -5px rgba(18, 61, 46, 0.10),
+        0 36px 75px -12px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Secure Login Badge */
+    .secure-badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 6px 15px;
+      background-color: var(--sage-subtle);
+      color: var(--primary-emerald);
+      font-size: 0.74rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      border-radius: 999px;
+      margin-bottom: 16px;
+      border: 1px solid rgba(23, 107, 77, 0.12);
+    }
+
+    .secure-badge-pill i {
+      font-size: 0.82rem;
+    }
+
+    /* Card Typography */
+    .card-title-portal {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 2.35rem;
+      font-weight: 700;
+      color: var(--deep-forest);
+      letter-spacing: -0.01em;
+      line-height: 1.12;
+      margin-bottom: 8px;
+    }
+
+    .card-subtitle-portal {
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      font-weight: 400;
+      line-height: 1.45;
+      margin-bottom: 24px;
+    }
+
+    /* Alerts */
+    .alert-custom-spa {
+      border-radius: 12px;
+      padding: 11px 14px;
+      font-size: 0.85rem;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid transparent;
+    }
+
+    .alert-custom-spa.alert-danger {
+      background-color: #FDEDEC;
+      color: #922B21;
+      border-color: #FADBD8;
+    }
+
+    .alert-custom-spa.alert-success {
+      background-color: #EAF7ED;
+      color: #145A32;
+      border-color: #D4EFDF;
+    }
+
+    /* Input Field Groups */
+    .form-group-spa {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    .label-spa {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 0.86rem;
+      font-weight: 700;
+      color: #213329;
+      margin-bottom: 7px;
+    }
+
+    .label-spa i {
+      font-size: 0.92rem;
+      color: var(--primary-emerald);
+    }
+
+    .input-wrapper-spa {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-icon-spa {
+      position: absolute;
+      left: 16px;
+      color: #8C9E95;
+      font-size: 1.05rem;
+      pointer-events: none;
+      transition: color 0.2s ease;
+    }
+
+    .custom-input-spa {
+      width: 100%;
+      height: 48px;
+      padding: 10px 44px 10px 44px;
+      background-color: #FAFCFA;
+      border: 1.5px solid var(--border-subtle);
+      border-radius: 12px;
+      font-size: 0.92rem;
+      color: var(--text-dark);
+      transition: all 0.2s ease;
+      outline: none;
+    }
+
+    .custom-input-spa::placeholder {
+      color: #9EABA3;
+      font-weight: 400;
+    }
+
+    .custom-input-spa:focus {
+      background-color: #FFFFFF;
+      border-color: var(--primary-emerald);
+      box-shadow: 0 0 0 3.5px rgba(23, 107, 77, 0.14);
+    }
+
+    .input-wrapper-spa:focus-within .input-icon-spa {
+      color: var(--primary-emerald);
+    }
+
+    /* Toggle Password Button */
+    .toggle-password-spa {
+      position: absolute;
+      right: 14px;
+      background: none;
+      border: none;
+      color: #8C9E95;
+      font-size: 1.15rem;
+      cursor: pointer;
+      padding: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.2s ease;
+      border-radius: 6px;
+    }
+
+    .toggle-password-spa:hover,
+    .toggle-password-spa:focus-visible {
+      color: var(--primary-emerald);
+      outline: none;
+    }
+
+    /* Primary Submit Button */
+    .btn-signin-spa {
+      width: 100%;
+      height: 50px;
+      background: linear-gradient(135deg, #176B4D 0%, #124A34 100%);
+      color: #FFFFFF;
+      border: none;
+      border-radius: 12px;
+      font-size: 0.98rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 24px;
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(23, 107, 77, 0.26);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .btn-signin-spa:hover {
+      background: linear-gradient(135deg, #124A34 0%, #0E3525 100%);
+      box-shadow: 0 8px 24px rgba(23, 107, 77, 0.36);
+      transform: translateY(-1px);
+      color: #FFFFFF;
+    }
+
+    .btn-signin-spa:active {
+      transform: translateY(0);
+      box-shadow: 0 3px 10px rgba(23, 107, 77, 0.24);
+    }
+
+
+
+    /* Mobile Brand Header */
+    .mobile-brand-wrap {
+      display: none;
+      text-align: center;
+      margin-bottom: 22px;
+    }
+
+    /* Responsive Media Queries */
+    @media (max-width: 1199px) {
+      .spa-grid-container {
+        gap: 36px;
+      }
+
+      .brand-heading-primary {
+        font-size: 2.75rem;
+      }
+
+      .wellness-pillars-row {
+        gap: 22px;
+      }
+    }
+
+    @media (max-width: 991px) {
+      .spa-viewport {
+        padding: 90px 20px 40px 20px;
+        background-position: center bottom;
+      }
+
+      .spa-grid-container {
+        grid-template-columns: 1fr;
+        gap: 30px;
+      }
+
+      .brand-experience-wrap {
+        display: none;
+      }
+
+      .mobile-brand-wrap {
+        display: block;
+      }
+
+      .top-brand-tab {
+        left: 20px;
+        padding: 8px 24px 10px 24px;
+      }
+
+      .top-tagline-wrap {
+        right: 20px;
+        top: 16px;
+      }
+
+      .top-tagline-text {
+        font-size: 1.15rem;
+      }
+
+      .admin-glass-card {
+        padding: 36px 28px 30px 28px;
+        max-width: 440px;
+        margin: 0 auto;
+      }
+    }
+
+    @media (max-width: 575px) {
+      .spa-viewport {
+        padding: 80px 14px 30px 14px;
+      }
+
+      .top-brand-tab {
+        left: 14px;
+        padding: 6px 16px 8px 16px;
+      }
+
+      .top-brand-logo {
+        height: 38px;
+      }
+
+      .top-tagline-wrap {
+        display: none;
+      }
+
+      .admin-glass-card {
+        padding: 28px 20px 24px 20px;
+        border-radius: 20px;
+      }
+
+      .card-title-portal {
+        font-size: 2rem;
+      }
+
+      .card-subtitle-portal {
+        font-size: 0.84rem;
+        margin-bottom: 18px;
+      }
+
+      .bottom-corner-accent {
+        width: 180px;
+        height: 180px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, ::before, ::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="spa-viewport">
+
+    <!-- Top Left Floating Brand Tab -->
+    <a href="{% url 'user:home' %}" class="top-brand-tab" title="Rudra Massage & Wellness Home">
+      <img src="{% static 'assets/images/rudra-wellness-logo-horizontal.png' %}" alt="Rudra Massage & Wellness"
+        class="top-brand-logo">
+    </a>
+
+    <!-- Top Right Tagline ("Better Care for a Healthier You") -->
+    <div class="top-tagline-wrap">
+      <div class="top-tagline-text">Better Care<br>for a Healthier You</div>
+      <div class="top-tagline-ornament">
+        <div class="top-tagline-line"></div>
+        <div class="top-tagline-icon">
+          <!-- Small Floral / Lotus Icon -->
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C12.8 5 15.5 8 18 9C16 11 14.5 13.5 14 16C13 14 11 14 10 16C9.5 13.5 8 11 6 9C8.5 8 11.2 5 12 2Z"/>
+            <path d="M12 17C13 19 15 20.5 17 21C15 22 13 22 12 21C11 22 9 22 7 21C9 20.5 11 19 12 17Z"/>
+          </svg>
+        </div>
+        <div class="top-tagline-line" style="background: linear-gradient(to left, transparent, var(--champagne-gold));"></div>
+      </div>
+    </div>
+
+    <!-- Bottom Right Decorative Fluid Waves (Corner Accent) -->
+    <svg class="bottom-corner-accent" viewBox="0 0 280 280" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M280 120 C220 130 160 170 140 230 C130 250 130 270 135 280 L280 280 Z" fill="#123D2E" opacity="0.95"/>
+      <path d="M280 150 C240 160 190 190 170 240 C165 255 165 270 170 280 L280 280 Z" fill="#176B4D" opacity="0.85"/>
+      <path d="M280 190 C250 198 215 220 200 255 C195 265 198 275 200 280 L280 280 Z" fill="#C49A52" opacity="0.75"/>
+      <path d="M280 135 C230 145 175 180 155 235" stroke="#C49A52" stroke-width="2" stroke-linecap="round" opacity="0.8"/>
+    </svg>
+
+    <!-- Main Grid Container -->
+    <div class="spa-grid-container">
+
+      <!-- Left Section: Brand Experience -->
+      <div class="brand-experience-wrap">
+        <div class="brand-eyebrow">
+          <span>WELCOME TO</span>
+        </div>
+
+        <h1 class="brand-heading-primary">
+          Rudra Massage &amp; Wellness
+        </h1>
+
+        <p class="brand-support-text">
+          Rejuvenate Your Body <span class="dot">•</span> Restore Your Mind <span class="dot">•</span> Feel the Difference
+        </p>
+
+        <!-- 4 Wellness Pillars -->
+        <div class="wellness-pillars-row">
+          <!-- 1. Relaxation (Lotus) -->
+          <div class="pillar-card">
+            <div class="pillar-circle" title="Relaxation">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 3C12.6 6.2 15.6 9.4 18.5 10.5C16.3 12.8 14.8 15.7 14.2 18.5C13 16.5 11 16.5 9.8 18.5C9.2 15.7 7.7 12.8 5.5 10.5C8.4 9.4 11.4 6.2 12 3Z"/>
+                <path d="M12 18.8C13.2 20.8 15.4 21.8 18 22C15.8 22.8 13.5 22.5 12 21.2C10.5 22.5 8.2 22.8 6 22C8.6 21.8 10.8 20.8 12 18.8Z"/>
+              </svg>
+            </div>
+            <span class="pillar-name">Relaxation</span>
+          </div>
+
+          <!-- 2. Wellness (Yoga / Meditation) -->
+          <div class="pillar-card">
+            <div class="pillar-circle" title="Wellness">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="12" cy="4.5" r="2.5"/>
+                <path d="M12 8.5C9.8 8.5 8 10 7.5 12.2L6 18H8.2L9.2 14.5C9.5 13.5 10.5 12.8 11.5 12.8H12.5C13.5 12.8 14.5 13.5 14.8 14.5L15.8 18H18L16.5 12.2C16 10 14.2 8.5 12 8.5Z"/>
+                <path d="M5.5 19.5C6.5 21 8.5 21.5 12 21.5C15.5 21.5 17.5 21 18.5 19.5L17 18.5C16 19.8 14.2 20 12 20C9.8 20 8 19.8 7 18.5L5.5 19.5Z"/>
+              </svg>
+            </div>
+            <span class="pillar-name">Wellness</span>
+          </div>
+
+          <!-- 3. Holistic Care (Leaf) -->
+          <div class="pillar-card">
+            <div class="pillar-circle" title="Holistic Care">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M17 3C11 3 6 8 6 14C6 17.5 8.5 20.5 12 21C11.5 19.5 11.5 17 13 14C14.5 11 18 9 20 8C19.5 12 18 15 15.5 17.5L17 19C20 16 21 11.5 21 7C21 4.5 19.5 3 17 3Z"/>
+                <path d="M6 14C4.5 15.5 3.5 17.5 3 21C6.5 20.5 8.5 19.5 10 18C7.5 18 6 16.5 6 14Z"/>
+              </svg>
+            </div>
+            <span class="pillar-name">Holistic Care</span>
+          </div>
+
+          <!-- 4. Better You (Heart) -->
+          <div class="pillar-card">
+            <div class="pillar-circle" title="Better You">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 21.35L10.55 20.03C5.4 15.36 2 12.28 2 8.5C2 5.42 4.42 3 7.5 3C9.24 3 10.91 3.81 12 5.09C13.09 3.81 14.76 3 16.5 3C19.58 3 22 5.42 22 8.5C22 12.28 18.6 15.36 13.45 20.04L12 21.35Z"/>
+              </svg>
+            </div>
+            <span class="pillar-name">Better You</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Section: Admin Login Card -->
+      <div class="login-card-wrapper">
+        <div class="admin-glass-card">
+
+          <!-- Mobile Brand Logo (Visible on mobile/tablet screens) -->
+          <div class="mobile-brand-wrap">
+            <a href="{% url 'user:home' %}">
+              <img src="{% static 'assets/images/rudra-wellness-logo-horizontal.png' %}" alt="Rudra Massage & Wellness"
+                style="height: 48px; width: auto; max-width: 200px; object-fit: contain; margin: 0 auto 16px auto; display: block;">
+            </a>
+          </div>
+
+          <!-- Top Pill Security Badge -->
+          <div>
+            <div class="secure-badge-pill">
+              <i class="bi bi-shield-lock-fill"></i> Secure Login
+            </div>
+          </div>
+
+          <!-- Card Header -->
+          <h2 class="card-title-portal">Admin Portal</h2>
+          <p class="card-subtitle-portal">
+            Sign in to access your dashboard and manage services, appointments, enquiries and more.
+          </p>
+
+          <!-- Django Flash Messages -->
+          {% if messages %}
+            {% for message in messages %}
+              <div class="alert-custom-spa {% if message.tags == 'error' %}alert-danger{% elif message.tags == 'success' %}alert-success{% else %}alert-info{% endif %} alert-dismissible fade show" role="alert">
+                <i class="bi {% if message.tags == 'error' %}bi-exclamation-triangle-fill{% elif message.tags == 'success' %}bi-check-circle-fill{% else %}bi-info-circle-fill{% endif %}"></i>
+                <div class="flex-grow-1">{{ message }}</div>
+                <button type="button" class="btn-close btn-close-sm" data-bs-dismiss="alert" aria-label="Close" style="padding: 6px;"></button>
+              </div>
+            {% endfor %}
+          {% endif %}
+
+          <!-- Login Form -->
+          <form method="post" action="{% url 'custom_admin:login' %}">
+            {% csrf_token %}
+            {% if next %}
+              <input type="hidden" name="next" value="{{ next }}">
+            {% endif %}
+
+            <!-- Admin Username Field -->
+            <div class="form-group-spa">
+              <label for="adminUsername" class="label-spa">
+                <i class="bi bi-person-fill"></i> Admin Username
+                <span class="visually-hidden">Staff Username</span>
+              </label>
+              <div class="input-wrapper-spa">
+                <i class="bi bi-person input-icon-spa"></i>
+                <input
+                  type="text"
+                  name="username"
+                  id="adminUsername"
+                  class="custom-input-spa"
+                  placeholder="Enter your username"
+                  autocomplete="username"
+                  required
+                  autofocus
+                >
+              </div>
+            </div>
+
+            <!-- Password Field with Show/Hide Toggle -->
+            <div class="form-group-spa">
+              <label for="adminPassword" class="label-spa">
+                <i class="bi bi-lock-fill"></i> Password
+              </label>
+              <div class="input-wrapper-spa">
+                <i class="bi bi-lock input-icon-spa"></i>
+                <input
+                  type="password"
+                  name="password"
+                  id="adminPassword"
+                  class="custom-input-spa"
+                  placeholder="Enter your password"
+                  autocomplete="current-password"
+                  required
+                >
+                <button
+                  type="button"
+                  class="toggle-password-spa"
+                  id="togglePasswordBtn"
+                  aria-label="Show password"
+                  title="Show password"
+                >
+                  <i class="bi bi-eye-slash" id="togglePasswordIcon"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Primary Sign In Button -->
+            <button type="submit" class="btn-signin-spa" id="submitLoginBtn">
+              <i class="bi bi-box-arrow-in-right"></i> Sign In
+            </button>
+
+          </form>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Password Show/Hide Toggle Script -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const toggleBtn = document.getElementById("togglePasswordBtn");
+      const passwordInput = document.getElementById("adminPassword");
+      const toggleIcon = document.getElementById("togglePasswordIcon");
+
+      if (toggleBtn && passwordInput && toggleIcon) {
+        toggleBtn.addEventListener("click", function () {
+          const isPassword = passwordInput.getAttribute("type") === "password";
+          if (isPassword) {
+            passwordInput.setAttribute("type", "text");
+            toggleIcon.classList.remove("bi-eye-slash");
+            toggleIcon.classList.add("bi-eye");
+            toggleBtn.setAttribute("title", "Hide password");
+            toggleBtn.setAttribute("aria-label", "Hide password");
+          } else {
+            passwordInput.setAttribute("type", "password");
+            toggleIcon.classList.remove("bi-eye");
+            toggleIcon.classList.add("bi-eye-slash");
+            toggleBtn.setAttribute("title", "Show password");
+            toggleBtn.setAttribute("aria-label", "Show password");
+          }
+        });
+      }
+    });
+  </script>
+
+  <!-- Bootstrap 5 Bundle JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

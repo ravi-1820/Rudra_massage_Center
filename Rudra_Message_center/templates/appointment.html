@@ -1,0 +1,468 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Book Your Appointment | Rudra Massage & Wellness{% endblock %}
+
+{% block extra_css %}
+<style>
+  /* Bulletproof Scoped Wellness Theme Styles */
+  .site-header {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 1030 !important;
+    background-color: #ffffff !important;
+    border-bottom: 1px solid rgba(229, 231, 235, 0.9) !important;
+    box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05) !important;
+  }
+  [data-theme="dark"] .site-header {
+    background-color: #0d1a14 !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+  }
+
+  .section-wellness-flow {
+    padding-top: 40px !important;
+    padding-bottom: 64px !important;
+    background-color: #fdfdfd;
+  }
+  [data-theme="dark"] .section-wellness-flow {
+    background-color: #0a0a0a;
+  }
+
+  .wellness-form-card {
+    background: #ffffff !important;
+    border: 1px solid rgba(226, 232, 240, 0.9) !important;
+    border-radius: 20px !important;
+    box-shadow: 0 16px 45px -12px rgba(15, 23, 42, 0.07), 0 2px 10px rgba(15, 23, 42, 0.03) !important;
+  }
+  [data-theme="dark"] .wellness-form-card {
+    background: #111a15 !important;
+    border-color: rgba(255, 255, 255, 0.08) !important;
+    box-shadow: 0 16px 45px -12px rgba(0, 0, 0, 0.5) !important;
+  }
+
+  .reassurance-panel-wellness {
+    background: rgba(81, 240, 168, 0.12) !important;
+    border: 1px solid rgba(13, 159, 93, 0.25) !important;
+    border-radius: 14px !important;
+    padding: 16px 20px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 16px !important;
+  }
+  [data-theme="dark"] .reassurance-panel-wellness {
+    background: rgba(13, 159, 93, 0.15) !important;
+    border-color: rgba(81, 240, 168, 0.3) !important;
+  }
+
+  .reassurance-icon-box {
+    width: 42px !important;
+    height: 42px !important;
+    border-radius: 50% !important;
+    background: rgba(81, 240, 168, 0.35) !important;
+    color: #0d9f5d !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 1.25rem !important;
+    flex-shrink: 0 !important;
+  }
+  [data-theme="dark"] .reassurance-icon-box {
+    background: rgba(81, 240, 168, 0.2) !important;
+    color: #51f0a8 !important;
+  }
+
+  /* Form Input with Icon wrapper */
+  .form-input-icon-wrap {
+    position: relative !important;
+    display: block !important;
+    width: 100% !important;
+  }
+
+  .form-input-icon-wrap .input-icon {
+    position: absolute !important;
+    left: 16px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    color: #8a99a8 !important;
+    font-size: 1.05rem !important;
+    pointer-events: none !important;
+    z-index: 5 !important;
+    line-height: 1 !important;
+  }
+
+  .form-input-icon-wrap.textarea-wrap .input-icon {
+    top: 20px !important;
+    transform: none !important;
+  }
+
+  .form-input-icon-wrap .form-veda-control,
+  .form-input-icon-wrap .form-veda-select {
+    padding-left: 46px !important;
+    background-color: #f1f4f6 !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 12px !important;
+    height: 48px !important;
+    width: 100% !important;
+    color: #15232b !important;
+    font-size: 0.92rem !important;
+    outline: none !important;
+    transition: all 0.2s ease !important;
+    box-sizing: border-box !important;
+    display: block !important;
+  }
+
+  .form-input-icon-wrap textarea.form-veda-control {
+    height: auto !important;
+    min-height: 110px !important;
+    padding-top: 14px !important;
+    padding-left: 46px !important;
+  }
+
+  [data-theme="dark"] .form-input-icon-wrap .form-veda-control,
+  [data-theme="dark"] .form-input-icon-wrap .form-veda-select {
+    background-color: #19241d !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+    color: #fdfdfd !important;
+  }
+
+  .form-input-icon-wrap .form-veda-control:focus,
+  .form-input-icon-wrap .form-veda-select:focus {
+    background-color: #ffffff !important;
+    border-color: #51f0a8 !important;
+    box-shadow: 0 0 0 3px rgba(81, 240, 168, 0.35) !important;
+    color: #15232b !important;
+  }
+
+  [data-theme="dark"] .form-input-icon-wrap .form-veda-control:focus,
+  [data-theme="dark"] .form-input-icon-wrap .form-veda-select:focus {
+    background-color: #1c2a21 !important;
+    color: #ffffff !important;
+  }
+
+  .form-input-icon-wrap:focus-within .input-icon {
+    color: #0d9f5d !important;
+  }
+
+  .form-veda-label {
+    display: block !important;
+    font-size: 0.88rem !important;
+    font-weight: 600 !important;
+    color: #15232b !important;
+    margin-bottom: 6px !important;
+  }
+  [data-theme="dark"] .form-veda-label {
+    color: #e5e7eb !important;
+  }
+
+  /* Mint-Green Pill CTA Button */
+  .btn-wellness-submit {
+    background-color: #51f0a8 !important;
+    color: #000000 !important;
+    font-weight: 700 !important;
+    font-size: 1rem !important;
+    padding: 14px 48px !important;
+    border-radius: 9999px !important;
+    border: none !important;
+    box-shadow: 0 8px 24px rgba(81, 240, 168, 0.45) !important;
+    cursor: pointer !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: all 0.22s ease !important;
+    text-decoration: none !important;
+    outline: none !important;
+  }
+
+  .btn-wellness-submit:hover {
+    background-color: #3de898 !important;
+    color: #000000 !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 12px 28px rgba(81, 240, 168, 0.55) !important;
+  }
+
+  .btn-wellness-submit:active {
+    transform: translateY(0) !important;
+  }
+
+  .btn-wellness-submit:disabled {
+    opacity: 0.6 !important;
+    cursor: not-allowed !important;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="section-wellness-flow section-bg-ivory">
+  <div class="container">
+    
+    <!-- Page Heading -->
+    <div class="text-center mb-4">
+      <span class="section-subtitle-tag" style="color: #0d9f5d; letter-spacing: 0.12em; font-weight: 700; font-size: 0.78rem;">PERSONALIZED WELLNESS</span>
+      <h1 class="h2 fw-bold text-dark mt-2 mb-2" style="font-family: var(--font-heading); color: #15232b;" data-i18n="apt.title">Book Your Appointment</h1>
+      <p class="text-muted mx-auto mb-3" style="max-width: 620px; font-size: 0.95rem;" data-i18n="apt.subtitle">
+        Choose a service and preferred time. Our team will contact you to confirm your appointment.
+      </p>
+      <div class="d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill small fw-semibold" style="background: rgba(81, 240, 168, 0.15); color: #0b7a48; border: 1px solid rgba(81, 240, 168, 0.4);">
+        <i class="bi bi-calendar2-check"></i> <span data-i18n="apt.privacy">Requests are typically confirmed within a few hours.</span>
+      </div>
+    </div>
+
+    <!-- Form Container -->
+    <div class="row justify-content-center">
+      <div class="col-lg-9 col-xl-8">
+
+        <div class="card wellness-form-card p-4 p-md-5">
+
+          <!-- Reassurance Notice Panel -->
+          <div class="reassurance-panel-wellness mb-4 d-flex align-items-center gap-3">
+            <div class="reassurance-icon-box">
+              <i class="bi bi-calendar-check"></i>
+            </div>
+            <div>
+              <h6 class="fw-bold mb-1 text-dark" style="font-size: 0.92rem;" data-i18n="apt.formTitle">Request Your Wellness Consultation or Demo</h6>
+              <p class="small text-muted mb-0" style="font-size: 0.84rem;" data-i18n="apt.formDesc">
+                Select your preferred date, time and service. Our team coordinates each session personally to ensure undivided attention.
+              </p>
+            </div>
+          </div>
+
+          <!-- Django Messages -->
+          {% if messages %}
+          {% for message in messages %}
+          <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show rounded-3 mb-4 shadow-sm d-flex align-items-center" role="alert">
+            {% if message.tags == 'success' %}
+            <i class="bi bi-check-circle-fill text-success me-2 fs-5"></i>
+            {% elif message.tags == 'error' or message.tags == 'danger' %}
+            <i class="bi bi-exclamation-triangle-fill text-danger me-2 fs-5"></i>
+            {% else %}
+            <i class="bi bi-info-circle-fill text-primary me-2 fs-5"></i>
+            {% endif %}
+            <div class="flex-grow-1">{{ message }}</div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+          {% endfor %}
+          {% endif %}
+
+          <!-- Form Errors Summary -->
+          {% if form.errors %}
+          <div class="alert alert-danger rounded-3 mb-4 shadow-sm" role="alert">
+            <div class="d-flex align-items-center gap-2 mb-2">
+              <i class="bi bi-exclamation-circle-fill fs-5"></i>
+              <strong>Please correct the following errors before submitting:</strong>
+            </div>
+            <ul class="mb-0 ps-3 small">
+              {% for field, errors in form.errors.items %}
+              {% for error in errors %}
+              <li>{{ error }}</li>
+              {% endfor %}
+              {% endfor %}
+            </ul>
+          </div>
+          {% endif %}
+
+          <form id="appointmentBookingForm" method="POST" action="{% url 'user:appointment' %}" data-backend-submit="true" novalidate>
+            {% csrf_token %}
+            <div class="row g-3">
+
+              <!-- Full Name -->
+              <div class="col-md-6">
+                <label for="aptFullName" class="form-veda-label">
+                  <span data-i18n="form.fullName">Full Name</span> <span class="text-danger">*</span>
+                </label>
+                <div class="form-input-icon-wrap">
+                  <i class="bi bi-person input-icon"></i>
+                  <input type="text" name="name" id="aptFullName"
+                    class="form-veda-control {% if form.name.errors %}is-invalid{% endif %}"
+                    placeholder="Enter Name" data-i18n-placeholder="form.namePlaceholder" value="{{ form.name.value|default:'' }}" required>
+                </div>
+                {% if form.name.errors %}
+                <div class="invalid-feedback-custom text-danger small mt-1">{{ form.name.errors.0 }}</div>
+                {% endif %}
+              </div>
+
+              <!-- Email Address -->
+              <div class="col-md-6">
+                <label for="aptEmail" class="form-veda-label">
+                  <span data-i18n="form.email">Email Address</span> <span class="text-muted fw-normal" style="font-size: 0.8rem;">(Optional)</span>
+                </label>
+                <div class="form-input-icon-wrap">
+                  <i class="bi bi-envelope input-icon"></i>
+                  <input type="email" name="email" id="aptEmail"
+                    class="form-veda-control {% if form.email.errors %}is-invalid{% endif %}"
+                    placeholder="Enter Email" data-i18n-placeholder="form.emailPlaceholder" value="{{ form.email.value|default:'' }}">
+                </div>
+                {% if form.email.errors %}
+                <div class="invalid-feedback-custom text-danger small mt-1">{{ form.email.errors.0 }}</div>
+                {% endif %}
+              </div>
+
+              <!-- Mobile Number -->
+              <div class="col-md-6">
+                <label for="aptPhone" class="form-veda-label">
+                  <span data-i18n="form.phone">Mobile Number (+91)</span> <span class="text-danger">*</span>
+                </label>
+                <div class="form-input-icon-wrap">
+                  <i class="bi bi-telephone input-icon"></i>
+                  <input type="tel" name="phone" id="aptPhone"
+                    class="form-veda-control {% if form.phone.errors %}is-invalid{% endif %}" data-type="indian-phone"
+                    placeholder="Enter Mobile Number" data-i18n-placeholder="form.phonePlaceholder" value="{{ form.phone.value|default:'' }}" required>
+                </div>
+                {% if form.phone.errors %}
+                <div class="invalid-feedback-custom text-danger small mt-1">{{ form.phone.errors.0 }}</div>
+                {% endif %}
+              </div>
+
+              <!-- City -->
+              <div class="col-md-6">
+                <label for="aptCity" class="form-veda-label">
+                  <span data-i18n="form.city">City</span> <span class="text-danger">*</span>
+                </label>
+                <div class="form-input-icon-wrap">
+                  <i class="bi bi-geo-alt input-icon"></i>
+                  <input type="text" name="city" id="aptCity"
+                    class="form-veda-control {% if form.city.errors %}is-invalid{% endif %}"
+                    placeholder="Enter City" data-i18n-placeholder="form.cityPlaceholder" value="{{ form.city.value|default:'' }}" required>
+                </div>
+                {% if form.city.errors %}
+                <div class="invalid-feedback-custom text-danger small mt-1">{{ form.city.errors.0 }}</div>
+                {% endif %}
+              </div>
+
+              <!-- Service Selection -->
+              <div class="col-md-6">
+                <label for="aptService" class="form-veda-label">
+                  <span data-i18n="form.service">Select Service / Machine</span> <span class="text-danger">*</span>
+                </label>
+                <div class="form-input-icon-wrap">
+                  <i class="bi bi-search input-icon"></i>
+                  <select id="aptService" name="service"
+                    class="form-veda-select {% if form.service.errors %}is-invalid{% endif %}" required>
+                    <option value="" data-i18n="apt.chooseSolution">-- Choose Solution * --</option>
+                    {% for s in services %}
+                    <option value="{{ s.id }}" {% if form.service.value|stringformat:'s' == s.id|stringformat:'s' or selected_service_id == s.id %}selected{% endif %}>
+                      {{ s.name }} ({{ s.category.name_translated }})
+                    </option>
+                    {% endfor %}
+                  </select>
+                </div>
+                {% if form.service.errors %}
+                <div class="invalid-feedback-custom text-danger small mt-1">{{ form.service.errors.0 }}</div>
+                {% endif %}
+              </div>
+
+              <!-- Demo Format -->
+              <div class="col-md-6">
+                <label for="aptDemoFormat" class="form-veda-label">
+                  <span data-i18n="apt.demoFormat">Demo Format</span> <span class="text-muted fw-normal" style="font-size: 0.8rem;">(Optional)</span>
+                </label>
+                <div class="form-input-icon-wrap">
+                  <i class="bi bi-building input-icon"></i>
+                  <select class="form-veda-select" id="aptDemoFormat" name="demo_format">
+                    <option value="centre" {% if form.demo_format.value == 'centre' or not form.demo_format.value %}selected{% endif %} data-i18n="apt.formatCentre">Centre Visit (Ahmedabad Demonstration Facility)</option>
+                    <option value="home" {% if form.demo_format.value == 'home' %}selected{% endif %} data-i18n="apt.formatHome">Home Doorstep Demo (Selected Cities)</option>
+                    <option value="video" {% if form.demo_format.value == 'video' %}selected{% endif %} data-i18n="apt.formatVideo">Virtual Guided Video Consultation</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Preferred Date -->
+              <div class="col-md-6">
+                <label for="aptDate" class="form-veda-label">
+                  <span data-i18n="form.date">Preferred Date</span> <span class="text-danger">*</span>
+                </label>
+                <div class="form-input-icon-wrap">
+                  <i class="bi bi-calendar input-icon"></i>
+                  <input type="date" name="appointment_date" id="aptDate" min="{{ today_date }}"
+                    class="form-veda-control {% if form.appointment_date.errors %}is-invalid{% endif %}"
+                    value="{{ form.appointment_date.value|default:'' }}" required>
+                </div>
+                {% if form.appointment_date.errors %}
+                <div class="invalid-feedback-custom text-danger small mt-1">{{ form.appointment_date.errors.0 }}</div>
+                {% endif %}
+              </div>
+
+              <!-- Preferred Time Slot -->
+              <div class="col-md-6">
+                <label for="aptTimeSlot" class="form-veda-label">
+                  <span data-i18n="form.time">Preferred Time</span> <span class="text-danger">*</span>
+                </label>
+                <div class="form-input-icon-wrap">
+                  <i class="bi bi-clock input-icon"></i>
+                  <select class="form-veda-select {% if form.time_slot.errors %}is-invalid{% endif %}" id="aptTimeSlot" name="time_slot" required>
+                    <option value="" data-i18n="apt.chooseSlot">-- Choose Slot * --</option>
+                    <option value="morning" {% if form.time_slot.value == 'morning' %}selected{% endif %} data-i18n="apt.slotMorning">Morning (10:00 AM - 1:00 PM)</option>
+                    <option value="midday" {% if form.time_slot.value == 'midday' %}selected{% endif %} data-i18n="apt.slotMidday">Midday (1:00 PM - 3:00 PM)</option>
+                    <option value="afternoon" {% if form.time_slot.value == 'afternoon' %}selected{% endif %} data-i18n="apt.slotAfternoon">Afternoon (3:00 PM - 5:00 PM)</option>
+                    <option value="evening" {% if form.time_slot.value == 'evening' %}selected{% endif %} data-i18n="apt.slotEvening">Evening (5:00 PM - 7:30 PM)</option>
+                  </select>
+                </div>
+                {% if form.time_slot.errors %}
+                <div class="invalid-feedback-custom text-danger small mt-1">{{ form.time_slot.errors.0 }}</div>
+                {% endif %}
+              </div>
+
+              <!-- Address / Special Discomfort Notes -->
+              <div class="col-12 mt-3">
+                <label for="aptNotes" class="form-veda-label">
+                  <span data-i18n="apt.notes">Address (if Home Demo) / Special Requests</span> <span class="text-muted fw-normal" style="font-size: 0.8rem;">(Optional)</span>
+                </label>
+                <div class="form-input-icon-wrap textarea-wrap">
+                  <i class="bi bi-chat-left-text input-icon"></i>
+                  <textarea id="aptNotes" name="notes" rows="3" maxlength="1000"
+                    class="form-veda-control {% if form.notes.errors %}is-invalid{% endif %}"
+                    placeholder="Enter Address / Special Requests" data-i18n-placeholder="apt.notesPlaceholder">{{ form.notes.value|default:'' }}</textarea>
+                  <div class="text-end text-muted mt-1" style="font-size: 0.75rem;" id="aptCharCounter">0/1000</div>
+                </div>
+                {% if form.notes.errors %}
+                <div class="invalid-feedback-custom text-danger small mt-1">{{ form.notes.errors.0 }}</div>
+                {% endif %}
+              </div>
+
+              <!-- Status Notice Alert -->
+              <div class="col-12 mt-3">
+                <div class="alert alert-light border small text-muted d-flex align-items-center gap-2 mb-0" style="border-radius: 12px;">
+                  <i class="bi bi-info-circle-fill text-success fs-5"></i>
+                  <div>
+                    <span data-i18n="apt.noticeAlert"><strong>Please note:</strong> This submission is an appointment request. Our coordinator will contact you to confirm final slot availability.</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Submit Button -->
+              <div class="col-12 mt-4 text-center">
+                <button type="submit" class="btn-wellness-submit" id="submitAppointmentBtn">
+                  <i class="bi bi-calendar2-check-fill me-2"></i><span data-i18n="apt.requestBtn">Request Appointment</span>
+                </button>
+                <div class="text-center text-muted small mt-3">
+                  <i class="bi bi-shield-lock-fill me-1"></i> <span data-i18n="apt.privacy">Your details are safe with us. No payment is required for demo requests.</span>
+                </div>
+              </div>
+
+            </div>
+          </form>
+
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'assets/js/forms.js' %}"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const notesArea = document.getElementById('aptNotes');
+    const counter = document.getElementById('aptCharCounter');
+    if (notesArea && counter) {
+      const updateCount = () => {
+        counter.textContent = `${notesArea.value.length}/1000`;
+      };
+      notesArea.addEventListener('input', updateCount);
+      updateCount();
+    }
+  });
+</script>
+{% endblock %}

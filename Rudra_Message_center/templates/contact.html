@@ -1,0 +1,188 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Contact Us | Rudra Massage & Wellness{% endblock %}
+
+{% block content %}
+<!-- Banner -->
+  <section class="py-5 section-bg-ivory border-bottom text-center">
+    <div class="container">
+      <span class="section-subtitle-tag" data-i18n="contact.tag">WE ARE HERE TO HELP</span>
+      <h1 class="h2 fw-bold text-forest mb-2" data-i18n="contact.title">Connect with Our Wellness Advisory</h1>
+      <p class="text-muted max-w-md mx-auto mb-0" data-i18n="contact.subtitle">
+        Have questions regarding therapy equipment, shipping across India, or booking a clinic trial? Reach out directly.
+      </p>
+    </div>
+  </section>
+
+  <!-- Contact Details & Form Grid -->
+  <section class="section-py section-bg-white">
+    <div class="container">
+      <div class="row g-5">
+        
+        <!-- Left Column: Contact Cards & Info -->
+        <div class="col-lg-5">
+          <h4 class="fw-bold text-forest mb-4" data-i18n="contact.infoTitle">Contact Information</h4>
+
+          <div class="card border rounded-4 p-4 shadow-sm mb-4">
+            <div class="d-flex align-items-start gap-3 mb-4">
+              <div class="quick-action-icon"><i class="bi bi-geo-alt-fill"></i></div>
+              <div>
+                <h6 class="fw-bold text-forest mb-1" data-i18n="contact.visitUs">Demonstration & Experience Lounge</h6>
+                <p class="text-muted small mb-0">
+                  {{ site_settings.business_address|default:"Rudra Massage & Wellness Centre, S.G. Highway, Bodakdev, Ahmedabad, Gujarat 380054" }}
+                </p>
+              </div>
+            </div>
+
+            <div class="d-flex align-items-start gap-3 mb-4">
+              <div class="quick-action-icon"><i class="bi bi-telephone-fill"></i></div>
+              <div>
+                <h6 class="fw-bold text-forest mb-1" data-i18n="contact.callUs">Phone Helpline</h6>
+                <p class="text-muted small mb-1" data-i18n="contact.ordersHelp">Toll-free Assistance & Orders:</p>
+                <a href="tel:{{ site_settings.phone_digits|default:'+919825000000' }}" class="fw-bold text-forest text-decoration-underline">{{ site_settings.primary_phone|default:"+91 98250 00000" }}</a>
+              </div>
+            </div>
+
+            <div class="d-flex align-items-start gap-3 mb-4">
+              <div class="quick-action-icon"><i class="bi bi-envelope-fill"></i></div>
+              <div>
+                <h6 class="fw-bold text-forest mb-1" data-i18n="contact.emailUs">Email Inquiries</h6>
+                <a href="mailto:{{ site_settings.contact_email|default:'care@rudrawellness.com' }}" class="text-muted small">{{ site_settings.contact_email|default:"care@rudrawellness.com" }}</a>
+              </div>
+            </div>
+
+            <div class="d-flex align-items-start gap-3">
+              <div class="quick-action-icon"><i class="bi bi-clock-fill"></i></div>
+              <div>
+                <h6 class="fw-bold text-forest mb-1" data-i18n="contact.hours">Visiting & Consultation Hours</h6>
+                <p class="text-muted small mb-0">{{ site_settings.business_hours|default:"Monday to Saturday: 9:30 AM to 7:00 PM | Sunday: By Prior Appointment Only"|linebreaksbr }}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- WhatsApp Connect Block -->
+          <div class="card border-0 p-4 rounded-4 shadow-sm text-white" style="background: linear-gradient(135deg, #128C7E, #25D366);">
+            <div class="d-flex align-items-center gap-3">
+              <i class="bi bi-whatsapp fs-1"></i>
+              <div>
+                <h5 class="fw-bold mb-1" data-i18n="contact.quickAnswers">Need Quick Answers?</h5>
+                <p class="small mb-2 text-white-50" data-i18n="contact.chatAdvisor">Chat with our senior equipment advisor directly on WhatsApp.</p>
+                <a href="https://wa.me/{{ site_settings.whatsapp_digits|default:'919825000000' }}" target="_blank" class="btn btn-sm btn-light fw-bold text-dark rounded-pill px-3" data-i18n="contact.startChat">
+                  Start WhatsApp Chat &rarr;
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Interactive Contact Form -->
+        <div class="col-lg-7">
+          <div class="card border rounded-4 p-4 p-md-5 shadow-sm">
+            <h4 class="fw-bold text-forest mb-2" data-i18n="contact.sendMessage">Send Us a Direct Message</h4>
+            <p class="text-muted small mb-4" data-i18n="contact.formSubtitle">Fill out the form below. Our advisory specialists will get in touch with you promptly.</p>
+
+            {% if form.errors %}
+              <div class="form-error-summary alert alert-danger mb-3">
+                <strong>Please resolve the following issues:</strong>
+                <ul class="mb-0 mt-1 small">
+                  {% for field in form %}
+                    {% for error in field.errors %}
+                      <li>{{ field.label|default:field.name|title }}: {{ error }}</li>
+                    {% endfor %}
+                  {% endfor %}
+                  {% for error in form.non_field_errors %}
+                    <li>{{ error }}</li>
+                  {% endfor %}
+                </ul>
+              </div>
+            {% endif %}
+
+            <form id="contactForm" method="post" action="{% url 'user:contact' %}" data-backend-submit="true" novalidate onsubmit="const b=this.querySelector('button[type=submit]'); if(b){ b.disabled=true; b.innerHTML='<span class=\'spinner-border spinner-border-sm me-2\'></span>Submitting...'; }">
+              {% csrf_token %}
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label for="contactName" class="form-veda-label"><span data-i18n="form.fullName">Your Name</span> *</label>
+                  <input type="text" name="name" id="contactName" class="form-veda-control {% if form.name.errors %}is-invalid{% endif %}" placeholder="e.g. Smt. Gita Mehta" data-i18n-placeholder="form.namePlaceholder" value="{{ form.name.value|default:'' }}" required>
+                  {% if form.name.errors %}
+                    <div class="invalid-feedback-custom d-block text-danger small mt-1">{{ form.name.errors.0 }}</div>
+                  {% else %}
+                    <div class="invalid-feedback-custom"></div>
+                  {% endif %}
+                </div>
+                <div class="col-md-6">
+                  <label for="contactEmail" class="form-veda-label"><span data-i18n="form.email">Email Address</span> *</label>
+                  <input type="email" name="email" id="contactEmail" class="form-veda-control {% if form.email.errors %}is-invalid{% endif %}" placeholder="gita@example.com" data-i18n-placeholder="form.emailPlaceholder" value="{{ form.email.value|default:'' }}" required>
+                  {% if form.email.errors %}
+                    <div class="invalid-feedback-custom d-block text-danger small mt-1">{{ form.email.errors.0 }}</div>
+                  {% else %}
+                    <div class="invalid-feedback-custom"></div>
+                  {% endif %}
+                </div>
+                <div class="col-md-6">
+                  <label for="contactPhone" class="form-veda-label"><span data-i18n="form.phone">Mobile Number (+91)</span> *</label>
+                  <input type="tel" name="phone" id="contactPhone" class="form-veda-control {% if form.phone.errors %}is-invalid{% endif %}" data-type="indian-phone" placeholder="98250 12345" data-i18n-placeholder="form.phonePlaceholder" value="{{ form.phone.value|default:'' }}" required>
+                  {% if form.phone.errors %}
+                    <div class="invalid-feedback-custom d-block text-danger small mt-1">{{ form.phone.errors.0 }}</div>
+                  {% else %}
+                    <div class="invalid-feedback-custom"></div>
+                  {% endif %}
+                </div>
+                <div class="col-md-6">
+                  <label for="contactSubject" class="form-veda-label"><span data-i18n="contact.subject">Subject</span> *</label>
+                  <select name="subject" id="contactSubject" class="form-veda-select {% if form.subject.errors %}is-invalid{% endif %}" required>
+                    <option value="" data-i18n="contact.optChoose">-- Choose Subject --</option>
+                    <option value="Product Enquiry" {% if form.subject.value == 'Product Enquiry' %}selected{% endif %} data-i18n="contact.optProduct">Product Specification Enquiry</option>
+                    <option value="Demo Request" {% if form.subject.value == 'Demo Request' %}selected{% endif %} data-i18n="contact.optDemo">Request In-Person Demo</option>
+                    <option value="Clinic Setup" {% if form.subject.value == 'Clinic Setup' %}selected{% endif %} data-i18n="contact.optClinic">Clinic / Bulk Purchase Setup</option>
+                    <option value="Support" {% if form.subject.value == 'Support' %}selected{% endif %} data-i18n="contact.optSupport">Warranty & Support Request</option>
+                    <option value="Other" {% if form.subject.value == 'Other' %}selected{% endif %} data-i18n="contact.optOther">Other Feedback</option>
+                  </select>
+                  {% if form.subject.errors %}
+                    <div class="invalid-feedback-custom d-block text-danger small mt-1">{{ form.subject.errors.0 }}</div>
+                  {% else %}
+                    <div class="invalid-feedback-custom"></div>
+                  {% endif %}
+                </div>
+                <div class="col-12">
+                  <label for="contactMessage" class="form-veda-label"><span data-i18n="form.message">Message Details</span> *</label>
+                  <textarea name="message" id="contactMessage" rows="4" class="form-veda-control {% if form.message.errors %}is-invalid{% endif %}" placeholder="Write your questions or notes here..." data-i18n-placeholder="enq.messagePlaceholder" required>{{ form.message.value|default:'' }}</textarea>
+                  {% if form.message.errors %}
+                    <div class="invalid-feedback-custom d-block text-danger small mt-1">{{ form.message.errors.0 }}</div>
+                  {% else %}
+                    <div class="invalid-feedback-custom"></div>
+                  {% endif %}
+                </div>
+                <div class="col-12 mt-4">
+                  <button type="submit" class="btn-veda-primary btn-veda-lg w-100" data-i18n="contact.sendBtn">
+                    Send Message
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Map Embed Placeholder -->
+      <div class="mt-5 pt-3">
+        <h5 class="fw-bold text-forest mb-3"><i class="bi bi-map-fill text-gold me-2"></i>Location Map (Ahmedabad Experience Centre)</h5>
+        <div class="ratio ratio-21x9 rounded-4 overflow-hidden border shadow-sm" style="background-color: #E2E8F0;">
+          <iframe 
+            src="{{ site_settings.google_maps_url|default:'https://maps.google.com/maps?q=Bodakdev,%20Ahmedabad,%20Gujarat&t=&z=13&ie=UTF8&iwloc=&output=embed' }}" 
+            title="Rudra Massage & Wellness Location Map"
+            style="border:0;" 
+            allowfullscreen="" 
+            loading="lazy">
+          </iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'assets/js/forms.js' %}"></script>
+{% endblock %}

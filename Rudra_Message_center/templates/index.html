@@ -1,0 +1,587 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Rudra Massage & Wellness | Natural Healing with Modern Therapy Solutions{% endblock %}
+
+{% block content %}
+<!-- Hero Section (Approved Composition & Proportions) -->
+  <section class="hero-section py-5">
+    <div class="container">
+      <div class="row align-items-center g-5">
+        <!-- Left Hero Copy -->
+        <div class="col-lg-6">
+          <div class="hero-pill-badge mb-3">
+            <span data-i18n="hero.badge">Your Wellness Journey Starts Here</span>
+          </div>
+          <h1 class="hero-title mb-3" style="font-size: clamp(2.4rem, 4.2vw, 3.8rem); line-height: 1.15; font-weight: 800;">
+            <span data-i18n="hero.title">Natural Healing with Modern Therapy Solutions</span>
+          </h1>
+          <p class="hero-lead text-muted mb-4" style="font-size: 1.05rem; line-height: 1.65; max-width: 520px;" data-i18n="hero.subtitle">
+            Experience the perfect blend of traditional wellness and modern therapy solutions. Feel better, move better, live better with Rudra Massage & Wellness.
+          </p>
+          <div class="hero-cta-group d-flex align-items-center gap-3 mb-0">
+            <a href="{% url 'user:services' %}" class="btn-veda-primary btn-veda-lg" data-i18n="hero.exploreCta">
+              Explore Services &rarr;
+            </a>
+            <a href="{% url 'user:appointment' %}" class="btn-veda-outline btn-veda-lg" data-i18n="hero.bookCta">
+              Book Appointment
+            </a>
+          </div>
+        </div>
+
+        <!-- Right Hero Media Composition: Distinctive 5s Auto-Rotating Stage Carousel -->
+        <div class="col-lg-6">
+          <div class="position-relative">
+            <div id="heroCarousel" class="carousel slide carousel-fade hero-stage-carousel" data-bs-ride="carousel" data-bs-interval="5000" data-bs-pause="false">
+              <!-- Carousel Slides -->
+              <div class="carousel-inner">
+                <!-- Slide 1 -->
+                <div class="carousel-item active">
+                  <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=900&q=80" alt="Full Body Therapy & Yoga">
+                  <!-- Bottom Floating Frosted Glass Card -->
+                  <div class="hero-stage-card">
+                    <div>
+                      <span class="hero-stage-tag" data-i18n="hero.slide1Tag"><i class="bi bi-flower1 me-1"></i> <span class="i18n-text">Holistic Therapy</span></span>
+                      <h4 class="hero-stage-title" data-i18n="hero.slide1Title">Full Body Deep Relaxation</h4>
+                      <p class="hero-stage-subtitle" data-i18n="hero.slide1Sub">Gentle pressure marma point recovery & stress release.</p>
+                    </div>
+                    <a href="{% url 'user:appointment' %}" class="hero-stage-btn" data-i18n="hero.bookNow">
+                      Book Now &rarr;
+                    </a>
+                  </div>
+                </div>
+
+                <!-- Slide 2 -->
+                <div class="carousel-item">
+                  <img src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=900&q=80" alt="Ayurvedic Kansa Metallurgy">
+                  <!-- Bottom Floating Frosted Glass Card -->
+                  <div class="hero-stage-card">
+                    <div>
+                      <span class="hero-stage-tag" data-i18n="hero.slide2Tag"><i class="bi bi-gem me-1"></i> <span class="i18n-text">Vedic Metallurgy</span></span>
+                      <h4 class="hero-stage-title" data-i18n="hero.slide2Title">100% Pure Kansa Bronze</h4>
+                      <p class="hero-stage-subtitle" data-i18n="hero.slide2Sub">Bio-metallic detoxification for foot & facial vitality.</p>
+                    </div>
+                    <a href="{% url 'user:services' %}?category=Kansa+Therapy" class="hero-stage-btn" data-i18n="hero.explore">
+                      Explore &rarr;
+                    </a>
+                  </div>
+                </div>
+
+                <!-- Slide 3 -->
+                <div class="carousel-item">
+                  <img src="https://images.unsplash.com/photo-1519823551278-64ac92734fb1?auto=format&fit=crop&w=900&q=80" alt="Orthopedic Decompression Care">
+                  <!-- Bottom Floating Frosted Glass Card -->
+                  <div class="hero-stage-card">
+                    <div>
+                      <span class="hero-stage-tag" data-i18n="hero.slide3Tag"><i class="bi bi-activity me-1"></i> <span class="i18n-text">Orthopedic Precision</span></span>
+                      <h4 class="hero-stage-title" data-i18n="hero.slide3Title">Spinal Curvature Decompression</h4>
+                      <p class="hero-stage-subtitle" data-i18n="hero.slide3Sub">Drug-free pneumatic air bladder lumbar traction.</p>
+                    </div>
+                    <a href="{% url 'user:appointment' %}" class="hero-stage-btn" data-i18n="hero.bookDemo">
+                      Book Demo &rarr;
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Minimal Floating Arrows -->
+              <button class="hero-stage-arrow left" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev" aria-label="Previous">
+                <i class="bi bi-chevron-left"></i>
+              </button>
+              <button class="hero-stage-arrow right" type="button" data-bs-target="#heroCarousel" data-bs-slide="next" aria-label="Next">
+                <i class="bi bi-chevron-right"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trust Indicators Bar (Modern Feature Cards with 3 Options Each) -->
+  <section class="py-5 section-bg-white border-top border-bottom">
+    <div class="container">
+      <div class="row g-4 justify-content-center">
+        <!-- Card 1: Natural Wellness Approach -->
+        <div class="col-12 col-sm-6 col-xl-3">
+          <div class="feature-trust-card">
+            <div class="feature-trust-icon">
+              <i class="bi bi-flower1"></i>
+            </div>
+            <div class="feature-trust-body">
+              <span class="feature-trust-tag" data-i18n="trust.card1Tag">Natural</span>
+              <h5 class="feature-trust-title" data-i18n="trust.card1Title">Wellness Approach</h5>
+              <ul class="feature-trust-list">
+                <li><i class="bi bi-check-circle-fill"></i> <span data-i18n="trust.card1Opt1">Ayurvedic principles</span></li>
+                <li><i class="bi bi-check-circle-fill"></i> <span data-i18n="trust.card1Opt2">Herbal therapy methods</span></li>
+                <li><i class="bi bi-check-circle-fill"></i> <span data-i18n="trust.card1Opt3">Holistic body care</span></li>
+              </ul>
+            </div>
+            <div class="feature-trust-glow"></div>
+          </div>
+        </div>
+        <!-- Card 2: Modern Therapy Equipment -->
+        <div class="col-12 col-sm-6 col-xl-3">
+          <div class="feature-trust-card">
+            <div class="feature-trust-icon">
+              <i class="bi bi-cpu"></i>
+            </div>
+            <div class="feature-trust-body">
+              <span class="feature-trust-tag" data-i18n="trust.card2Tag">Modern</span>
+              <h5 class="feature-trust-title" data-i18n="trust.card2Title">Therapy Equipment</h5>
+              <ul class="feature-trust-list">
+                <li><i class="bi bi-check-circle-fill"></i> <span data-i18n="trust.card2Opt1">Clinical-grade devices</span></li>
+                <li><i class="bi bi-check-circle-fill"></i> <span data-i18n="trust.card2Opt2">Advanced massage tools</span></li>
+                <li><i class="bi bi-check-circle-fill"></i> <span data-i18n="trust.card2Opt3">Smart pain relief tech</span></li>
+              </ul>
+            </div>
+            <div class="feature-trust-glow"></div>
+          </div>
+        </div>
+        <!-- Card 3: Expert Guidance & Support -->
+        <div class="col-12 col-sm-6 col-xl-3">
+          <div class="feature-trust-card">
+            <div class="feature-trust-icon">
+              <i class="bi bi-shield-check"></i>
+            </div>
+            <div class="feature-trust-body">
+              <span class="feature-trust-tag" data-i18n="trust.card3Tag">Expert Guidance</span>
+              <h5 class="feature-trust-title" data-i18n="trust.card3Title">& Support</h5>
+              <ul class="feature-trust-list">
+                <li><i class="bi bi-check-circle-fill"></i> <span data-i18n="trust.card3Opt1">Trained wellness staff</span></li>
+                <li><i class="bi bi-check-circle-fill"></i> <span data-i18n="trust.card3Opt2">Personalised advice</span></li>
+                <li><i class="bi bi-check-circle-fill"></i> <span data-i18n="trust.card3Opt3">Post-treatment care</span></li>
+              </ul>
+            </div>
+            <div class="feature-trust-glow"></div>
+          </div>
+        </div>
+        <!-- Card 4: Home & Centre Usage Options -->
+        <div class="col-12 col-sm-6 col-xl-3">
+          <div class="feature-trust-card">
+            <div class="feature-trust-icon">
+              <i class="bi bi-house-door"></i>
+            </div>
+            <div class="feature-trust-body">
+              <span class="feature-trust-tag" data-i18n="trust.card4Tag">Home & Centre</span>
+              <h5 class="feature-trust-title" data-i18n="trust.card4Title">Usage Options</h5>
+              <ul class="feature-trust-list">
+                <li><i class="bi bi-check-circle-fill"></i> <span data-i18n="trust.card4Opt1">Home-use devices</span></li>
+                <li><i class="bi bi-check-circle-fill"></i> <span data-i18n="trust.card4Opt2">Centre sessions</span></li>
+                <li><i class="bi bi-check-circle-fill"></i> <span data-i18n="trust.card4Opt3">Doorstep delivery</span></li>
+              </ul>
+            </div>
+            <div class="feature-trust-glow"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Explore by Need Section (Approved 8-Item Horizontal Layout) -->
+  <section class="section-py section-bg-ivory">
+    <div class="container">
+      <div class="section-header text-center mb-5">
+        <h2 class="section-title mb-2" data-i18n="need.title">Explore by Need</h2>
+        <p class="section-desc text-muted mb-0" data-i18n="need.subtitle">Find the right solution for your wellness needs</p>
+      </div>
+
+      <div class="row g-3 row-cols-2 row-cols-sm-4 row-cols-xl-8 justify-content-center">
+        <!-- 1. Back Pain -->
+        <div class="col">
+          <a href="{% url 'user:services' %}?need=Back+Pain" class="need-card-clean">
+            <div class="need-icon-circle"><i class="bi bi-person-standing"></i></div>
+            <span data-i18n="need.backPain">Back Pain</span>
+          </a>
+        </div>
+        <!-- 2. Knee Pain -->
+        <div class="col">
+          <a href="{% url 'user:services' %}?need=Knee+Pain" class="need-card-clean">
+            <div class="need-icon-circle"><i class="bi bi-heart-pulse"></i></div>
+            <span data-i18n="need.kneePain">Knee Pain</span>
+          </a>
+        </div>
+        <!-- 3. Neck & Shoulder -->
+        <div class="col">
+          <a href="{% url 'user:services' %}?need=Neck+%26+Shoulder+Pain" class="need-card-clean">
+            <div class="need-icon-circle"><i class="bi bi-person"></i></div>
+            <span data-i18n="need.neckShoulder">Neck & Shoulder</span>
+          </a>
+        </div>
+        <!-- 4. Eye Care -->
+        <div class="col">
+          <a href="{% url 'user:services' %}?need=Eye+Strain" class="need-card-clean">
+            <div class="need-icon-circle"><i class="bi bi-eye"></i></div>
+            <span data-i18n="need.eyeCare">Eye Care</span>
+          </a>
+        </div>
+        <!-- 5. Weight Management -->
+        <div class="col">
+          <a href="{% url 'user:services' %}?need=Weight+Management+%26+Fitness" class="need-card-clean">
+            <div class="need-icon-circle"><i class="bi bi-lightning-charge"></i></div>
+            <span data-i18n="need.weightMgmt">Weight Management</span>
+          </a>
+        </div>
+        <!-- 6. Stress & Sleep -->
+        <div class="col">
+          <a href="{% url 'user:services' %}?need=Sleep+%26+Stress+Management" class="need-card-clean">
+            <div class="need-icon-circle"><i class="bi bi-moon-stars"></i></div>
+            <span data-i18n="need.stressSleep">Stress & Sleep</span>
+          </a>
+        </div>
+        <!-- 7. Foot & Leg Fatigue -->
+        <div class="col">
+          <a href="{% url 'user:services' %}?need=Foot+%26+Leg+Fatigue" class="need-card-clean">
+            <div class="need-icon-circle"><i class="bi bi-flower1"></i></div>
+            <span data-i18n="need.footLeg">Foot & Leg Fatigue</span>
+          </a>
+        </div>
+        <!-- 8. Circulation Support -->
+        <div class="col">
+          <a href="{% url 'user:services' %}?need=Circulation+Support" class="need-card-clean">
+            <div class="need-icon-circle"><i class="bi bi-activity"></i></div>
+            <span data-i18n="need.circulation">Circulation Support</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+
+  <!-- Featured Products & Services (Approved 4-Card Row with Enquire Now) -->
+  <section class="section-py section-bg-ivory">
+    <div class="container">
+      <div class="section-header text-center mb-5">
+        <h2 class="section-title mb-2" data-i18n="feat.title">Featured Products & Services</h2>
+        <p class="section-desc text-muted mb-0" data-i18n="feat.subtitle">Handpicked solutions for your wellness journey</p>
+      </div>
+
+      <div class="row g-4 row-cols-1 row-cols-sm-2 row-cols-xl-4">
+        {% for svc in featured_services %}
+        <div class="col">
+          <div class="featured-product-card">
+            <span class="product-badge-pill">{{ svc.category.name_translated }}</span>
+            <div class="product-img-wrap">
+              {% if svc.image %}
+                <img src="{{ svc.image.url }}" alt="{{ svc.name }}" loading="lazy">
+              {% else %}
+                <img src="{% static 'assets/images/rudra-wellness-logo.png' %}" alt="{{ svc.name }}" loading="lazy" class="opacity-75 p-3">
+              {% endif %}
+            </div>
+            <div class="product-card-body">
+              <h5 class="product-card-title">{{ svc.name }}</h5>
+              <p class="product-card-desc">{{ svc.short_description }}</p>
+              <a href="{% url 'user:service_detail' slug=svc.slug %}" class="view-details-link" data-i18n="feat.viewDetails">View Details &rarr;</a>
+              <a href="{% url 'user:appointment' %}?service={{ svc.id }}" class="btn-enquire-full" data-i18n="feat.bookAppointment">Book Appointment</a>
+            </div>
+          </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center py-4 text-muted">
+          <p class="mb-0" data-i18n="feat.empty">Explore our full therapy solutions in the <a href="{% url 'user:services' %}" class="text-forest fw-semibold">Services Catalogue</a>.</p>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <!-- About Rudra Massage & Wellness Section (Approved 3-Column Layout) -->
+  <section class="section-py section-bg-white border-top border-bottom">
+    <div class="container">
+      <div class="row align-items-center g-4 g-xl-5">
+        <!-- Left: Large Room Photo -->
+        <div class="col-12 col-lg-6 col-xl-5">
+          <div class="position-relative">
+            <img src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=800&q=80" alt="Rudra Massage & Wellness Centre" class="w-100 rounded-4 shadow-sm" style="height: 380px; object-fit: cover;">
+          </div>
+        </div>
+
+        <!-- Middle: Story & Mission -->
+        <div class="col-12 col-lg-6 col-xl-4">
+          <h2 class="section-title mb-3" style="font-size: 1.85rem; font-weight: 800;" data-i18n="about.title">About Rudra Massage & Wellness</h2>
+          <p class="text-muted mb-3" style="font-size: 0.95rem; line-height: 1.65;" data-i18n="about.desc">
+            We bring together the wisdom of traditional wellness and the power of modern therapy to help you feel your best. Our mission is to provide natural, safe and effective wellness solutions for a healthier and more balanced life.
+          </p>
+          <div class="mt-4">
+            <a href="{% url 'user:about' %}" class="btn-veda-primary" data-i18n="about.learnMore">Learn More &rarr;</a>
+          </div>
+        </div>
+
+        <!-- Right: 3 Feature Cards Stack (Responsive on tablet & desktop) -->
+        <div class="col-12 col-xl-3">
+          <div class="row row-cols-1 row-cols-sm-3 row-cols-xl-1 g-3">
+            <div class="col">
+              <div class="about-feature-item mb-0 h-100">
+                <div class="about-feature-icon"><i class="bi bi-flower1"></i></div>
+                <p class="about-feature-text" data-i18n="about.feat1">Holistic Wellness Approach</p>
+              </div>
+            </div>
+            <div class="col">
+              <div class="about-feature-item mb-0 h-100">
+                <div class="about-feature-icon"><i class="bi bi-shield-check"></i></div>
+                <p class="about-feature-text" data-i18n="about.feat2">Trusted Quality Products</p>
+              </div>
+            </div>
+            <div class="col">
+              <div class="about-feature-item mb-0 h-100">
+                <div class="about-feature-icon"><i class="bi bi-headset"></i></div>
+                <p class="about-feature-text" data-i18n="about.feat3">Expert Support & Guidance</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works Section (Approved 3-Step Journey with Connecting Arrows) -->
+  <section class="section-py section-bg-ivory">
+    <div class="container">
+      <div class="section-header text-center mb-5">
+        <h2 class="section-title mb-2" data-i18n="how.title">How It Works</h2>
+        <p class="section-desc text-muted mb-0" data-i18n="how.subtitle">Get started in 3 simple steps.</p>
+      </div>
+
+      <div class="row g-4 align-items-center">
+        <!-- Step 1 -->
+        <div class="col-md-4">
+          <div class="how-step-card">
+            <div class="how-step-num">1</div>
+            <h4 class="fw-bold mb-2" style="font-size: 1.1rem;" data-i18n="how.step1Title">Explore Products & Services</h4>
+            <p class="text-muted" style="font-size: 0.88rem; line-height: 1.6;" data-i18n="how.step1Desc">Browse our wide range of wellness solutions and find what suits you.</p>
+            <span class="how-step-arrow d-none d-md-block">&rarr;</span>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="col-md-4">
+          <div class="how-step-card">
+            <div class="how-step-num">2</div>
+            <h4 class="fw-bold mb-2" style="font-size: 1.1rem;" data-i18n="how.step2Title">Choose a Relevant Option</h4>
+            <p class="text-muted" style="font-size: 0.88rem; line-height: 1.6;" data-i18n="how.step2Desc">Select your preferred product, service or therapy.</p>
+            <span class="how-step-arrow d-none d-md-block">&rarr;</span>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="col-md-4">
+          <div class="how-step-card">
+            <div class="how-step-num">3</div>
+            <h4 class="fw-bold mb-2" style="font-size: 1.1rem;" data-i18n="how.step3Title">Book or Enquire</h4>
+            <p class="text-muted" style="font-size: 0.88rem; line-height: 1.6;" data-i18n="how.step3Desc">Fill in the form or book an appointment. We'll get back to you soon.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Split Section: What Our Customers Say + Health & Wellness Journal -->
+  <section class="section-py section-bg-white border-top border-bottom">
+    <div class="container">
+      <div class="row g-4 g-xl-5">
+        <!-- Left: What Our Customers Say (col-12 col-xl-4) with Modern Testimonial Carousel -->
+        <div class="col-12 col-xl-4">
+          <div class="d-flex align-items-center justify-content-between mb-2">
+            <h3 class="fw-bold mb-0" style="font-size: 1.35rem;" data-i18n="test.title">What Our Customers Say</h3>
+            <div class="d-flex gap-2">
+              <button class="carousel-nav-btn" data-bs-target="#customerReviewsCarousel" data-bs-slide="prev" aria-label="Previous review"><i class="bi bi-arrow-left"></i></button>
+              <button class="carousel-nav-btn" data-bs-target="#customerReviewsCarousel" data-bs-slide="next" aria-label="Next review"><i class="bi bi-arrow-right"></i></button>
+            </div>
+          </div>
+          <p class="text-muted small mb-3" data-i18n="test.subtitle">Real experiences. Better lives.</p>
+
+          <div id="customerReviewsCarousel" class="carousel slide carousel-fade clean-testimonial-carousel" data-bs-ride="carousel" data-bs-interval="5000">
+            <div class="carousel-inner">
+              <!-- Review 1 -->
+              <div class="carousel-item active">
+                <div class="clean-testimonial-card shadow-sm border">
+                  <div class="d-flex align-items-center gap-3 mb-3">
+                    <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80" alt="Priya Sharma" class="author-avatar-img">
+                    <div>
+                      <div class="text-warning fs-6 mb-1">
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                      </div>
+                      <small class="badge bg-success-subtle text-success border border-success-subtle py-1" data-i18n="test.verified">Verified Client</small>
+                    </div>
+                  </div>
+                  <p class="fst-italic text-muted mb-4" style="font-size: 0.92rem; line-height: 1.65;">
+                    "The massage chair has been a game changer for my back pain. The quality and service are excellent. Highly recommend!"
+                  </p>
+                  <div class="mt-auto border-top pt-2">
+                    <h6 class="fw-bold mb-0">Priya Sharma</h6>
+                    <small class="text-muted">Ahmedabad • Full Body Therapy</small>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Review 2 -->
+              <div class="carousel-item">
+                <div class="clean-testimonial-card shadow-sm border">
+                  <div class="d-flex align-items-center gap-3 mb-3">
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80" alt="Rajesh Parekh" class="author-avatar-img">
+                    <div>
+                      <div class="text-warning fs-6 mb-1">
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                      </div>
+                      <small class="badge bg-success-subtle text-success border border-success-subtle py-1" data-i18n="test.verified">Verified Client</small>
+                    </div>
+                  </div>
+                  <p class="fst-italic text-muted mb-4" style="font-size: 0.92rem; line-height: 1.65;">
+                    "After struggling with lumbar discomfort from long desk hours, the decompression belt gave me tangible relief within 2 weeks. Medical-grade comfort!"
+                  </p>
+                  <div class="mt-auto border-top pt-2">
+                    <h6 class="fw-bold mb-0">Rajesh S. Parekh</h6>
+                    <small class="text-muted">Vadodara • AyurSpine Decompressor</small>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Review 3 -->
+              <div class="carousel-item">
+                <div class="clean-testimonial-card shadow-sm border">
+                  <div class="d-flex align-items-center gap-3 mb-3">
+                    <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=200&q=80" alt="Hansaben Patel" class="author-avatar-img">
+                    <div>
+                      <div class="text-warning fs-6 mb-1">
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                      </div>
+                      <small class="badge bg-success-subtle text-success border border-success-subtle py-1" data-i18n="test.verified">Verified Client</small>
+                    </div>
+                  </div>
+                  <p class="fst-italic text-muted mb-4" style="font-size: 0.92rem; line-height: 1.65;">
+                    "Using the authentic Kansa foot bowl with herbal oil before sleep has become our family ritual. Deep, restful sleep returned naturally."
+                  </p>
+                  <div class="mt-auto border-top pt-2">
+                    <h6 class="fw-bold mb-0">Hansaben Patel</h6>
+                    <small class="text-muted">Surat • Kansa Vataki Therapy</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Health & Wellness Journal (col-12 col-xl-8) -->
+        <div class="col-12 col-xl-8">
+          <div class="d-flex align-items-center justify-content-between mb-2">
+            <h3 class="fw-bold mb-0" style="font-size: 1.35rem;" data-i18n="blog.title">Health & Wellness Journal</h3>
+            <a href="{% url 'user:blog' %}" class="text-mint fw-bold small text-decoration-none" data-i18n="blog.viewAll">View All Articles &rarr;</a>
+          </div>
+          <p class="text-muted small mb-4" data-i18n="blog.subtitle">Tips, guides and insights for a healthier you.</p>
+
+          <div class="row g-3 row-cols-1 row-cols-sm-2 row-cols-md-3">
+            <!-- Article 1 -->
+            <div class="col">
+              <div class="blog-card">
+                <div class="blog-card-img" style="height: 150px;">
+                  <img src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=600&q=80" alt="Back Stretches">
+                </div>
+                <div class="p-3 d-flex flex-column flex-grow-1">
+                  <span class="badge bg-light text-dark border align-self-start mb-2" style="font-size: 0.7rem;" data-i18n="blog.wellness">Wellness</span>
+                  <h6 class="fw-bold mb-1" style="font-size: 0.92rem; line-height: 1.35;">Simple Stretches for a Healthier Back</h6>
+                  <small class="text-muted d-block mb-3" style="font-size: 0.75rem;">Apr 15, 2026</small>
+                  <a href="{% url 'user:blog_detail' %}?id=blog-1" class="text-dark fw-bold small mt-auto text-decoration-none" data-i18n="blog.readArticle">Read Article &rarr;</a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Article 2 -->
+            <div class="col">
+              <div class="blog-card">
+                <div class="blog-card-img" style="height: 150px;">
+                  <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=600&q=80" alt="Massage Benefits">
+                </div>
+                <div class="p-3 d-flex flex-column flex-grow-1">
+                  <span class="badge bg-light text-dark border align-self-start mb-2" style="font-size: 0.7rem;" data-i18n="blog.lifestyle">Lifestyle</span>
+                  <h6 class="fw-bold mb-1" style="font-size: 0.92rem; line-height: 1.35;">The Benefits of Regular Massage</h6>
+                  <small class="text-muted d-block mb-3" style="font-size: 0.75rem;">Apr 10, 2026</small>
+                  <a href="{% url 'user:blog_detail' %}?id=blog-2" class="text-dark fw-bold small mt-auto text-decoration-none" data-i18n="blog.readArticle">Read Article &rarr;</a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Article 3 -->
+            <div class="col">
+              <div class="blog-card">
+                <div class="blog-card-img" style="height: 150px;">
+                  <img src="https://images.unsplash.com/photo-1498837167922-ddd27525d352?auto=format&fit=crop&w=600&q=80" alt="Nutrition Foods">
+                </div>
+                <div class="p-3 d-flex flex-column flex-grow-1">
+                  <span class="badge bg-light text-dark border align-self-start mb-2" style="font-size: 0.7rem;" data-i18n="blog.nutrition">Nutrition</span>
+                  <h6 class="fw-bold mb-1" style="font-size: 0.92rem; line-height: 1.35;">Foods for Better Energy & Immunity</h6>
+                  <small class="text-muted d-block mb-3" style="font-size: 0.75rem;">Apr 5, 2026</small>
+                  <a href="{% url 'user:blog_detail' %}?id=blog-3" class="text-dark fw-bold small mt-auto text-decoration-none" data-i18n="blog.readArticle">Read Article &rarr;</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Final CTA Section (Approved Dark Forest Green Rounded Card) -->
+  <section class="py-5 section-bg-ivory">
+    <div class="container">
+      <div class="cta-banner-dark">
+        <div class="cta-bg-leaves"></div>
+        <div class="row align-items-center g-4 position-relative z-1">
+          <!-- Left: Call to Action -->
+          <div class="col-12 col-lg-7">
+            <h2 class="cta-title" data-i18n="cta.title">Ready to Experience Better Well-being?</h2>
+            <p class="cta-lead" data-i18n="cta.lead">Book a consultation or get in touch with our wellness experts today.</p>
+            <div class="d-flex align-items-center gap-3 flex-wrap">
+              <a href="{% url 'user:appointment' %}" class="btn-veda-primary btn-veda-lg" data-i18n="cta.bookBtn">
+                Book Appointment &rarr;
+              </a>
+              <a href="{% url 'user:services' %}" class="btn-veda-outline-white btn-veda-lg" data-i18n="cta.exploreBtn">
+                Explore Services
+              </a>
+            </div>
+          </div>
+
+          <!-- Right: 3 Checked Value Points -->
+          <div class="col-12 col-lg-5">
+            <ul class="cta-check-list">
+              <li><i class="bi bi-check-circle-fill"></i> <span data-i18n="cta.point1">Personalized Solutions</span></li>
+              <li><i class="bi bi-check-circle-fill"></i> <span data-i18n="cta.point2">Expert Guidance</span></li>
+              <li><i class="bi bi-check-circle-fill"></i> <span data-i18n="cta.point3">Flexible Scheduling</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const heroCarouselEl = document.getElementById('heroCarousel');
+    if (heroCarouselEl) {
+      // Continuously auto-rotates every 5 seconds without pausing on hover
+      new bootstrap.Carousel(heroCarouselEl, {
+        interval: 5000,
+        ride: 'carousel',
+        pause: false,
+        wrap: true
+      });
+    }
+  });
+</script>
+{% endblock %}

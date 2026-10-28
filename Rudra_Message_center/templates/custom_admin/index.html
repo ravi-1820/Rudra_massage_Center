@@ -1,0 +1,272 @@
+{% extends 'custom_admin/admin_base.html' %}
+{% load static %}
+
+{% block title %}Admin Dashboard Portal | Rudra Massage & Wellness{% endblock %}
+
+{% block nav_dashboard %}active{% endblock %}
+
+{% block topbar_title %}Overview Dashboard{% endblock %}
+
+
+
+{% block content %}
+<!-- Metric Stat Cards Row -->
+        <div class="row g-4 mb-4">
+          <div class="col-sm-6 col-xl-3">
+            <div class="admin-stat-card">
+              <div class="admin-stat-info">
+                <span>Total Enquiries</span>
+                <h3 id="statTotalEnquiries">{{ total_enquiries|default:"0" }}</h3>
+                <small class="text-warning fw-bold" style="font-size: 0.73rem;">{{ followup_enquiries_count|default:"0" }} follow-up pending</small>
+              </div>
+              <div class="admin-stat-icon stat-icon-green">
+                <i class="bi bi-chat-text"></i>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-sm-6 col-xl-3">
+            <div class="admin-stat-card">
+              <div class="admin-stat-info">
+                <span>Booked Demos</span>
+                <h3 id="statTotalAppointments">{{ total_appointments|default:"0" }}</h3>
+                <small class="text-muted" style="font-size: 0.73rem;">Confirmed & requests</small>
+              </div>
+              <div class="admin-stat-icon stat-icon-gold">
+                <i class="bi bi-calendar2-check"></i>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-sm-6 col-xl-3">
+            <div class="admin-stat-card">
+              <div class="admin-stat-info">
+                <span>Active Solutions</span>
+                <h3 id="statTotalServices">{{ active_services_count|default:"0" }}</h3>
+                <small class="text-muted" style="font-size: 0.73rem;">{{ total_services|default:"0" }} in catalogue</small>
+              </div>
+              <div class="admin-stat-icon stat-icon-blue">
+                <i class="bi bi-grid-fill"></i>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-sm-6 col-xl-3">
+            <div class="admin-stat-card">
+              <div class="admin-stat-info">
+                <span>Active Offers</span>
+                <h3>{{ total_offers|default:"0" }}</h3>
+                <small class="text-muted" style="font-size: 0.73rem;">Promotional campaigns</small>
+              </div>
+              <div class="admin-stat-icon stat-icon-orange">
+                <i class="bi bi-tags-fill"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Enquiries Section -->
+        <div class="admin-table-card">
+          <div class="admin-card-header">
+            <div>
+              <h5>Recent Client Enquiries</h5>
+              <small class="text-muted">Inbound leads awaiting consultation follow-up</small>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+              <a href="{% url 'custom_admin:enquiries' %}" class="btn btn-sm btn-outline-dark">View All Enquiries</a>
+            </div>
+          </div>
+          <div class="admin-table-responsive">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Enquiry ID</th>
+                  <th>Client & Phone</th>
+                  <th>Therapy Solution</th>
+                  <th>Date</th>
+                  <th>Workflow Status</th>
+                  <th class="text-end">Action</th>
+                </tr>
+              </thead>
+              <tbody id="adminEnquiriesTbody">
+                {% for enq in recent_enquiries %}
+                  <tr>
+                    <td>
+                      <a href="{% url 'custom_admin:enquiry_detail' enq.id %}" class="fw-bold text-forest text-decoration-none">
+                        #ENQ-{{ enq.id }}
+                      </a>
+                    </td>
+                    <td>
+                      <div class="fw-bold text-dark">{{ enq.name }}</div>
+                      <small class="text-muted">{{ enq.phone }} ({{ enq.city }})</small>
+                    </td>
+                    <td>
+                      {% if enq.service %}
+                        <span class="badge bg-light text-forest border">{{ enq.service.name }}</span>
+                      {% elif enq.service_name_snapshot %}
+                        <span class="badge bg-light text-forest border">{{ enq.service_name_snapshot }}</span>
+                      {% else %}
+                        <span class="text-muted small">General Enquiry</span>
+                      {% endif %}
+                    </td>
+                    <td>{{ enq.created_at|date:"M d, Y" }}</td>
+                    <td>
+                      <span class="badge {% if enq.status == 'new' %}bg-primary{% elif enq.status == 'contacted' %}bg-info text-dark{% elif enq.status == 'in_discussion' %}bg-warning text-dark{% elif enq.status == 'resolved' %}bg-success{% else %}bg-secondary{% endif %}">
+                        {{ enq.get_status_display }}
+                      </span>
+                    </td>
+                    <td class="text-end">
+                      <a href="{% url 'custom_admin:enquiry_detail' enq.id %}" class="btn btn-sm btn-outline-forest">
+                        <i class="bi bi-eye"></i>
+                      </a>
+                    </td>
+                  </tr>
+                {% empty %}
+                  <tr>
+                    <td colspan="6" class="text-center py-4 text-muted">No client enquiries received yet.</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Upcoming Product Demonstrations Table -->
+        <div class="admin-table-card">
+          <div class="admin-card-header">
+            <div>
+              <h5>Upcoming Product Demos & Consultations</h5>
+              <small class="text-muted">Doorstep trials & clinic visits scheduled</small>
+            </div>
+            <a href="{% url 'custom_admin:appointments' %}" class="btn btn-sm btn-outline-dark">Manage Schedule</a>
+          </div>
+          <div class="admin-table-responsive">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Booking ID</th>
+                  <th>Client</th>
+                  <th>Date & Time Slot</th>
+                  <th>Requested Machine</th>
+                  <th>Format</th>
+                  <th>Status</th>
+                  <th class="text-end">Action</th>
+                </tr>
+              </thead>
+              <tbody id="adminAppointmentsTbody" data-server-rendered="true">
+                {% for apt in recent_appointments %}
+                <tr>
+                  <td class="fw-bold">
+                    <a href="{% url 'custom_admin:appointment_detail' apt.id %}" class="text-forest text-decoration-none">
+                      {{ apt.booking_reference }}
+                    </a>
+                  </td>
+                  <td>
+                    <a href="{% url 'custom_admin:appointment_detail' apt.id %}" class="text-dark text-decoration-none">
+                      <strong>{{ apt.name }}</strong>
+                    </a>
+                    <br><small class="text-muted">{{ apt.phone }}</small>
+                  </td>
+                  <td>
+                    {{ apt.appointment_date|date:"d M Y" }}
+                    <br><small class="text-muted">{{ apt.get_time_slot_display }}</small>
+                  </td>
+                  <td>
+                    {% if apt.service %}
+                      {{ apt.service.name }}
+                    {% else %}
+                      {{ apt.service_name_snapshot|default:"—" }}
+                    {% endif %}
+                  </td>
+                  <td>
+                    <span class="badge bg-light text-dark border">{{ apt.get_demo_format_display }}</span>
+                  </td>
+                  <td>
+                    {% if apt.status == 'pending' %}
+                      <span class="badge bg-warning text-dark">Pending</span>
+                    {% elif apt.status == 'confirmed' %}
+                      <span class="badge bg-success">Confirmed</span>
+                    {% elif apt.status == 'completed' %}
+                      <span class="badge bg-info text-dark">Completed</span>
+                    {% elif apt.status == 'cancelled' %}
+                      <span class="badge bg-danger">Cancelled</span>
+                    {% endif %}
+                  </td>
+                  <td class="text-end">
+                    <a href="{% url 'custom_admin:appointment_detail' apt.id %}" class="btn btn-sm btn-outline-forest" title="View Appointment Details">
+                      <i class="bi bi-eye"></i>
+                    </a>
+                  </td>
+                </tr>
+                {% empty %}
+                <tr>
+                  <td colspan="7" class="text-center py-4 text-muted">No scheduled demo appointments yet.</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Quick Catalogue Preview & Action -->
+        <div class="admin-table-card">
+          <div class="admin-card-header d-flex align-items-center justify-content-between">
+            <div>
+              <h5>Featured Products Management</h5>
+              <small class="text-muted">Quick access to catalogue records</small>
+            </div>
+            <a href="{% url 'custom_admin:service_create' %}" class="btn btn-sm btn-veda-gold d-inline-flex align-items-center gap-1 shadow-sm">
+              <i class="bi bi-plus-lg"></i> Add New Solution
+            </a>
+          </div>
+          <div class="admin-table-responsive">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Product Name</th>
+                  <th>Category</th>
+                  <th>Status</th>
+                  <th class="text-end">Actions</th>
+                </tr>
+              </thead>
+              <tbody data-server-rendered="true">
+                {% for svc in featured_services %}
+                <tr>
+                  <td class="fw-bold text-forest">
+                    <a href="{% url 'custom_admin:service_edit' svc.id %}" class="text-forest text-decoration-none">
+                      {{ svc.name }}
+                    </a>
+                  </td>
+                  <td><span class="badge bg-light text-dark border">{{ svc.category.name }}</span></td>
+                  <td>
+                    <span class="badge {% if svc.is_active %}bg-success{% else %}bg-secondary{% endif %}">
+                      {% if svc.is_active %}Active{% else %}Deactivated{% endif %}
+                    </span>
+                  </td>
+                  <td class="text-end">
+                    <div class="d-inline-flex gap-1">
+                      <a href="{% url 'custom_admin:service_edit' svc.id %}" class="btn btn-sm btn-outline-secondary" title="Edit Service" aria-label="Edit Service">
+                        <i class="bi bi-pencil"></i>
+                      </a>
+                      <button type="button" class="btn btn-sm btn-outline-danger btn-delete-trigger" 
+                              title="Delete Service" aria-label="Delete Service"
+                              data-bs-toggle="modal" data-bs-target="#deleteConfirmModal"
+                              data-record-type="Therapy Solution"
+                              data-record-name="{{ svc.name }}"
+                              data-delete-url="{% url 'custom_admin:service_delete' svc.id %}"
+                              data-next="{% url 'custom_admin:dashboard' %}">
+                        <i class="bi bi-trash3"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                {% empty %}
+                <tr>
+                  <td colspan="4" class="text-center py-4 text-muted">No therapy solutions in catalogue yet.</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+{% endblock %}

@@ -1,0 +1,220 @@
+{% extends 'custom_admin/admin_base.html' %}
+{% load static %}
+
+{% block title %}Manage Categories | Rudra Massage & Wellness Admin{% endblock %}
+
+{% block nav_categories %}active{% endblock %}
+
+{% block topbar_title %}Product & Service Categories{% endblock %}
+
+{% block topbar_actions %}
+<a href="{% url 'custom_admin:category_create' %}" class="btn btn-sm btn-veda-gold d-flex align-items-center gap-1 shadow-sm">
+  <i class="bi bi-plus-lg"></i> Add New Category
+</a>
+{% endblock %}
+
+{% block content %}
+<!-- Metric Cards -->
+<div class="row g-3 mb-4">
+  <div class="col-sm-4">
+    <div class="admin-stat-card py-3">
+      <div class="admin-stat-info">
+        <span class="text-muted small">Total Categories</span>
+        <h3 class="mb-0 fs-4">{{ total_count }}</h3>
+      </div>
+      <div class="admin-stat-icon stat-icon-blue">
+        <i class="bi bi-collection-fill"></i>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-4">
+    <div class="admin-stat-card py-3">
+      <div class="admin-stat-info">
+        <span class="text-muted small">Active on Public Site</span>
+        <h3 class="mb-0 fs-4 text-success">{{ active_count }}</h3>
+      </div>
+      <div class="admin-stat-icon stat-icon-green">
+        <i class="bi bi-check-circle-fill"></i>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-4">
+    <div class="admin-stat-card py-3">
+      <div class="admin-stat-info">
+        <span class="text-muted small">Inactive / Hidden</span>
+        <h3 class="mb-0 fs-4 text-secondary">{{ inactive_count }}</h3>
+      </div>
+      <div class="admin-stat-icon stat-icon-gold">
+        <i class="bi bi-eye-slash-fill"></i>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Table Card -->
+<div class="admin-table-card">
+  <div class="admin-card-header d-flex flex-wrap align-items-center justify-content-between gap-3">
+    <div>
+      <h5 class="mb-0">All Product Categories</h5>
+      <small class="text-muted">Primary categories structuring the services catalogue</small>
+    </div>
+
+    <!-- Search Controls -->
+    <form method="get" class="d-flex align-items-center gap-2">
+      <div class="input-group input-group-sm" style="width: 240px;">
+        <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
+        <input type="text" name="q" value="{{ search_query }}" class="form-control border-start-0" placeholder="Search category..." aria-label="Search categories">
+      </div>
+
+      <select name="status" class="form-select form-select-sm" style="width: 130px;" onchange="this.form.submit()">
+        <option value="">All Statuses</option>
+        <option value="active" {% if selected_status == "active" %}selected{% endif %}>Active</option>
+        <option value="inactive" {% if selected_status == "inactive" %}selected{% endif %}>Inactive</option>
+      </select>
+
+      <button type="submit" class="btn btn-sm btn-outline-dark">Filter</button>
+      {% if search_query or selected_status %}
+        <a href="{% url 'custom_admin:categories' %}" class="btn btn-sm btn-outline-secondary">Reset</a>
+      {% endif %}
+    </form>
+  </div>
+
+  <div class="admin-table-responsive">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th style="width: 70px;">Thumbnail</th>
+          <th>Category Name & Slug</th>
+          <th>Description</th>
+          <th style="width: 120px;" class="text-center">Assigned Items</th>
+          <th style="width: 80px;" class="text-center">Order</th>
+          <th style="width: 110px;" class="text-center">Status</th>
+          <th style="width: 120px;" class="text-end">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for cat in categories %}
+          <tr>
+            <td>
+              {% if cat.image %}
+                <img src="{{ cat.image.url }}" alt="{{ cat.name }}" style="width: 44px; height: 44px; object-fit: cover; border-radius: 8px; border: 1px solid #dce5df;">
+              {% else %}
+                <div class="bg-light d-flex align-items-center justify-content-center text-muted" style="width: 44px; height: 44px; border-radius: 8px; border: 1px dashed #ced4da;">
+                  <i class="bi bi-folder2-open" style="font-size: 1.2rem;"></i>
+                </div>
+              {% endif %}
+            </td>
+
+            <td>
+              <div class="fw-bold text-dark">{{ cat.name }}</div>
+              <small class="text-muted">Slug: <code>{{ cat.slug }}</code></small>
+            </td>
+
+            <td>
+              <div class="small text-muted text-truncate" style="max-width: 320px;" title="{{ cat.description }}">
+                {{ cat.description|default:"No description specified" }}
+              </div>
+            </td>
+
+            <td class="text-center">
+              <span class="badge bg-light text-forest border px-2 py-1">
+                {{ cat.service_count }} solution{{ cat.service_count|pluralize }}
+              </span>
+            </td>
+
+            <td class="text-center fw-semibold text-muted">
+              {{ cat.display_order }}
+            </td>
+
+            <td class="text-center">
+              <form method="post" action="{% url 'custom_admin:category_toggle_active' cat.id %}">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                {% if cat.is_active %}
+                  <button type="submit" class="btn btn-sm btn-outline-success rounded-pill px-2 py-1" style="font-size: 0.75rem; font-weight: 600;" title="Click to deactivate">
+                    <i class="bi bi-check-circle me-1"></i> Active
+                  </button>
+                {% else %}
+                  <button type="submit" class="btn btn-sm btn-outline-secondary rounded-pill px-2 py-1" style="font-size: 0.75rem;" title="Click to activate">
+                    <i class="bi bi-x-circle me-1"></i> Inactive
+                  </button>
+                {% endif %}
+              </form>
+            </td>
+
+            <td class="text-end">
+              <div class="d-inline-flex gap-1">
+                <a href="{% url 'custom_admin:category_edit' cat.id %}" class="btn btn-sm btn-outline-dark" title="Edit Category" aria-label="Edit Category">
+                  <i class="bi bi-pencil"></i>
+                </a>
+                <a href="{% url 'user:services' %}?category={{ cat.slug }}" target="_blank" class="btn btn-sm btn-outline-secondary" title="View category filter on public site" aria-label="Preview">
+                  <i class="bi bi-box-arrow-up-right"></i>
+                </a>
+                {% if cat.service_count > 0 %}
+                  <button type="button" class="btn btn-sm btn-outline-secondary opacity-50" 
+                          title="Cannot delete: contains {{ cat.service_count }} solution(s)" 
+                          aria-label="Cannot delete category" disabled>
+                    <i class="bi bi-trash3"></i>
+                  </button>
+                {% else %}
+                  <button type="button" class="btn btn-sm btn-outline-danger btn-delete-trigger" 
+                          title="Delete Category" aria-label="Delete Category"
+                          data-bs-toggle="modal" data-bs-target="#deleteConfirmModal"
+                          data-record-type="Category"
+                          data-record-name="{{ cat.name }}"
+                          data-delete-url="{% url 'custom_admin:category_delete' cat.id %}"
+                          data-next="{{ request.get_full_path }}">
+                    <i class="bi bi-trash3"></i>
+                  </button>
+                {% endif %}
+              </div>
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="7" class="text-center py-5">
+              <div class="text-muted mb-2">
+                <i class="bi bi-collection text-secondary" style="font-size: 2.2rem;"></i>
+              </div>
+              <h6 class="fw-semibold">No categories found</h6>
+              <p class="text-muted small mb-3">Add categories to organize your wellness services.</p>
+              <a href="{% url 'custom_admin:category_create' %}" class="btn btn-sm btn-veda-gold">
+                <i class="bi bi-plus-lg me-1"></i> Add Category
+              </a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% if page_obj.has_other_pages %}
+    <div class="admin-card-header d-flex align-items-center justify-content-between border-top py-3">
+      <small class="text-muted">
+        Showing {{ page_obj.start_index }} to {{ page_obj.end_index }} of {{ page_obj.paginator.count }} categories
+      </small>
+      <nav aria-label="Categories pagination">
+        <ul class="pagination pagination-sm mb-0">
+          {% if page_obj.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if pagination_querystring %}&{{ pagination_querystring }}{% endif %}">Previous</a></li>
+          {% else %}
+            <li class="page-item disabled"><span class="page-link">Previous</span></li>
+          {% endif %}
+          {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+              <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+            {% else %}
+              <li class="page-item"><a class="page-link" href="?page={{ num }}{% if pagination_querystring %}&{{ pagination_querystring }}{% endif %}">{{ num }}</a></li>
+            {% endif %}
+          {% endfor %}
+          {% if page_obj.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}{% if pagination_querystring %}&{{ pagination_querystring }}{% endif %}">Next</a></li>
+          {% else %}
+            <li class="page-item disabled"><span class="page-link">Next</span></li>
+          {% endif %}
+        </ul>
+      </nav>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

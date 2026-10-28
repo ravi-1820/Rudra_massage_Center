@@ -1,0 +1,230 @@
+{% extends 'custom_admin/admin_base.html' %}
+{% load static %}
+
+{% block title %}Manage Support Requests | Rudra Massage & Wellness Admin{% endblock %}
+
+{% block nav_support_requests %}active{% endblock %}
+
+{% block topbar_title %}Customer Support & Warranty Requests{% endblock %}
+
+{% block content %}
+<!-- Metric Summary Cards -->
+<div class="row g-3 mb-4">
+  <div class="col-sm-6 col-xl-3">
+    <div class="admin-stat-card py-3">
+      <div class="admin-stat-info">
+        <span class="text-muted small">Total Requests</span>
+        <h3 class="mb-0 fs-4">{{ total_count }}</h3>
+      </div>
+      <div class="admin-stat-icon stat-icon-blue">
+        <i class="bi bi-headset"></i>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-6 col-xl-3">
+    <div class="admin-stat-card py-3">
+      <div class="admin-stat-info">
+        <span class="text-muted small">New / Unassigned</span>
+        <h3 class="mb-0 fs-4 text-primary">{{ new_count }}</h3>
+      </div>
+      <div class="admin-stat-icon stat-icon-orange">
+        <i class="bi bi-exclamation-circle-fill"></i>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-6 col-xl-3">
+    <div class="admin-stat-card py-3">
+      <div class="admin-stat-info">
+        <span class="text-muted small">In Progress</span>
+        <h3 class="mb-0 fs-4 text-warning">{{ in_progress_count }}</h3>
+      </div>
+      <div class="admin-stat-icon stat-icon-gold">
+        <i class="bi bi-gear-wide-connected"></i>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-6 col-xl-3">
+    <div class="admin-stat-card py-3">
+      <div class="admin-stat-info">
+        <span class="text-muted small">Resolved / Closed</span>
+        <h3 class="mb-0 fs-4 text-success">{{ resolved_count|add:closed_count }}</h3>
+      </div>
+      <div class="admin-stat-icon stat-icon-green">
+        <i class="bi bi-check2-circle"></i>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Main Table Card -->
+<div class="admin-table-card">
+  <div class="admin-card-header d-flex flex-wrap align-items-center justify-content-between gap-3">
+    <div>
+      <h5 class="mb-0">Support & Warranty Requests</h5>
+      <small class="text-muted">Review, triage, and update support tickets submitted from website contact and support portals</small>
+    </div>
+
+    <!-- Search & Filter Bar -->
+    <form method="get" class="d-flex flex-wrap align-items-center gap-2">
+      <!-- Search Input -->
+      <div class="input-group input-group-sm" style="width: 230px;">
+        <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
+        <input type="text" name="q" value="{{ search_query }}" class="form-control border-start-0" placeholder="Search ticket, name, phone..." aria-label="Search support requests">
+      </div>
+
+      <!-- Status Filter -->
+      <select name="status" class="form-select form-select-sm" style="width: 140px;" onchange="this.form.submit()">
+        <option value="">All Statuses</option>
+        {% for code, label in status_choices %}
+          <option value="{{ code }}" {% if status_filter == code %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+
+      <!-- Type Filter -->
+      <select name="type" class="form-select form-select-sm" style="width: 160px;" onchange="this.form.submit()">
+        <option value="">All Categories</option>
+        {% for code, label in type_choices %}
+          <option value="{{ code }}" {% if selected_type == code %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+
+      {% if search_query or status_filter or selected_type %}
+        <a href="{% url 'custom_admin:support_requests' %}" class="btn btn-sm btn-outline-secondary" title="Reset Filters">
+          <i class="bi bi-x-circle"></i> Reset
+        </a>
+      {% endif %}
+    </form>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+      <thead class="table-light">
+        <tr>
+          <th scope="col" style="width: 160px;">Ticket No.</th>
+          <th scope="col">Customer</th>
+          <th scope="col">Request Type</th>
+          <th scope="col">Subject / Equipment</th>
+          <th scope="col">Date Submitted</th>
+          <th scope="col">Status</th>
+          <th scope="col" class="text-end">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for req in support_requests %}
+          <tr>
+            <td>
+              <a href="{% url 'custom_admin:support_request_detail' req.id %}" class="fw-bold text-forest text-decoration-none">
+                {{ req.ticket_number }}
+              </a>
+            </td>
+            <td>
+              <div class="fw-semibold text-dark">{{ req.name }}</div>
+              <div class="small text-muted">
+                <a href="tel:{{ req.phone }}" class="text-muted text-decoration-none me-2"><i class="bi bi-telephone me-1"></i>{{ req.phone }}</a>
+                {% if req.email %}
+                  <a href="mailto:{{ req.email }}" class="text-muted text-decoration-none"><i class="bi bi-envelope me-1"></i>{{ req.email }}</a>
+                {% endif %}
+              </div>
+            </td>
+            <td>
+              <span class="badge bg-light text-dark border">
+                {{ req.get_request_type_display }}
+              </span>
+            </td>
+            <td>
+              <div class="fw-semibold text-truncate" style="max-width: 220px;" title="{{ req.subject|default:req.product_name }}">
+                {{ req.subject|default:req.product_name|default:"General Inquiry" }}
+              </div>
+              <small class="text-muted text-truncate d-block" style="max-width: 220px;" title="{{ req.message }}">
+                {{ req.message|truncatechars:60 }}
+              </small>
+            </td>
+            <td>
+              <div class="small">{{ req.created_at|date:"M d, Y" }}</div>
+              <small class="text-muted">{{ req.created_at|time:"h:i A" }}</small>
+            </td>
+            <td>
+              <span class="badge {% if req.status == 'new' %}bg-primary{% elif req.status == 'in_progress' %}bg-warning text-dark{% elif req.status == 'resolved' %}bg-success{% else %}bg-secondary{% endif %}">
+                {{ req.get_status_display }}
+              </span>
+            </td>
+            <td class="text-end">
+              <div class="d-inline-flex gap-1 align-items-center">
+                <a href="{% url 'custom_admin:support_request_detail' req.id %}" class="btn btn-sm btn-outline-primary" title="View Ticket Details" aria-label="View Details">
+                  <i class="bi bi-eye"></i> View
+                </a>
+                <button type="button" class="btn btn-sm btn-outline-danger btn-delete-trigger" 
+                        title="Delete Ticket" aria-label="Delete Ticket"
+                        data-bs-toggle="modal" data-bs-target="#deleteConfirmModal"
+                        data-record-type="Support Ticket"
+                        data-record-name="{{ req.ticket_number }} ({{ req.name }})"
+                        data-delete-url="{% url 'custom_admin:support_request_delete' req.id %}"
+                        data-next="{{ request.get_full_path }}">
+                  <i class="bi bi-trash3"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="7" class="text-center py-5">
+              <div class="text-muted">
+                <i class="bi bi-inbox fs-1 d-block mb-2 text-secondary"></i>
+                <h6 class="fw-bold">No Support Requests Found</h6>
+                <p class="small mb-0">
+                  {% if search_query or status_filter or selected_type %}
+                    No tickets matched your query. <a href="{% url 'custom_admin:support_requests' %}">Clear active filters</a>.
+                  {% else %}
+                    No customer contact or support tickets have been submitted yet.
+                  {% endif %}
+                </p>
+              </div>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  {% if page_obj.has_other_pages %}
+    <div class="admin-card-footer d-flex flex-wrap align-items-center justify-content-between p-3 border-top gap-2">
+      <small class="text-muted">
+        Showing {{ page_obj.start_index }} to {{ page_obj.end_index }} of {{ page_obj.paginator.count }} tickets
+      </small>
+      <nav aria-label="Support Requests pagination">
+        <ul class="pagination pagination-sm mb-0">
+          {% if page_obj.has_previous %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if pagination_querystring %}&{{ pagination_querystring }}{% endif %}">&laquo;</a>
+            </li>
+          {% else %}
+            <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
+          {% endif %}
+
+          {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+              <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{ num }}{% if pagination_querystring %}&{{ pagination_querystring }}{% endif %}">{{ num }}</a>
+              </li>
+            {% endif %}
+          {% endfor %}
+
+          {% if page_obj.has_next %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if pagination_querystring %}&{{ pagination_querystring }}{% endif %}">&raquo;</a>
+            </li>
+          {% else %}
+            <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
+          {% endif %}
+        </ul>
+      </nav>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

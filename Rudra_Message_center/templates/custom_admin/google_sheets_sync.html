@@ -1,0 +1,239 @@
+{% extends 'custom_admin/admin_base.html' %}
+{% load static %}
+
+{% block title %}Google Sheets Synchronization | Rudra Massage & Wellness Admin{% endblock %}
+
+{% block nav_google_sheets %}active{% endblock %}
+
+{% block topbar_title %}Google Sheets Synchronization Monitor{% endblock %}
+
+{% block content %}
+<!-- Metric Summary Cards -->
+<div class="row g-3 mb-4">
+  <div class="col-sm-6 col-xl-3">
+    <div class="admin-stat-card py-3">
+      <div class="admin-stat-info">
+        <span class="text-muted small">Total Queued Records</span>
+        <h3 class="mb-0 fs-4">{{ counts.total }}</h3>
+      </div>
+      <div class="admin-stat-icon stat-icon-blue">
+        <i class="bi bi-file-earmark-spreadsheet-fill"></i>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-6 col-xl-3">
+    <div class="admin-stat-card py-3">
+      <div class="admin-stat-info">
+        <span class="text-muted small">Synced to Sheets</span>
+        <h3 class="mb-0 fs-4 text-success">{{ counts.synced }}</h3>
+      </div>
+      <div class="admin-stat-icon stat-icon-green">
+        <i class="bi bi-check2-circle"></i>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-6 col-xl-3">
+    <div class="admin-stat-card py-3">
+      <div class="admin-stat-info">
+        <span class="text-muted small">Pending Queue</span>
+        <h3 class="mb-0 fs-4 text-primary">{{ counts.pending }}</h3>
+      </div>
+      <div class="admin-stat-icon stat-icon-orange">
+        <i class="bi bi-clock-history"></i>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-6 col-xl-3">
+    <div class="admin-stat-card py-3">
+      <div class="admin-stat-info">
+        <span class="text-muted small">Failed / In Backoff</span>
+        <h3 class="mb-0 fs-4 text-danger">{{ counts.failed }}</h3>
+      </div>
+      <div class="admin-stat-icon stat-icon-gold">
+        <i class="bi bi-exclamation-triangle-fill"></i>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Integration Status Diagnostic Banner -->
+<div class="admin-card mb-4 p-3 d-flex flex-wrap align-items-center justify-content-between gap-3">
+  <div>
+    <h5 class="mb-1 d-flex align-items-center gap-2">
+      <i class="bi bi-info-circle text-primary"></i> Integration Readiness:
+      {% if diagnostics.is_configured %}
+        <span class="badge bg-success">Active & Ready</span>
+      {% else %}
+        <span class="badge bg-warning text-dark">Inactive / Disabled</span>
+      {% endif %}
+    </h5>
+    <p class="text-muted small mb-0">{{ diagnostics.status }}</p>
+  </div>
+
+  {% if counts.failed > 0 %}
+  <form method="post" action="{% url 'custom_admin:google_sheets_retry_all_failed' %}">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-warning btn-sm d-flex align-items-center gap-1 shadow-sm">
+      <i class="bi bi-arrow-repeat"></i> Retry All Failed ({{ counts.failed }})
+    </button>
+  </form>
+  {% endif %}
+</div>
+
+<!-- Filter Bar -->
+<div class="admin-card mb-4 p-3">
+  <form method="get" class="row g-2 align-items-center">
+    <div class="col-auto">
+      <label class="form-label small text-muted mb-0">Status:</label>
+    </div>
+    <div class="col-auto">
+      <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
+        <option value="">All Statuses</option>
+        {% for st_val, st_lbl in status_choices %}
+          <option value="{{ st_val }}" {% if status_filter == st_val %}selected{% endif %}>{{ st_lbl }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="col-auto ms-md-3">
+      <label class="form-label small text-muted mb-0">Source:</label>
+    </div>
+    <div class="col-auto">
+      <select name="source_type" class="form-select form-select-sm" onchange="this.form.submit()">
+        <option value="">All Sources</option>
+        {% for src_val, src_lbl in source_choices %}
+          <option value="{{ src_val }}" {% if source_filter == src_val %}selected{% endif %}>{{ src_lbl }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    {% if status_filter or source_filter %}
+    <div class="col-auto ms-auto">
+      <a href="{% url 'custom_admin:google_sheets_sync' %}" class="btn btn-link btn-sm text-secondary text-decoration-none">
+        <i class="bi bi-x-circle"></i> Clear Filters
+      </a>
+    </div>
+    {% endif %}
+  </form>
+</div>
+
+<!-- Records Table -->
+<div class="admin-card">
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+      <thead class="table-light">
+        <tr>
+          <th>Source Type</th>
+          <th>Identifier</th>
+          <th>Target Sheet</th>
+          <th>Status</th>
+          <th>Attempts</th>
+          <th>Last Attempt</th>
+          <th>Next Retry</th>
+          <th>Last Error</th>
+          <th class="text-end">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for rec in page_obj %}
+        <tr>
+          <td>
+            {% if rec.source_type == 'enquiry' %}
+              <span class="badge bg-info text-dark">Enquiry</span>
+            {% elif rec.source_type == 'appointment' %}
+              <span class="badge bg-primary">Appointment</span>
+            {% else %}
+              <span class="badge bg-secondary">Support / Contact</span>
+            {% endif %}
+          </td>
+          <td>
+            <strong>{{ rec.source_identifier }}</strong>
+          </td>
+          <td>
+            {% if rec.sheet_name %}
+              <code>{{ rec.sheet_name }}</code>{% if rec.row_index %}:L{{ rec.row_index }}{% endif %}
+            {% else %}
+              <span class="text-muted small">—</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if rec.status == 'synced' %}
+              <span class="badge bg-success">Synced</span>
+            {% elif rec.status == 'pending' %}
+              <span class="badge bg-warning text-dark">Pending</span>
+            {% elif rec.status == 'in_progress' %}
+              <span class="badge bg-info">In Progress</span>
+            {% else %}
+              <span class="badge bg-danger">Failed</span>
+            {% endif %}
+          </td>
+          <td>
+            <span class="badge bg-light text-dark border">{{ rec.attempts }} / 5</span>
+          </td>
+          <td class="small text-muted">
+            {{ rec.last_attempt_at|date:"d M Y H:i"|default:"Never" }}
+          </td>
+          <td class="small text-muted">
+            {% if rec.next_retry_at %}
+              <span title="{{ rec.next_retry_at|date:'d M Y H:i:s' }}">{{ rec.next_retry_at|timeuntil }}</span>
+            {% else %}
+              —
+            {% endif %}
+          </td>
+          <td class="small">
+            {% if rec.last_error_category %}
+              <span class="text-danger" title="{{ rec.last_error_message }}">{{ rec.last_error_category }}</span>
+            {% else %}
+              <span class="text-muted">—</span>
+            {% endif %}
+          </td>
+          <td class="text-end">
+            <form method="post" action="{% url 'custom_admin:google_sheets_retry' rec.id %}">
+              {% csrf_token %}
+              <input type="hidden" name="next" value="{{ request.get_full_path }}">
+              <button type="submit" class="btn btn-outline-primary btn-sm py-0 px-2" title="Retry synchronization now">
+                <i class="bi bi-arrow-repeat"></i> Retry
+              </button>
+            </form>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="9" class="text-center py-4 text-muted">
+            <i class="bi bi-inbox fs-3 d-block mb-1"></i>
+            No sync tracking records found{% if status_filter or source_filter %} matching selected filters{% endif %}.
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  {% if page_obj.has_other_pages %}
+  <div class="p-3 border-top d-flex justify-content-between align-items-center">
+    <span class="small text-muted">
+      Showing {{ page_obj.start_index }} to {{ page_obj.end_index }} of {{ page_obj.paginator.count }} records
+    </span>
+    <ul class="pagination pagination-sm mb-0">
+      {% if page_obj.has_previous %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if status_filter %}&status={{ status_filter }}{% endif %}{% if source_filter %}&source_type={{ source_filter }}{% endif %}">Previous</a>
+        </li>
+      {% endif %}
+      <li class="page-item active">
+        <span class="page-link">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+      </li>
+      {% if page_obj.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if status_filter %}&status={{ status_filter }}{% endif %}{% if source_filter %}&source_type={{ source_filter }}{% endif %}">Next</a>
+        </li>
+      {% endif %}
+    </ul>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

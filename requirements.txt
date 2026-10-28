@@ -1,4 +1,18 @@
-Django==6.1.1
+# Core Framework & Dependencies
+Django==6.1.2
 asgiref==3.12.1
 sqlparse==0.6.0
-Pillow==12.2.0
+
+# Image Processing (ImageField support)
+Pillow==12.3.0
+
+# Environment Configuration
+python-dotenv==1.2.4
+
+# Google Sheets API & Authentication
+google-api-python-client==2.201.0
+google-auth==2.62.0
+google-auth-httplib2==0.4.4
+
+# Timezone data (required for IANA timezones on Windows)
+tzdata==2026.5

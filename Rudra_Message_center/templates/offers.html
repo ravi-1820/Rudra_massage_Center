@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Offers & Festive Bundles | Rudra Massage & Wellness{% endblock %}
+
+{% block content %}
+<!-- Banner -->
+  <section class="py-5 section-bg-ivory border-bottom text-center">
+    <div class="container">
+      <span class="section-subtitle-tag">SPECIAL INCENTIVES</span>
+      <h1 class="h2 fw-bold text-forest mb-2" data-i18n="offers.title">Offers, Vouchers & Festive Packages</h1>
+      <p class="text-muted max-w-md mx-auto mb-0" data-i18n="offers.subtitle">
+        Copy promo codes below to redeem savings during your telephone enquiry or clinic booking.
+      </p>
+    </div>
+  </section>
+
+  <!-- Offers Grid -->
+  <section class="section-py section-bg-white">
+    <div class="container">
+      <div class="row g-4 justify-content-center">
+        {% for offer in offers %}
+        <div class="col-md-6 col-lg-4">
+          <div class="offer-card">
+            {% if offer.badge_tag %}
+            <span class="offer-card-tag">{{ offer.badge_tag }}</span>
+            {% endif %}
+            <div class="offer-discount">{{ offer.discount_title }}</div>
+            <h4 class="offer-title">{{ offer.title }}</h4>
+            <p class="offer-desc">
+              {{ offer.description }}
+            </p>
+            {% if offer.validity_text %}
+            <div class="small text-muted mb-3"><i class="bi bi-clock me-1"></i> {{ offer.validity_text }}</div>
+            {% elif offer.valid_until %}
+            <div class="small text-muted mb-3"><i class="bi bi-clock me-1"></i> Valid till {{ offer.valid_until|date:"F d, Y" }}</div>
+            {% endif %}
+            {% if offer.promo_code %}
+            <div class="offer-promo-box">
+              <span class="promo-code-text">{{ offer.promo_code }}</span>
+              <button class="btn btn-sm btn-dark" onclick="navigator.clipboard.writeText('{{ offer.promo_code|escapejs }}'); showToast('Code Copied', 'Promo code {{ offer.promo_code|escapejs }} copied to clipboard!', 'gold');">
+                <i class="bi bi-copy me-1"></i> Copy Code
+              </button>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center py-5">
+          <div class="p-5 border rounded-4 bg-light shadow-sm max-w-md mx-auto">
+            <i class="bi bi-gift fs-1 text-mint mb-3 d-block"></i>
+            <h4 class="fw-bold text-forest mb-2">No Active Offers Right Now</h4>
+            <p class="text-muted mb-0">
+              Please check back soon for our upcoming seasonal incentives, festive packages, and demo discounts.
+            </p>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+      <!-- Action -->
+      <div class="text-center mt-5">
+        <a href="{% url 'user:appointment' %}" class="btn-veda-primary btn-veda-lg">
+          Apply a Promo Code During Demo Booking &rarr;
+        </a>
+      </div>
+    </div>
+  </section>
+
+  {% endblock %}

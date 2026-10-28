@@ -1,0 +1,164 @@
+{% extends 'custom_admin/admin_base.html' %}
+{% load static %}
+
+{% block title %}{{ title }} | Rudra Massage & Wellness Admin{% endblock %}
+
+{% block nav_categories %}active{% endblock %}
+
+{% block topbar_title %}{{ title }}{% endblock %}
+
+{% block topbar_actions %}
+<a href="{% url 'custom_admin:categories' %}" class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-1">
+  <i class="bi bi-arrow-left"></i> Back to Categories
+</a>
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+    <div class="card border rounded-4 p-4 p-md-5 shadow-sm bg-white">
+      
+      <!-- Header -->
+      <div class="d-flex align-items-center justify-content-between pb-3 mb-4 border-bottom">
+        <div>
+          <h4 class="fw-bold text-forest mb-1">{{ title }}</h4>
+          <small class="text-muted">Create or modify service categories displayed on the public navigation</small>
+        </div>
+      </div>
+
+      <!-- Errors -->
+      {% if form.errors %}
+        <div class="alert alert-danger rounded-3 p-3 mb-4" role="alert">
+          <div class="d-flex align-items-center gap-2 fw-bold mb-2">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            <span>Please correct the errors indicated below:</span>
+          </div>
+          <ul class="mb-0 small ps-3">
+            {% for field in form %}
+              {% for error in field.errors %}
+                <li><strong>{{ field.label }}:</strong> {{ error }}</li>
+              {% endfor %}
+            {% endfor %}
+            {% for error in form.non_field_errors %}
+              <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+
+      <!-- Form -->
+      <form method="post" enctype="multipart/form-data" novalidate>
+        {% csrf_token %}
+
+        <div class="row g-3 mb-4">
+          <!-- Name -->
+          <div class="col-md-7">
+            <label for="{{ form.name.id_for_label }}" class="form-label fw-semibold small">
+              Category Name *
+            </label>
+            {{ form.name }}
+            {% if form.name.errors %}
+              <div class="text-danger small mt-1">{{ form.name.errors.0 }}</div>
+            {% endif %}
+          </div>
+
+          <!-- Slug -->
+          <div class="col-md-5">
+            <label for="{{ form.slug.id_for_label }}" class="form-label fw-semibold small">
+              URL Slug
+            </label>
+            {{ form.slug }}
+            <small class="text-muted" style="font-size: 0.75rem;">Leave empty to auto-generate.</small>
+            {% if form.slug.errors %}
+              <div class="text-danger small mt-1">{{ form.slug.errors.0 }}</div>
+            {% endif %}
+          </div>
+
+          <!-- Description -->
+          <div class="col-12">
+            <label for="{{ form.description.id_for_label }}" class="form-label fw-semibold small">
+              Description (Optional)
+            </label>
+            {{ form.description }}
+            {% if form.description.errors %}
+              <div class="text-danger small mt-1">{{ form.description.errors.0 }}</div>
+            {% endif %}
+          </div>
+
+          <!-- Image -->
+          <div class="col-md-8">
+            <label for="{{ form.image.id_for_label }}" class="form-label fw-semibold small">
+              Category Thumbnail / Image
+            </label>
+            {{ form.image }}
+            {% if form.image.errors %}
+              <div class="text-danger small mt-1">{{ form.image.errors.0 }}</div>
+            {% endif %}
+          </div>
+
+          {% if is_edit and category.image %}
+            <div class="col-md-4">
+              <label class="form-label fw-semibold small">Current Image</label>
+              <div class="d-flex align-items-center gap-2 p-2 border rounded-3 bg-light">
+                <img src="{{ category.image.url }}" alt="{{ category.name }}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px;">
+                <span class="small text-muted text-break">Uploaded image</span>
+              </div>
+            </div>
+          {% endif %}
+
+          <!-- Order -->
+          <div class="col-sm-4">
+            <label for="{{ form.display_order.id_for_label }}" class="form-label fw-semibold small">
+              Display Order
+            </label>
+            {{ form.display_order }}
+          </div>
+
+          <!-- Active Switch -->
+          <div class="col-sm-8 d-flex align-items-center pt-3">
+            <div class="form-check form-switch">
+              {{ form.is_active }}
+              <label class="form-check-label fw-semibold small" for="{{ form.is_active.id_for_label }}">
+                Active on Website
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 pt-3 border-top">
+          <div>
+            {% if is_edit %}
+              {% if category.services.exists %}
+                <button type="button" class="btn btn-outline-secondary opacity-50 px-3" 
+                        title="Cannot delete category because it contains active therapy solutions" disabled>
+                  <i class="bi bi-trash3 me-1"></i> Delete Category
+                </button>
+              {% else %}
+                <button type="button" class="btn btn-outline-danger btn-delete-trigger px-3" 
+                        title="Delete this category"
+                        data-bs-toggle="modal" data-bs-target="#deleteConfirmModal"
+                        data-record-type="Category"
+                        data-record-name="{{ category.name }}"
+                        data-delete-url="{% url 'custom_admin:category_delete' category.id %}"
+                        data-next="{% url 'custom_admin:categories' %}">
+                  <i class="bi bi-trash3 me-1"></i> Delete Category
+                </button>
+              {% endif %}
+            {% endif %}
+          </div>
+          <div class="d-flex align-items-center gap-2">
+            <a href="{% url 'custom_admin:categories' %}" class="btn btn-outline-secondary px-4">
+              Cancel
+            </a>
+            <button type="submit" class="btn btn-veda-primary px-4 fw-bold">
+              <i class="bi bi-check2-circle me-1"></i> Save Category
+            </button>
+          </div>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

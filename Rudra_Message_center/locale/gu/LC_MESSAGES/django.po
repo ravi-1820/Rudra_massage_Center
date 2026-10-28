@@ -1,0 +1,202 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Rudra Massage & Wellness 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-27 19:00+0530\n"
+"PO-Revision-Date: 2026-10-27 19:00+0530\n"
+"Language: gu\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Home"
+msgstr "હોમ"
+
+msgid "About Us"
+msgstr "અમારા વિશે"
+
+msgid "Catalogue"
+msgstr "કેટલોગ"
+
+msgid "Services"
+msgstr "સેવાઓ"
+
+msgid "All Products & Services"
+msgstr "બધા ઉત્પાદનો અને સેવાઓ"
+
+msgid "Gallery"
+msgstr "ગેલેરી"
+
+msgid "Blog"
+msgstr "બ્લોગ"
+
+msgid "Contact"
+msgstr "સંપર્ક"
+
+msgid "Contact Us"
+msgstr "સંપર્ક કરો"
+
+msgid "Explore Services"
+msgstr "સેવાઓ જુઓ"
+
+msgid "Explore Services →"
+msgstr "સેવાઓ જુઓ →"
+
+msgid "Book Appointment"
+msgstr "એપોઇન્ટમેન્ટ બુક કરો"
+
+msgid "Book Appointment →"
+msgstr "એપોઇન્ટમેન્ટ બુક કરો →"
+
+msgid "Enquire Now"
+msgstr "પૂછપરછ કરો"
+
+msgid "Enquire Now →"
+msgstr "પૂછપરછ કરો →"
+
+msgid "Featured Products & Services"
+msgstr "પસંદગીના ઉત્પાદનો અને સેવાઓ"
+
+msgid "Explore by Need"
+msgstr "તમારી જરૂરિયાત પ્રમાણે શોધો"
+
+msgid "Find the right solution for your wellness needs"
+msgstr "તમારા સ્વાસ્થ્ય માટે યોગ્ય ઉપાય પસંદ કરો"
+
+msgid "Back Pain"
+msgstr "કમરનો દુખાવો"
+
+msgid "Knee Pain"
+msgstr "ઘૂંટણનો દુખાવો"
+
+msgid "Neck & Shoulder"
+msgstr "ગરદન અને ખભાનો દુખાવો"
+
+msgid "Eye Care"
+msgstr "આંખની સંભાળ"
+
+msgid "Weight Management"
+msgstr "વજન નિયંત્રણ"
+
+msgid "Stress & Sleep"
+msgstr "તણાવ અને ઊંઘ"
+
+msgid "Foot & Leg Fatigue"
+msgstr "પગ અને પિંડીનો થાક"
+
+msgid "Circulation Support"
+msgstr "રક્ત પરિભ્રમણ સુધારણા"
+
+msgid "How It Works"
+msgstr "આ કેવી રીતે કાર્ય કરે છે"
+
+msgid "Get started in 3 simple steps."
+msgstr "૩ સરળ પગલાંમાં શરૂ કરો."
+
+msgid "What Our Customers Say"
+msgstr "અમારા ગ્રાહકો શું કહે છે"
+
+msgid "Health & Wellness Journal"
+msgstr "હેલ્થ અને વેલનેસ જર્નલ"
+
+msgid "View Details"
+msgstr "વિગતો જુઓ"
+
+msgid "View Details →"
+msgstr "વિગતો જુઓ →"
+
+msgid "Send Message"
+msgstr "સંદેશ મોકલો"
+
+msgid "Send Enquiry"
+msgstr "પૂછપરછ મોકલો"
+
+msgid "Request Appointment"
+msgstr "એપોઇન્ટમેન્ટ વિનંતી મોકલો"
+
+msgid "Quick Links"
+msgstr "ઝડપી લિંક્સ"
+
+msgid "Our Services"
+msgstr "અમારી સેવાઓ"
+
+msgid "Privacy Policy"
+msgstr "ગોપનીયતા નીતિ"
+
+msgid "Terms & Conditions"
+msgstr "નિયમો અને શરતો"
+
+msgid "All rights reserved."
+msgstr "સર્વાધિકાર સુરક્ષિત."
+
+msgid "Filter By"
+msgstr "ફિલ્ટર કરો"
+
+msgid "Clear All"
+msgstr "બધા દૂર કરો"
+
+msgid "Search"
+msgstr "શોધો"
+
+msgid "Sort By:"
+msgstr "ક્રમ પસંદ કરો:"
+
+msgid "Previous"
+msgstr "અગાઉનું"
+
+msgid "Next"
+msgstr "આગળનું"
+
+msgid "Full Name"
+msgstr "પૂરું નામ"
+
+msgid "Email Address"
+msgstr "ઈમેલ એડ્રેસ"
+
+msgid "Mobile Number (+91)"
+msgstr "મોબાઇલ નંબર (+91)"
+
+msgid "City"
+msgstr "શહેર"
+
+msgid "Preferred Date"
+msgstr "પસંદગીની તારીખ"
+
+msgid "Preferred Time"
+msgstr "પસંદગીનો સમય"
+
+msgid "Select Service / Machine"
+msgstr "સાધન અથવા સેવા પસંદ કરો"
+
+msgid "Your Message / Specific Concerns"
+msgstr "તમારો સંદેશ અથવા ચોક્કસ વિગત"
+
+msgid "Special Offer"
+msgstr "વિશેષ ઑફર"
+
+msgid "Shop Now →"
+msgstr "હમણાં ખરીદો →"
+
+msgid "View All Articles →"
+msgstr "બધા લેખો જુઓ →"
+
+msgid "Read Article →"
+msgstr "લેખ વાંચો →"
+
+msgid "Therapy Machines"
+msgstr "થેરાપી મશીન્સ"
+
+msgid "Massagers"
+msgstr "મસાજર્સ"
+
+msgid "Exercise Equipment"
+msgstr "કસરત સાધનો"
+
+msgid "Kansa Therapy"
+msgstr "કાંસા થેરાપી"
+
+msgid "Surgical & Support"
+msgstr "સર્જિકલ અને સપોર્ટ"
+
+msgid "Surgical & Support Products"
+msgstr "સર્જિકલ અને સપોર્ટ પ્રોડક્ટ્સ"

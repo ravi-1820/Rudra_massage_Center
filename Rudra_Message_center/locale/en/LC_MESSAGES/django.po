@@ -1,0 +1,40 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Rudra Massage & Wellness 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-27 19:00+0530\n"
+"PO-Revision-Date: 2026-10-27 19:00+0530\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Home"
+msgstr "Home"
+
+msgid "About Us"
+msgstr "About Us"
+
+msgid "Catalogue"
+msgstr "Catalogue"
+
+msgid "Services"
+msgstr "Services"
+
+msgid "Gallery"
+msgstr "Gallery"
+
+msgid "Blog"
+msgstr "Blog"
+
+msgid "Contact"
+msgstr "Contact"
+
+msgid "Contact Us"
+msgstr "Contact Us"
+
+msgid "Book Appointment"
+msgstr "Book Appointment"
+
+msgid "Enquire Now"
+msgstr "Enquire Now"

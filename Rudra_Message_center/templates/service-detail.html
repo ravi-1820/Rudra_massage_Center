@@ -1,0 +1,317 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ service.name }} | Rudra Massage & Wellness{% endblock %}
+
+{% block extra_css %}
+<style>
+  #detailTabs .nav-link {
+    color: var(--muted-foreground, #525252);
+    background: transparent;
+    border: 1px solid var(--border, #f4f6f8);
+    border-radius: 9999px;
+    padding: 0.6rem 1.4rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+  }
+  #detailTabs .nav-link:hover {
+    color: var(--foreground, #000000);
+    border-color: #51f0a8;
+  }
+  #detailTabs .nav-link.active {
+    color: #000000 !important;
+    background-color: #51f0a8 !important;
+    border-color: #51f0a8 !important;
+    box-shadow: 0 4px 14px rgba(81, 240, 168, 0.35);
+  }
+  .service-detail-img-box {
+    min-height: 380px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #ffffff;
+    border: 1px solid var(--border, #f4f6f8);
+    border-radius: 1.25rem;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  }
+  .service-detail-img-box img {
+    max-height: 400px;
+    width: 100%;
+    object-fit: contain;
+    padding: 1.25rem;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Breadcrumbs Bar -->
+<section class="py-3 section-bg-ivory border-bottom">
+  <div class="container">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb mb-0 small align-items-center">
+        <li class="breadcrumb-item"><a href="{% url 'user:home' %}" class="text-decoration-none" data-i18n="cat.breadcrumbHome">Home</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'user:services' %}" class="text-decoration-none" data-i18n="cat.breadcrumbCatalogue">Catalogue</a></li>
+        <li class="breadcrumb-item">
+          <a href="{% url 'user:services' %}?category={{ service.category.slug }}" class="text-decoration-none">{{ service.category.name }}</a>
+        </li>
+        <li class="breadcrumb-item active text-truncate" aria-current="page" style="max-width: 320px;">{{ service.name }}</li>
+      </ol>
+    </nav>
+  </div>
+</section>
+
+<!-- Product Hero & Overview -->
+<section class="section-py section-bg-white border-bottom">
+  <div class="container">
+    <div class="row g-5 align-items-center">
+      
+      <!-- Left: Service Image -->
+      <div class="col-lg-6">
+        <div class="service-detail-img-box">
+          {% if service.is_featured %}
+            <span class="badge-custom badge-forest position-absolute top-0 start-0 m-3 shadow-sm">
+              <i class="bi bi-star-fill me-1"></i><span data-i18n="sd.featured">Featured</span>
+            </span>
+          {% endif %}
+          {% if service.image %}
+            <img src="{{ service.image.url }}" alt="{{ service.name }}" class="img-fluid rounded-3">
+          {% else %}
+            <img src="{% static 'assets/images/rudra-wellness-logo.png' %}" alt="{{ service.name }}" class="img-fluid rounded-3 opacity-75">
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Right: Information & Actions -->
+      <div class="col-lg-6">
+        <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
+          <a href="{% url 'user:services' %}?category={{ service.category.slug }}" class="badge bg-light text-forest border fw-bold text-decoration-none px-3 py-2">
+            <i class="bi bi-tag-fill me-1"></i>{{ service.category.name_translated }}
+          </a>
+          {% if service.is_featured %}
+            <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2 fw-semibold">
+              <i class="bi bi-patch-check-fill me-1"></i><span data-i18n="sd.signature">Signature Wellness Therapy</span>
+            </span>
+          {% endif %}
+        </div>
+
+        <h1 class="h2 fw-bold text-forest mb-3">{{ service.name }}</h1>
+        <p class="lead fs-6 text-muted mb-4">{{ service.short_description }}</p>
+
+        <!-- Taxonomy Tags / Suitability -->
+        {% if service.customer_needs.all or service.body_parts.all or service.service_types.all or service.intended_uses.all %}
+          <div class="p-3 rounded-4 section-bg-ivory border mb-4">
+            <h6 class="fw-bold text-forest small mb-2 text-uppercase" style="letter-spacing: 0.05em;" data-i18n="sd.scopeHeading">Therapeutic Scope & Suitability:</h6>
+            <div class="d-flex flex-wrap gap-2">
+              {% for cn in service.customer_needs.all %}
+                <span class="product-tag-pill"><i class="bi bi-heart-pulse-fill me-1"></i>{{ cn.name_translated }}</span>
+              {% endfor %}
+              {% for bp in service.body_parts.all %}
+                <span class="product-tag-pill"><i class="bi bi-geo-alt-fill me-1"></i>{{ bp.name_translated }}</span>
+              {% endfor %}
+              {% for st in service.service_types.all %}
+                <span class="product-tag-pill"><i class="bi bi-gear-wide-connected me-1"></i>{{ st.name_translated }}</span>
+              {% endfor %}
+              {% for iu in service.intended_uses.all %}
+                <span class="product-tag-pill"><i class="bi bi-check2-circle me-1"></i>{{ iu.name_translated }}</span>
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+
+        <!-- CTAs: Book Appointment & Enquire Now -->
+        <div class="d-flex gap-3 flex-wrap mb-4">
+          <a href="{% url 'user:appointment' %}?service={{ service.id }}" class="btn-veda-primary btn-veda-lg flex-grow-1 text-center text-decoration-none">
+            <i class="bi bi-calendar2-check-fill me-2"></i> <span data-i18n="sd.bookAppointment">Book Appointment</span>
+          </a>
+          <a href="{% url 'user:enquiry' %}?service={{ service.id }}" class="btn-veda-gold btn-veda-lg flex-grow-1 text-center text-decoration-none">
+            <i class="bi bi-chat-text-fill me-2"></i> <span data-i18n="sd.enquireNow">Enquire Now</span>
+          </a>
+        </div>
+
+        <div class="d-flex align-items-center gap-4 text-muted small pt-2 border-top">
+          <div><i class="bi bi-shield-check text-success me-1"></i> <span data-i18n="sd.trust1">Certified Therapists</span></div>
+          <div><i class="bi bi-flower1 text-success me-1"></i> <span data-i18n="sd.trust2">Pure Herbal Formulations</span></div>
+          <div><i class="bi bi-clock-history text-success me-1"></i> <span data-i18n="sd.trust3">Custom Consultations</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Deep Dive Tabs: Detailed Description, Benefits, Precautions, Usage Instructions -->
+<section class="section-py section-bg-ivory">
+  <div class="container">
+    <ul class="nav nav-pills justify-content-center mb-4 gap-2 flex-wrap" id="detailTabs" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="desc-tab" data-bs-toggle="pill" data-bs-target="#descTabContent" type="button" role="tab" aria-controls="descTabContent" aria-selected="true">
+          <i class="bi bi-file-text me-1"></i> <span data-i18n="sd.tabDescription">Description</span>
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="benefits-tab" data-bs-toggle="pill" data-bs-target="#benefitsTabContent" type="button" role="tab" aria-controls="benefitsTabContent" aria-selected="false">
+          <i class="bi bi-heart-pulse me-1"></i> <span data-i18n="sd.tabBenefits">Benefits</span>
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="usage-tab" data-bs-toggle="pill" data-bs-target="#usageTabContent" type="button" role="tab" aria-controls="usageTabContent" aria-selected="false">
+          <i class="bi bi-card-checklist me-1"></i> <span data-i18n="sd.tabUsage">Usage Instructions</span>
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="precautions-tab" data-bs-toggle="pill" data-bs-target="#precautionsTabContent" type="button" role="tab" aria-controls="precautionsTabContent" aria-selected="false">
+          <i class="bi bi-shield-exclamation me-1"></i> <span data-i18n="sd.tabPrecautions">Safety & Precautions</span>
+        </button>
+      </li>
+    </ul>
+
+    <div class="tab-content bg-white p-4 p-md-5 rounded-4 border shadow-sm" id="detailTabsContent">
+      <!-- Tab 1: Full Description -->
+      <div class="tab-pane fade show active" id="descTabContent" role="tabpanel" aria-labelledby="desc-tab">
+        <h4 class="fw-bold text-forest mb-3">Therapeutic Mechanism & Overview</h4>
+        <div class="text-muted leading-relaxed" style="font-size: 1.02rem; line-height: 1.8;">
+          {{ service.description|linebreaks }}
+        </div>
+        
+        <div class="alert alert-light border mt-4 p-3 d-flex align-items-center gap-3 rounded-3">
+          <i class="bi bi-info-circle-fill text-gold fs-3 flex-shrink-0"></i>
+          <small class="text-muted">
+            <strong>Wellness Advisory:</strong> Rudra Massage & Wellness treatments and therapy devices are designed to facilitate holistic relaxation, musculoskeletal relief, and revitalized physical well-being.
+          </small>
+        </div>
+      </div>
+
+      <!-- Tab 2: Benefits -->
+      <div class="tab-pane fade" id="benefitsTabContent" role="tabpanel" aria-labelledby="benefits-tab">
+        <h4 class="fw-bold text-forest mb-3">Therapeutic Benefits</h4>
+        {% if service.benefits %}
+          <div class="text-muted leading-relaxed" style="font-size: 1.02rem; line-height: 1.8;">
+            {{ service.benefits|linebreaks }}
+          </div>
+        {% else %}
+          <p class="text-muted mb-3">
+            This therapy provides comprehensive soothing relief tailored to your unique anatomical constitution. Key advantages typically observed include:
+          </p>
+          <ul class="text-muted leading-relaxed mb-4">
+            <li>Alleviation of localized muscular tension, stiffness, and joint fatigue.</li>
+            <li>Stimulation of micro-circulation and enhanced lymphatic drainage.</li>
+            <li>Promotes deep neuromuscular relaxation, stress reduction, and restorative sleep.</li>
+          </ul>
+          <p class="small text-muted mb-0 fst-italic">
+            <i class="bi bi-stars text-gold me-1"></i>Detailed individual benefits will be curated and discussed during your personal consultation.
+          </p>
+        {% endif %}
+      </div>
+
+      <!-- Tab 3: Usage Instructions -->
+      <div class="tab-pane fade" id="usageTabContent" role="tabpanel" aria-labelledby="usage-tab">
+        <h4 class="fw-bold text-forest mb-3">Usage & Protocol Instructions</h4>
+        {% if service.usage_instructions %}
+          <div class="text-muted leading-relaxed" style="font-size: 1.02rem; line-height: 1.8;">
+            {{ service.usage_instructions|linebreaks }}
+          </div>
+        {% else %}
+          <div class="p-3 bg-light rounded-3 border mb-3">
+            <h6 class="fw-bold text-forest mb-2"><i class="bi bi-journal-check me-2"></i>Standard Clinical & In-Centre Protocol</h6>
+            <ol class="text-muted mb-0 ps-3 leading-relaxed">
+              <li class="mb-2"><strong>Pre-Therapy Preparation:</strong> Hydrate adequately and arrive 10 minutes prior to relax in our tranquil waiting lounge.</li>
+              <li class="mb-2"><strong>Therapist Guidance:</strong> Our certified practitioners adjust intensity, posture support, and treatment durations specifically to your comfort levels.</li>
+              <li><strong>Post-Session Care:</strong> Rest quietly for 10-15 minutes post-therapy to maximize neural assimilation and circulatory benefits.</li>
+            </ol>
+          </div>
+          <p class="small text-muted mb-0">
+            For home-use wellness products, a comprehensive manufacturer manual and guided orientation is provided upon delivery.
+          </p>
+        {% endif %}
+      </div>
+
+      <!-- Tab 4: Precautions -->
+      <div class="tab-pane fade" id="precautionsTabContent" role="tabpanel" aria-labelledby="precautions-tab">
+        <h4 class="fw-bold text-forest mb-3">Important Safety & Health Precautions</h4>
+        {% if service.precautions %}
+          <div class="p-3 bg-light rounded-3 border mb-3">
+            <div class="text-muted mb-0 leading-relaxed" style="font-size: 1.02rem; line-height: 1.8;">
+              {{ service.precautions|linebreaks }}
+            </div>
+          </div>
+        {% endif %}
+        <div class="p-3 bg-light rounded-3 border mb-3">
+          <div class="d-flex gap-3 align-items-start">
+            <i class="bi bi-exclamation-triangle-fill text-warning fs-4 flex-shrink-0 mt-1"></i>
+            <div>
+              <h6 class="fw-bold text-forest mb-1">Pre-Treatment Health Considerations</h6>
+              <p class="small text-muted mb-0">
+                Please inform your therapist prior to commencing if you have active fractures, severe cardiac conditions, pacemakers, deep vein thrombosis (DVT), acute skin inflammations, or are pregnant.
+              </p>
+            </div>
+          </div>
+        </div>
+        <p class="small text-muted mb-0">
+          Always consult your physician before starting any rigorous therapy regimen if you are currently under specialized medical care.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Related Solutions Recommendation Section -->
+{% if related_services %}
+<section class="section-py section-bg-white border-top">
+  <div class="container">
+    <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
+      <div>
+        <span class="section-subtitle-tag">COMPLEMENTARY SUPPORT</span>
+        <h3 class="fw-bold text-forest mb-0" data-i18n="sd.relatedTitle">Related Therapy Solutions</h3>
+      </div>
+      <a href="{% url 'user:services' %}?category={{ service.category.slug }}" class="btn-veda-outline btn-veda-sm">View Category &rarr;</a>
+    </div>
+
+    <div class="row g-4">
+      {% for rel in related_services %}
+        <div class="col-md-6 col-lg-4 mb-3">
+          <div class="product-card h-100 d-flex flex-column">
+            <div class="product-image-box">
+              {% if rel.is_featured %}
+                <span class="product-badge-float badge-custom badge-forest" data-i18n="sd.featured">Featured</span>
+              {% endif %}
+              <span class="product-category-tag">{{ rel.category.name }}</span>
+              {% if rel.image %}
+                <img src="{{ rel.image.url }}" alt="{{ rel.name }}" loading="lazy">
+              {% else %}
+                <img src="{% static 'assets/images/rudra-wellness-logo.png' %}" alt="{{ rel.name }}" loading="lazy">
+              {% endif %}
+            </div>
+            <div class="product-body d-flex flex-column flex-grow-1">
+              <h4 class="product-title" title="{{ rel.name }}">{{ rel.name }}</h4>
+              <p class="product-desc">{{ rel.short_description }}</p>
+
+              <div class="product-tags-row mt-auto mb-3">
+                {% for bp in rel.body_parts.all %}
+                  <span class="product-tag-pill"><i class="bi bi-geo-alt-fill me-1"></i>{{ bp.name }}</span>
+                {% endfor %}
+                {% for cn in rel.customer_needs.all %}
+                  <span class="product-tag-pill"><i class="bi bi-heart-pulse-fill me-1"></i>{{ cn.name }}</span>
+                {% endfor %}
+              </div>
+
+              <div class="product-actions-row">
+                <a href="{% url 'user:service_detail' slug=rel.slug %}" class="btn-veda-outline btn-veda-sm text-center" data-i18n="btn.viewDetails">
+                  View Details
+                </a>
+                <a href="{% url 'user:appointment' %}?service={{ rel.id }}" class="btn-veda-gold btn-veda-sm text-center" data-i18n="btn.bookAppointment">
+                  Book Appointment
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% endblock %}
