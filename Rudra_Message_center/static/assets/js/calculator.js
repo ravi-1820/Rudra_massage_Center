@@ -206,6 +206,9 @@ class BmiCalculator {
 
     if (shouldScroll) {
       resultBox.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      if (typeof showToast === "function") {
+        showToast("BMI Calculated", `Your calculated BMI is ${roundedBmi} (${category})`, "success");
+      }
     }
   }
 }

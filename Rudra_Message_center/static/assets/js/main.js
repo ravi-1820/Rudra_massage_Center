@@ -25,26 +25,62 @@ function showToast(title, message, type = "success") {
   }
 
   const toast = document.createElement("div");
-  const typeClass = type === "error" ? "toast-error" : (type === "gold" ? "toast-gold" : "toast-success");
-  const iconClass = type === "error" ? "bi-exclamation-triangle-fill text-danger" : (type === "gold" ? "bi-award-fill text-warning" : "bi-check-circle-fill text-success");
+  const normType = (type || "success").toLowerCase();
+  let typeClass = "toast-success";
+  let iconClass = "bi-check-circle-fill text-success";
+
+  if (normType === "error" || normType === "danger") {
+    typeClass = "toast-error";
+    iconClass = "bi-exclamation-triangle-fill text-danger";
+  } else if (normType === "gold" || normType === "warning") {
+    typeClass = "toast-gold";
+    iconClass = "bi-award-fill text-warning";
+  } else if (normType === "info") {
+    typeClass = "toast-info";
+    iconClass = "bi-info-circle-fill text-primary";
+  }
 
   toast.className = `veda-toast ${typeClass}`;
+  toast.setAttribute("role", "alert");
   toast.innerHTML = `
     <i class="bi ${iconClass} toast-icon"></i>
     <div class="toast-content">
       <h6>${escapeToastText(title)}</h6>
       <p>${escapeToastText(message)}</p>
     </div>
+    <button type="button" class="toast-close-btn" aria-label="Close">
+      <i class="bi bi-x-lg"></i>
+    </button>
   `;
 
-  container.appendChild(toast);
-
-  setTimeout(() => {
+  let removeTimer;
+  const dismiss = () => {
     toast.style.opacity = "0";
     toast.style.transform = "translateX(-20px)";
-    setTimeout(() => toast.remove(), 300);
-  }, 4200);
+    setTimeout(() => {
+      if (toast.parentElement) toast.remove();
+    }, 300);
+  };
+
+  const closeBtn = toast.querySelector(".toast-close-btn");
+  if (closeBtn) {
+    closeBtn.addEventListener("click", () => {
+      clearTimeout(removeTimer);
+      dismiss();
+    });
+  }
+
+  toast.addEventListener("mouseenter", () => clearTimeout(removeTimer));
+  toast.addEventListener("mouseleave", () => {
+    removeTimer = setTimeout(dismiss, 3000);
+  });
+
+  container.appendChild(toast);
+  removeTimer = setTimeout(dismiss, 4500);
 }
+
+window.showToast = showToast;
+
 
 // Theme Controller (Mint Signal Light / Dark Theme)
 const ThemeController = {

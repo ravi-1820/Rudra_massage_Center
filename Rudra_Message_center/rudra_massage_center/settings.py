@@ -164,8 +164,9 @@ DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', os.getenv('EMAIL_HOST_USER'
 
 # Google Sheets Integration
 GOOGLE_SHEETS_ENABLED = os.getenv('GOOGLE_SHEETS_ENABLED', 'False').lower() in ('true', '1', 'yes')
-GOOGLE_SHEETS_SPREADSHEET_ID = os.getenv('GOOGLE_SHEETS_SPREADSHEET_ID', '').strip()
-GOOGLE_SERVICE_ACCOUNT_FILE = os.getenv('GOOGLE_SERVICE_ACCOUNT_FILE', '').strip()
-
+GOOGLE_SHEETS_SPREADSHEET_ID = os.getenv('GOOGLE_SHEETS_SPREADSHEET_ID', '1arzbB89B3tYfRB6SFTe32ej7Yq_tJ10AMx7ME4hcrjs').strip()
+GOOGLE_SERVICE_ACCOUNT_FILE = os.getenv(
+    'GOOGLE_SERVICE_ACCOUNT_FILE',
+    r'C:\Users\rajja\.credentials\rudra-massage\rudra-sheets-service-account.json').strip()
 
 

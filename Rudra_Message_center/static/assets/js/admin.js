@@ -61,6 +61,9 @@ const AdminThemeController = {
     const current = document.documentElement.classList.contains("dark") ? "dark" : "light";
     const next = current === "dark" ? "light" : "dark";
     this.setTheme(next);
+    if (typeof showToast === "function") {
+      showToast("Theme Updated", `Switched to ${next === "dark" ? "Dark" : "Light"} Mint Signal theme`, "gold");
+    }
   },
 
   init() {

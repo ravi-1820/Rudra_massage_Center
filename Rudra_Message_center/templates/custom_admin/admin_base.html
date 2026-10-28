@@ -164,14 +164,45 @@
       <!-- Dashboard Body -->
       <div class="admin-body">
         {% if messages %}
-          <div class="mb-4">
+          <div id="adminMessagesData" class="d-none" aria-hidden="true">
             {% for message in messages %}
-              <div class="alert {% if message.tags == 'error' %}alert-danger{% elif message.tags == 'success' %}alert-success{% else %}alert-info{% endif %} alert-dismissible fade show rounded-3 small shadow-sm" role="alert">
-                {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-              </div>
+              <div class="admin-message-item" data-tag="{{ message.tags|default:'info' }}" data-text="{{ message|escape }}"></div>
             {% endfor %}
           </div>
+          <script>
+            (function () {
+              function triggerAdminToasts() {
+                const items = document.querySelectorAll("#adminMessagesData .admin-message-item");
+                if (!items.length) return;
+                items.forEach(function (el) {
+                  const tag = (el.getAttribute("data-tag") || "info").toLowerCase();
+                  const text = el.getAttribute("data-text") || "";
+                  let title = "Admin Notification";
+                  let type = "info";
+
+                  if (tag.indexOf("success") !== -1) {
+                    title = "Success";
+                    type = "success";
+                  } else if (tag.indexOf("error") !== -1 || tag.indexOf("danger") !== -1) {
+                    title = "Action Failed";
+                    type = "error";
+                  } else if (tag.indexOf("warning") !== -1) {
+                    title = "Warning";
+                    type = "gold";
+                  }
+
+                  if (typeof showToast === "function") {
+                    showToast(title, text, type);
+                  }
+                });
+              }
+              if (document.readyState === "loading") {
+                document.addEventListener("DOMContentLoaded", triggerAdminToasts);
+              } else {
+                triggerAdminToasts();
+              }
+            })();
+          </script>
         {% endif %}
         {% block content %}{% endblock %}
       </div>

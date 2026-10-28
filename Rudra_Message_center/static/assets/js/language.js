@@ -911,6 +911,11 @@ class LanguageManager {
     this.applyTranslations(lang);
     this.updateActiveButtonState();
 
+    if (typeof showToast === "function") {
+      const langName = lang === "gu" ? "ગુજરાતી (Gujarati)" : "English";
+      showToast("Language Updated", `Switched interface language to ${langName}`, "gold");
+    }
+
     // Notify any components listening for language change
     try {
       window.dispatchEvent(new CustomEvent("languageChanged", { detail: { language: lang } }));
