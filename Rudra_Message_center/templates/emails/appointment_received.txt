@@ -1,0 +1,32 @@
+{% extends "emails/base_email.txt" %}
+
+{% block content %}
+{% if language == 'gu' %}
+અમને તમારી એપોઇન્ટમેન્ટ બુકિંગ વિનંતી સફળતાપૂર્વક મળી ગઈ છે.
+
+બુકિંગ સંદર્ભ નંબર: {{ booking_reference }}
+સેવા / સાધન: {{ service_name }}
+તારીખ: {{ appointment_date|date:"l, d F Y" }}
+સમય ગાળો: {{ time_slot_display }}
+ડેમોનું સ્વરૂપ: {{ demo_format_display }}
+શહેર: {{ city|default:"-" }}
+સ્થિતિ: પુષ્ટિ બાકી (Pending Confirmation)
+
+આગળનું પગલું:
+કૃપા કરીને નોંધ લેશો કે તમારી એપોઇન્ટમેન્ટ હાલમાં પુષ્ટિ માટે બાકી છે. અમારા વેલનેસ કોઓર્ડિનેટર સમય અને સાધનની ઉપલબ્ધતા ચકાસીને ટૂંક સમયમાં તમને ફોન દ્વારા અંતિમ પુષ્ટિ કરશે.
+{% else %}
+Thank you for scheduling a session with Rudra Massage & Wellness. We have received your appointment request.
+
+BOOKING REFERENCE: {{ booking_reference }}
+Requested Solution: {{ service_name }}
+Requested Date: {{ appointment_date|date:"l, d F Y" }}
+Requested Time: {{ time_slot_display }}
+Demo Format: {{ demo_format_display }}
+City: {{ city|default:"-" }}
+Current Status: {{ status_display }}
+
+WHAT HAPPENS NEXT:
+Please note that your request is currently pending confirmation. Our wellness coordinator will review availability and contact you shortly by phone or WhatsApp to finalize your appointment schedule.
+{% endif %}
+{% endblock %}
+

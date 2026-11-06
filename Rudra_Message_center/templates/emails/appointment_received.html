@@ -1,0 +1,72 @@
+{% extends "emails/base_email.html" %}
+
+{% block content %}
+<div class="lead-text">
+  {% if language == 'gu' %}
+    રુદ્ર મસાજ અને વેલનેસ સાથે ડેમોન્સટ્રેશન સુનિશ્ચિત કરવા બદલ આભાર. અમને તમારી એપોઇન્ટમેન્ટ બુકિંગ વિનંતી સફળતાપૂર્વક મળી ગઈ છે.
+  {% else %}
+    Thank you for scheduling a session with Rudra Massage & Wellness. We have successfully received your appointment request.
+  {% endif %}
+</div>
+
+<div class="summary-card">
+  <div style="font-size: 13px; color: #66706b; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px;">
+    {% if language == 'gu' %}બુકિંગ સંદર્ભ નંબર{% else %}Booking Reference Number{% endif %}
+  </div>
+  <div style="font-size: 20px; font-weight: 700; color: #093723; margin-top: 4px; font-family: monospace;">
+    {{ booking_reference }}
+  </div>
+</div>
+
+<table class="detail-table">
+  <tr>
+    <td class="detail-label">{% if language == 'gu' %}સેવા / સાધન{% else %}Requested Solution{% endif %}</td>
+    <td class="detail-value">{{ service_name }}</td>
+  </tr>
+  <tr>
+    <td class="detail-label">{% if language == 'gu' %}પસંદ કરેલ તારીખ{% else %}Requested Date{% endif %}</td>
+    <td class="detail-value">{{ appointment_date|date:"l, d F Y" }}</td>
+  </tr>
+  <tr>
+    <td class="detail-label">{% if language == 'gu' %}સમય ગાળો{% else %}Requested Time Slot{% endif %}</td>
+    <td class="detail-value">{{ time_slot_display }}</td>
+  </tr>
+  <tr>
+    <td class="detail-label">{% if language == 'gu' %}ડેમોનું સ્વરૂપ{% else %}Demo Format{% endif %}</td>
+    <td class="detail-value">{{ demo_format_display }}</td>
+  </tr>
+  {% if city %}
+  <tr>
+    <td class="detail-label">{% if language == 'gu' %}શહેર{% else %}City{% endif %}</td>
+    <td class="detail-value">{{ city }}</td>
+  </tr>
+  {% endif %}
+  <tr>
+    <td class="detail-label">{% if language == 'gu' %}વર્તમાન સ્થિતિ{% else %}Current Status{% endif %}</td>
+    <td class="detail-value">
+      <span class="badge-status">
+        {% if language == 'gu' %}પુષ્ટિ બાકી (Pending Confirmation){% else %}{{ status_display }}{% endif %}
+      </span>
+    </td>
+  </tr>
+</table>
+
+{% if notes %}
+<div style="margin: 16px 0; padding: 12px 14px; background: #fafafa; border: 1px solid #eef0ee; border-radius: 4px; font-size: 13px;">
+  <strong style="color: #444;">{% if language == 'gu' %}તમારી નોંધ / સરનામું:{% else %}Client Notes / Doorstep Address:{% endif %}</strong>
+  <div style="margin-top: 4px; color: #555; white-space: pre-line;">{{ notes }}</div>
+</div>
+{% endif %}
+
+<div class="next-steps">
+  <strong style="color: #093723; display: block; margin-bottom: 6px;">
+    {% if language == 'gu' %}આગળનું પગલું:{% else %}What happens next?{% endif %}
+  </strong>
+  {% if language == 'gu' %}
+    કૃપા કરીને નોંધ લેશો કે તમારી વિનંતી હાલમાં <strong>પુષ્ટિ માટે પ્રતીક્ષારત</strong> છે. અમારા વેલનેસ કોઓર્ડિનેટર તમારા પ્રદેશ અને સાધનની ઉપલબ્ધતા ચકાસીને ટૂંક સમયમાં તમને ફોન અથવા વોટ્સએપ દ્વારા સંપર્ક કરીને સમય સ્લોટની આખરી પુષ્ટિ કરશે.
+  {% else %}
+    Please note that your appointment is currently <strong>pending confirmation</strong>. Our wellness coordinator will review therapist and equipment availability and contact you shortly via phone or WhatsApp to finalize your demonstration schedule.
+  {% endif %}
+</div>
+{% endblock %}
+

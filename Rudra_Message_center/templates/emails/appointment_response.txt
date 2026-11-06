@@ -1,0 +1,38 @@
+{% extends "emails/base_email.txt" %}
+
+{% block content %}
+{% if language == 'gu' %}
+અમે તમારી એપોઇન્ટમેન્ટ વિનંતી {{ booking_reference }} અંગેનો અપડેટ આપવા માટે સંપર્ક કરી રહ્યા છીએ.
+
+બુકિંગ સંદર્ભ નંબર: {{ booking_reference }}
+વર્તમાન સ્થિતિ: {{ status_display }}
+{% if response_message %}
+અમારી ટીમ તરફથી સંદેશ:
+{{ response_message }}
+{% endif %}
+થેરાપી સોલ્યુશન: {{ service_name }}
+નિયુક્ત તારીખ: {{ appointment_date|date:"l, d F Y" }}{% if rescheduled %} (પુનઃ સુનિશ્ચિત){% endif %}
+સમય વિન્ડો: {{ time_slot_display }}
+ડેમોનું સ્વરૂપ: {{ demo_format_display }}
+શહેર: {{ city|default:"-" }}
+
+કોઈપણ સહાય માટે અમારી હેલ્પલાઇન {{ site_settings.primary_phone }} પર સંપર્ક કરશો.
+{% else %}
+We are writing to provide an update regarding your appointment booking {{ booking_reference }}.
+
+BOOKING REFERENCE: {{ booking_reference }}
+Current Status: {{ status_display }}
+{% if response_message %}
+MESSAGE FROM OUR TEAM:
+{{ response_message }}
+{% endif %}
+Therapy Solution: {{ service_name }}
+Scheduled Date: {{ appointment_date|date:"l, d F Y" }}{% if rescheduled %} (Rescheduled){% endif %}
+Time Slot: {{ time_slot_display }}
+Demo Format: {{ demo_format_display }}
+City: {{ city|default:"-" }}
+
+For any queries, please call our helpline at {{ site_settings.primary_phone }}.
+{% endif %}
+{% endblock %}
+

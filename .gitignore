@@ -1,0 +1,21 @@
+# Git ignore rules for repository root
+Rudra_Message_center/.env
+Rudra_Message_center/.env.*
+!Rudra_Message_center/.env.example
+*.sqlite3
+*.sqlite3*
+*.log
+media/
+staticfiles/
+venv/
+.venv/
+__pycache__/
+*.pyc
+*service-account*.json
+rudra-sheets-service-account*.json
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini
+*.tmp
+

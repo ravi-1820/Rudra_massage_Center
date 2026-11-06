@@ -285,16 +285,10 @@
 
     <!-- Page Heading -->
     <div class="text-center mb-4">
-      <span class="section-subtitle-tag"
-        style="color: #0d9f5d; letter-spacing: 0.12em; font-weight: 700; font-size: 0.78rem;">DEDICATED ADVISORY</span>
       <h1 class="h2 fw-bold text-dark mt-2 mb-2" style="font-family: var(--font-heading); color: #15232b;" data-i18n="enq.title">Product & Equipment Enquiry</h1>
       <p class="text-muted mx-auto mb-3" style="max-width: 620px; font-size: 0.95rem;" data-i18n="enq.subtitle">
         Connect with our wellness specialists for pricing, clinic setups, and live equipment demos.
       </p>
-      <div class="d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill small fw-semibold"
-        style="background: rgba(81, 240, 168, 0.15); color: #0b7a48; border: 1px solid rgba(81, 240, 168, 0.4);">
-        <i class="bi bi-clock"></i> <span data-i18n="enq.formDesc">Our team typically responds within one business day.</span>
-      </div>
     </div>
 
     <!-- Form Container -->
@@ -358,14 +352,13 @@
               <!-- Email Address -->
               <div class="col-md-6">
                 <label for="email" class="form-veda-label">
-                  <span data-i18n="form.email">Email Address</span> <span class="text-muted fw-normal"
-                    style="font-size: 0.8rem;">(Optional)</span>
+                  <span data-i18n="form.email">Email Address</span> *
                 </label>
                 <div class="form-input-icon-wrap">
                   <i class="bi bi-envelope input-icon"></i>
                   <input type="email" name="email" id="email"
                     class="form-veda-control {% if form.email.errors %}is-invalid{% endif %}"
-                    placeholder="Enter Email" data-i18n-placeholder="form.emailPlaceholder" value="{{ form.email.value|default:'' }}">
+                    placeholder="Enter Email" data-i18n-placeholder="form.emailPlaceholder" value="{{ form.email.value|default:'' }}" required>
                 </div>
                 {% if form.email.errors %}
                 <div class="invalid-feedback-custom text-danger small mt-1">{{ form.email.errors.0 }}</div>
@@ -536,9 +529,6 @@
                 <button type="submit" class="btn-wellness-submit" id="submitEnquiryBtn">
                   <i class="bi bi-send-fill me-2"></i> <span data-i18n="enq.sendBtn">Send Enquiry</span>
                 </button>
-                <div class="text-center text-muted small mt-3">
-                  <i class="bi bi-lock-fill me-1"></i> <span data-i18n="apt.privacy">Your information is secure and will only be used to respond to your enquiry.</span>
-                </div>
               </div>
 
             </div>

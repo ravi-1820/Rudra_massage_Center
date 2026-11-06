@@ -8,6 +8,8 @@ and formula injection protection.
 """
 
 import logging
+import socket
+import time
 from datetime import timedelta
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
@@ -25,6 +27,38 @@ SCOPES = [
 READONLY_SCOPES = [
     "https://www.googleapis.com/auth/spreadsheets.readonly",
 ]
+
+# Header Validation & Service Cache
+# Caches validated worksheet headers to eliminate redundant API round-trips per synchronized row.
+_HEADER_VALIDATION_CACHE: Dict[str, Dict[str, Any]] = {}
+HEADER_CACHE_TTL_SECONDS: int = 1800  # 30 minutes
+
+# Caches authenticated Google Sheets service clients to avoid repeated token/discovery initialization.
+_CACHED_SHEETS_SERVICE: Dict[str, Dict[str, Any]] = {}
+SERVICE_CACHE_TTL_SECONDS: int = 2700  # 45 minutes
+
+
+def clear_service_cache() -> None:
+    """Clears cached Google Sheets service client instances."""
+    global _CACHED_SHEETS_SERVICE
+    _CACHED_SHEETS_SERVICE.clear()
+
+
+def clear_header_cache(sheet_name: Optional[str] = None) -> None:
+    """
+    Clears cached worksheet header validation results.
+    If sheet_name is provided, clears only cache entries matching that sheet.
+    Otherwise, clears all cached headers.
+    """
+    global _HEADER_VALIDATION_CACHE
+    if sheet_name:
+        _HEADER_VALIDATION_CACHE = {
+            k: v
+            for k, v in _HEADER_VALIDATION_CACHE.items()
+            if not k.endswith(f":{sheet_name}")
+        }
+    else:
+        _HEADER_VALIDATION_CACHE.clear()
 
 # Approved Worksheet Names (preserved exact spelling)
 WORKSHEET_ENQUIRIES = "Enquiries"
@@ -82,6 +116,12 @@ APPROVED_SCHEMAS: Dict[str, List[str]] = {
     WORKSHEET_CONTACTS: SUPPORT_REQUEST_HEADERS,
 }
 
+TARGET_SHEET_MAP: Dict[str, str] = {
+    "enquiry": WORKSHEET_ENQUIRIES,
+    "appointment": WORKSHEET_APPOINTMENTS,
+    "support_request": WORKSHEET_CONTACTS,
+}
+
 
 def sanitize_cell_value(val: Any) -> Any:
     """
@@ -112,9 +152,8 @@ def get_sheets_config_diagnostics() -> Dict[str, Any]:
     spreadsheet_id = (
         getattr(settings, "GOOGLE_SHEETS_SPREADSHEET_ID", "") or ""
     ).strip()
-    service_account_file = (
-        getattr(settings, "GOOGLE_SERVICE_ACCOUNT_FILE", "") or ""
-    ).strip()
+    raw_sa_file = getattr(settings, "GOOGLE_SERVICE_ACCOUNT_FILE", "") or ""
+    service_account_file = str(raw_sa_file).strip().strip('"\'').replace('\r', '\\r').replace('\t', '\\t').replace('\n', '\\n').replace('\\', '/')
 
     file_exists = False
     if service_account_file:
@@ -164,12 +203,22 @@ def get_sheets_config_diagnostics() -> Dict[str, Any]:
     }
 
 
-def get_sheets_service(readonly: bool = False):
+def get_sheets_service(readonly: bool = False, bypass_cache: bool = False):
     """
     Initializes and returns the Google Sheets API Resource service if configured.
     Uses readonly=True for read-only operations and readonly=False for write operations.
+    Reuses cached service instance within SERVICE_CACHE_TTL_SECONDS to avoid repeated
+    credential file reads and discovery overhead.
+    Configures explicit network timeouts to prevent hanging on slow responses.
     Exceptions are caught and logged safely without exposing private key or token details.
     """
+    cache_key = "readonly" if readonly else "readwrite"
+    now_ts = timezone.now().timestamp()
+    if not bypass_cache and cache_key in _CACHED_SHEETS_SERVICE:
+        entry = _CACHED_SHEETS_SERVICE[cache_key]
+        if now_ts - entry.get("cached_at", 0) < SERVICE_CACHE_TTL_SECONDS:
+            return entry.get("service")
+
     diagnostics = get_sheets_config_diagnostics()
     if not diagnostics["is_configured"]:
         logger.debug(
@@ -178,20 +227,34 @@ def get_sheets_service(readonly: bool = False):
         )
         return None
 
-    service_account_file = getattr(
-        settings, "GOOGLE_SERVICE_ACCOUNT_FILE", ""
-    ).strip()
+    raw_sa_file = getattr(settings, "GOOGLE_SERVICE_ACCOUNT_FILE", "") or ""
+    service_account_file = str(raw_sa_file).strip().strip('"\'').replace('\r', '\\r').replace('\t', '\\t').replace('\n', '\\n').replace('\\', '/')
 
     try:
         from google.oauth2 import service_account
         from googleapiclient.discovery import build
+        import google_auth_httplib2
+        import httplib2
+
+        # Configure network timeout safely
+        request_timeout = float(getattr(settings, "GOOGLE_SHEETS_REQUEST_TIMEOUT", 20.0))
+        if socket.getdefaulttimeout() is None:
+            socket.setdefaulttimeout(30.0)
 
         selected_scopes = READONLY_SCOPES if readonly else SCOPES
         credentials = service_account.Credentials.from_service_account_file(
             service_account_file,
             scopes=selected_scopes,
         )
-        service = build("sheets", "v4", credentials=credentials, cache_discovery=False)
+
+        http_transport = httplib2.Http(timeout=request_timeout)
+        authorized_http = google_auth_httplib2.AuthorizedHttp(credentials, http=http_transport)
+        service = build("sheets", "v4", http=authorized_http, cache_discovery=False)
+
+        _CACHED_SHEETS_SERVICE[cache_key] = {
+            "service": service,
+            "cached_at": now_ts,
+        }
         return service
     except Exception as e:
         logger.warning(
@@ -381,12 +444,16 @@ def validate_or_init_header(
     sheet_name: str,
     init_if_empty: bool = True,
     dry_run: bool = False,
+    bypass_cache: bool = False,
 ) -> Dict[str, Any]:
     """
     Validates or idempotently initializes the header row (Row 1) for a specific worksheet.
+    - Uses in-memory caching with TTL (HEADER_CACHE_TTL_SECONDS) to avoid redundant API
+      calls when synchronizing multiple customer records.
     - If worksheet is completely empty and init_if_empty=True: writes approved headers (unless dry_run).
     - If worksheet has non-empty row 1: verifies it strictly matches the approved schema.
-    - If headers differ: halts and returns schema_mismatch without overwriting.
+    - If headers differ: halts and returns schema_mismatch without overwriting (terminal).
+    - Transient timeouts or socket errors are bounded-retried once and marked non-terminal.
     """
     expected_headers = APPROVED_SCHEMAS.get(sheet_name)
     if not expected_headers:
@@ -394,20 +461,50 @@ def validate_or_init_header(
             "valid": False,
             "error_type": "unknown_worksheet",
             "message": f"No approved schema defined for worksheet '{sheet_name}'.",
+            "is_terminal": True,
         }
+
+    cache_key = f"{spreadsheet_id}:{sheet_name}"
+    now_ts = timezone.now().timestamp()
+    if not bypass_cache and not dry_run and cache_key in _HEADER_VALIDATION_CACHE:
+        entry = _HEADER_VALIDATION_CACHE[cache_key]
+        if now_ts - entry.get("cached_at", 0) < HEADER_CACHE_TTL_SECONDS:
+            return {
+                "valid": True,
+                "initialized": False,
+                "cached": True,
+                "headers": entry.get("headers", expected_headers),
+                "message": f"Headers in '{sheet_name}' validated from cache.",
+                "is_terminal": False,
+            }
 
     range_header_only = f"'{sheet_name}'!1:1"
     try:
-        response = (
-            service.spreadsheets()
-            .values()
-            .get(
-                spreadsheetId=spreadsheet_id,
-                range=range_header_only,
-            )
-            .execute()
-        )
-        rows = response.get("values", [])
+        # Bounded transient retry: retry once on transient TimeoutError or socket.timeout
+        response = None
+        for attempt in range(2):
+            try:
+                response = (
+                    service.spreadsheets()
+                    .values()
+                    .get(
+                        spreadsheetId=spreadsheet_id,
+                        range=range_header_only,
+                    )
+                    .execute()
+                )
+                break
+            except (TimeoutError, socket.timeout) as exc:
+                if attempt == 0:
+                    logger.warning(
+                        "Header inspection timeout for '%s', retrying once...",
+                        sheet_name,
+                    )
+                    time.sleep(1)
+                    continue
+                raise
+
+        rows = response.get("values", []) if response else []
         existing_headers = [str(c).strip() for c in rows[0]] if rows and len(rows) > 0 else []
 
         # Empty worksheet header
@@ -417,6 +514,7 @@ def validate_or_init_header(
                     "valid": False,
                     "error_type": "empty_headers",
                     "message": f"Worksheet '{sheet_name}' has no header row. Initialization required.",
+                    "is_terminal": False,
                 }
 
             if dry_run:
@@ -426,6 +524,7 @@ def validate_or_init_header(
                     "would_initialize": True,
                     "headers": expected_headers,
                     "message": f"[DRY-RUN] Would initialize Row 1 of '{sheet_name}' with {len(expected_headers)} headers.",
+                    "is_terminal": False,
                 }
 
             # Initialize row 1 with approved headers
@@ -438,20 +537,33 @@ def validate_or_init_header(
                 body={"values": [expected_headers]},
             ).execute()
 
+            # Cache the newly initialized headers
+            _HEADER_VALIDATION_CACHE[cache_key] = {
+                "headers": expected_headers,
+                "cached_at": timezone.now().timestamp(),
+            }
+
             return {
                 "valid": True,
                 "initialized": True,
                 "headers": expected_headers,
                 "message": f"Successfully initialized Row 1 of '{sheet_name}' with approved schema.",
+                "is_terminal": False,
             }
 
         # Check existing headers against approved schema
         if existing_headers == expected_headers:
+            # Cache the verified headers
+            _HEADER_VALIDATION_CACHE[cache_key] = {
+                "headers": existing_headers,
+                "cached_at": timezone.now().timestamp(),
+            }
             return {
                 "valid": True,
                 "initialized": False,
                 "headers": existing_headers,
                 "message": f"Headers in '{sheet_name}' match approved schema.",
+                "is_terminal": False,
             }
         else:
             return {
@@ -464,22 +576,36 @@ def validate_or_init_header(
                 ),
                 "expected": expected_headers,
                 "found": existing_headers,
+                "is_terminal": True,
             }
 
     except Exception as exc:
         err_str = str(exc).lower()
         status_code = getattr(getattr(exc, "resp", None), "status", None)
-        if status_code == 403 or "403" in err_str:
+        is_terminal = False
+
+        if isinstance(exc, (TimeoutError, socket.timeout)) or "timeout" in err_str:
+            msg = f"Failed to inspect headers in '{sheet_name}': TimeoutError."
+            error_type = "connection_error"
+            is_terminal = False
+        elif status_code == 403 or "403" in err_str:
             msg = f"Permission denied accessing '{sheet_name}' (HTTP 403)."
             error_type = "permission_denied"
+            is_terminal = True
+        elif status_code == 404 or "404" in err_str:
+            msg = f"Spreadsheet or worksheet '{sheet_name}' not found (HTTP 404)."
+            error_type = "not_found"
+            is_terminal = True
         else:
             msg = f"Failed to inspect headers in '{sheet_name}': {exc.__class__.__name__}."
             error_type = "connection_error"
+            is_terminal = False
 
         return {
             "valid": False,
             "error_type": error_type,
             "message": msg,
+            "is_terminal": is_terminal,
         }
 
 
@@ -582,43 +708,26 @@ def enqueue_sync_record(source_type: str, source_id: int, source_identifier: str
     """
     from user.models import GoogleSheetsSyncRecord
 
+    target_sheet = TARGET_SHEET_MAP.get(source_type, "")
     sync_record, created = GoogleSheetsSyncRecord.objects.get_or_create(
         source_type=source_type,
         source_id=source_id,
         defaults={
             "source_identifier": source_identifier,
+            "sheet_name": target_sheet,
             "status": GoogleSheetsSyncRecord.SyncStatus.PENDING,
             "next_retry_at": timezone.now(),
         },
     )
     if not created and sync_record.status != GoogleSheetsSyncRecord.SyncStatus.SYNCED:
         sync_record.source_identifier = source_identifier
+        if not sync_record.sheet_name and target_sheet:
+            sync_record.sheet_name = target_sheet
         sync_record.status = GoogleSheetsSyncRecord.SyncStatus.PENDING
         sync_record.next_retry_at = timezone.now()
-        sync_record.save(update_fields=["source_identifier", "status", "next_retry_at", "updated_at"])
+        sync_record.save(update_fields=["source_identifier", "sheet_name", "status", "next_retry_at", "updated_at"])
 
     return sync_record
-
-
-def queue_enquiry_sync(enquiry):
-    """Convenience helper to enqueue an Enquiry after database commit."""
-    from user.models import GoogleSheetsSyncRecord
-    source_identifier = f"ENQ-{enquiry.id}"
-    return enqueue_sync_record(GoogleSheetsSyncRecord.SourceType.ENQUIRY, enquiry.id, source_identifier)
-
-
-def queue_appointment_sync(appointment):
-    """Convenience helper to enqueue an Appointment after database commit."""
-    from user.models import GoogleSheetsSyncRecord
-    source_identifier = appointment.booking_reference or f"APT-{appointment.id}"
-    return enqueue_sync_record(GoogleSheetsSyncRecord.SourceType.APPOINTMENT, appointment.id, source_identifier)
-
-
-def queue_support_request_sync(support_request):
-    """Convenience helper to enqueue a SupportRequest after database commit."""
-    from user.models import GoogleSheetsSyncRecord
-    source_identifier = support_request.ticket_number or f"SR-{support_request.id}"
-    return enqueue_sync_record(GoogleSheetsSyncRecord.SourceType.SUPPORT_REQUEST, support_request.id, source_identifier)
 
 
 def sync_single_record(
@@ -674,6 +783,10 @@ def sync_single_record(
         sync_record.mark_failed("source_record_missing", f"Originating record {sync_record.source_id} not found in database.", is_terminal=True)
         return {"success": False, "error_type": "source_record_missing"}
 
+    if not sync_record.sheet_name and sheet_name and not dry_run:
+        sync_record.sheet_name = sheet_name
+        sync_record.save(update_fields=["sheet_name", "updated_at"])
+
     # Step 1: Validate or initialize header row
     header_check = validate_or_init_header(
         service=service,
@@ -683,8 +796,18 @@ def sync_single_record(
         dry_run=dry_run,
     )
     if not header_check["valid"]:
-        sync_record.mark_failed(header_check.get("error_type", "schema_mismatch"), header_check.get("message", "Schema validation failed."))
-        return {"success": False, "error_type": header_check.get("error_type"), "message": header_check.get("message")}
+        is_term = header_check.get("is_terminal", False)
+        sync_record.mark_failed(
+            header_check.get("error_type", "schema_mismatch"),
+            header_check.get("message", "Schema validation failed."),
+            is_terminal=is_term,
+        )
+        return {
+            "success": False,
+            "error_type": header_check.get("error_type"),
+            "message": header_check.get("message"),
+            "is_terminal": is_term,
+        }
 
     # Step 2: Query Column A to locate any existing row with this stable identifier
     try:
@@ -781,21 +904,129 @@ def sync_single_record(
     except Exception as exc:
         err_str = str(exc).lower()
         status_code = getattr(getattr(exc, "resp", None), "status", None)
-        if status_code == 403 or "403" in err_str:
+        is_terminal = False
+        if isinstance(exc, (TimeoutError, socket.timeout)) or "timeout" in err_str:
+            category = "connection_error"
+            msg = f"Network timeout while syncing to '{sheet_name}': TimeoutError."
+            is_terminal = False
+        elif status_code == 403 or "403" in err_str:
             category = "permission_denied"
             msg = "Permission denied writing to spreadsheet (HTTP 403)."
+            is_terminal = True
         elif status_code == 404 or "404" in err_str:
             category = "not_found"
             msg = "Target spreadsheet or worksheet not found (HTTP 404)."
+            is_terminal = True
         elif status_code == 429 or "quota" in err_str or "rate" in err_str:
             category = "rate_limited"
             msg = "Google Sheets API quota or rate limit exceeded."
+            is_terminal = False
         else:
             category = "api_error"
             msg = f"Google Sheets API error: {exc.__class__.__name__}."
+            is_terminal = False
 
-        sync_record.mark_failed(category, msg)
-        return {"success": False, "error_type": category, "message": msg}
+        sync_record.mark_failed(category, msg, is_terminal=is_terminal)
+        return {"success": False, "error_type": category, "message": msg, "is_terminal": is_terminal}
+
+
+def trigger_auto_sync(sync_record) -> Dict[str, Any]:
+    """
+    Safely triggers automatic Google Sheets synchronization for a single record.
+    - Idempotent: Skips execution if record is already SYNCED or IN_PROGRESS.
+    - Safe & Isolated: Never raises exceptions; catches and records failures.
+    - Preserves customer data even if Google Sheets is unreachable.
+    - Updates GoogleSheetsSyncRecord status (SYNCED, FAILED with safe error).
+    """
+    from user.models import GoogleSheetsSyncRecord
+
+    if not sync_record or not getattr(sync_record, "id", None):
+        return {"success": False, "error_type": "invalid_sync_record"}
+
+    try:
+        sync_record.refresh_from_db()
+    except Exception:
+        pass
+
+    # Idempotency safety: If already synced to Google Sheets, never write a duplicate row.
+    if sync_record.status == GoogleSheetsSyncRecord.SyncStatus.SYNCED:
+        logger.info(
+            "Auto-sync skipped for %s [%s]: already SYNCED.",
+            sync_record.get_source_type_display(),
+            sync_record.source_identifier,
+        )
+        return {"success": True, "action": "already_synced", "identifier": sync_record.source_identifier}
+
+    # Avoid duplicate concurrent sync runs
+    if sync_record.status == GoogleSheetsSyncRecord.SyncStatus.IN_PROGRESS:
+        logger.info(
+            "Auto-sync skipped for %s [%s]: already IN_PROGRESS.",
+            sync_record.get_source_type_display(),
+            sync_record.source_identifier,
+        )
+        return {"success": False, "action": "in_progress", "identifier": sync_record.source_identifier}
+
+    # Check if Google Sheets integration is enabled
+    enabled = getattr(settings, "GOOGLE_SHEETS_ENABLED", False)
+    if not enabled:
+        logger.debug(
+            "Google Sheets auto-sync skipped for %s [%s]: GOOGLE_SHEETS_ENABLED is False.",
+            sync_record.get_source_type_display(),
+            sync_record.source_identifier,
+        )
+        return {"success": False, "error_type": "integration_disabled"}
+
+    # Mark as in-progress
+    sync_record.mark_in_progress()
+
+    try:
+        result = sync_single_record(sync_record)
+        return result
+    except Exception as exc:
+        logger.warning(
+            "Auto-sync execution failed for %s [%s]: %s",
+            sync_record.get_source_type_display(),
+            sync_record.source_identifier,
+            exc.__class__.__name__,
+        )
+        sync_record.mark_failed("sync_exception", f"Auto-sync failed: {exc.__class__.__name__}")
+        return {"success": False, "error_type": "sync_exception", "message": str(exc)}
+
+
+def queue_enquiry_sync(enquiry, sync_now: bool = True):
+    """
+    Convenience helper to enqueue and auto-sync an Enquiry after database commit.
+    """
+    from user.models import GoogleSheetsSyncRecord
+    source_identifier = f"ENQ-{enquiry.id}"
+    sync_record = enqueue_sync_record(GoogleSheetsSyncRecord.SourceType.ENQUIRY, enquiry.id, source_identifier)
+    if sync_now:
+        trigger_auto_sync(sync_record)
+    return sync_record
+
+
+def queue_appointment_sync(appointment, sync_now: bool = True):
+    """
+    Convenience helper to enqueue and auto-sync an Appointment after database commit.
+    """
+    from user.models import GoogleSheetsSyncRecord
+    source_identifier = appointment.booking_reference or f"APT-{appointment.id}"
+    sync_record = enqueue_sync_record(GoogleSheetsSyncRecord.SourceType.APPOINTMENT, appointment.id, source_identifier)
+    if sync_now:
+        trigger_auto_sync(sync_record)
+    return sync_record
+
+
+def queue_support_request_sync(support_request, sync_now: bool = True):
+    """
+    Convenience helper to enqueue and auto-sync a SupportRequest after database commit.
+    """
+    from user.models import GoogleSheetsSyncRecord
+    source_identifier = support_request.ticket_number or f"SR-{support_request.id}"
+    sync_record = enqueue_sync_record(GoogleSheetsSyncRecord.SourceType.SUPPORT_REQUEST, support_request.id, source_identifier)
+    if sync_now:
+        trigger_auto_sync(sync_record)
+    return sync_record
 
 
 def process_pending_syncs(
@@ -899,7 +1130,7 @@ def queue_backfill_records(source_type: Optional[str] = None, limit: Optional[in
         if limit:
             enqs_to_backfill = enqs_to_backfill[:limit]
         for enq in enqs_to_backfill:
-            queue_enquiry_sync(enq)
+            queue_enquiry_sync(enq, sync_now=False)
             queued_count += 1
 
     # Backfill Appointments
@@ -915,7 +1146,7 @@ def queue_backfill_records(source_type: Optional[str] = None, limit: Optional[in
             if remaining_limit:
                 apts_to_backfill = apts_to_backfill[:remaining_limit]
             for apt in apts_to_backfill:
-                queue_appointment_sync(apt)
+                queue_appointment_sync(apt, sync_now=False)
                 queued_count += 1
 
     # Backfill Support Requests
@@ -931,7 +1162,7 @@ def queue_backfill_records(source_type: Optional[str] = None, limit: Optional[in
             if remaining_limit:
                 srs_to_backfill = srs_to_backfill[:remaining_limit]
             for sr in srs_to_backfill:
-                queue_support_request_sync(sr)
+                queue_support_request_sync(sr, sync_now=False)
                 queued_count += 1
 
     return queued_count

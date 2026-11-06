@@ -44,6 +44,27 @@ class AdminLoginForm(AuthenticationForm):
 
 
 class EnquiryStatusForm(forms.ModelForm):
+    customer_response = forms.CharField(
+        required=False,
+        label="Message to Customer",
+        help_text="If entered, this message will be emailed directly to the customer's registered email.",
+        widget=forms.Textarea(
+            attrs={
+                "class": "form-control",
+                "rows": 4,
+                "placeholder": "Type response to email directly to customer...",
+                "id": "enquiryCustomerResponse",
+            }
+        ),
+    )
+    send_email_notification = forms.BooleanField(
+        required=False,
+        initial=True,
+        label="Send Email Notification",
+        help_text="Notify customer of this status update/response via email.",
+        widget=forms.CheckboxInput(attrs={"class": "form-check-input", "role": "switch", "id": "enquirySendEmailSwitch"}),
+    )
+
     class Meta:
         model = Enquiry
         fields = ["status", "admin_notes"]
@@ -66,6 +87,38 @@ class EnquiryStatusForm(forms.ModelForm):
 
 
 class AppointmentStatusForm(forms.ModelForm):
+    appointment_date = forms.DateField(
+        required=False,
+        label="Scheduled Date",
+        widget=forms.DateInput(attrs={"class": "form-control", "type": "date", "id": "appointmentDateInput"}),
+    )
+    time_slot = forms.ChoiceField(
+        choices=Appointment.TimeSlot.choices,
+        required=False,
+        label="Time Slot",
+        widget=forms.Select(attrs={"class": "form-select", "id": "appointmentTimeSlotSelect"}),
+    )
+    customer_response = forms.CharField(
+        required=False,
+        label="Message to Customer",
+        help_text="Personalized note emailed directly to the client regarding this appointment.",
+        widget=forms.Textarea(
+            attrs={
+                "class": "form-control",
+                "rows": 4,
+                "placeholder": "Type message to email directly to client (e.g. confirmation instructions, rescheduling notes)...",
+                "id": "appointmentCustomerResponse",
+            }
+        ),
+    )
+    send_email_notification = forms.BooleanField(
+        required=False,
+        initial=True,
+        label="Send Email Notification",
+        help_text="Send email notification to client regarding this update.",
+        widget=forms.CheckboxInput(attrs={"class": "form-check-input", "role": "switch", "id": "appointmentSendEmailSwitch"}),
+    )
+
     class Meta:
         model = Appointment
         fields = ["status", "admin_notes"]
@@ -81,14 +134,53 @@ class AppointmentStatusForm(forms.ModelForm):
             ),
         }
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance and self.instance.pk:
+            if not self.initial.get("appointment_date") and self.instance.appointment_date:
+                self.initial["appointment_date"] = self.instance.appointment_date
+            if not self.initial.get("time_slot") and self.instance.time_slot:
+                self.initial["time_slot"] = self.instance.time_slot
+
     def clean_status(self):
         status = self.cleaned_data.get("status")
         if status not in dict(Appointment.Status.choices):
             raise forms.ValidationError("Invalid appointment status choice.")
         return status
 
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        if self.cleaned_data.get("appointment_date"):
+            instance.appointment_date = self.cleaned_data["appointment_date"]
+        if self.cleaned_data.get("time_slot"):
+            instance.time_slot = self.cleaned_data["time_slot"]
+        if commit:
+            instance.save()
+        return instance
+
 
 class SupportRequestStatusForm(forms.ModelForm):
+    customer_response = forms.CharField(
+        required=False,
+        label="Message to Customer",
+        help_text="Resolution instructions or troubleshooting reply emailed to the customer.",
+        widget=forms.Textarea(
+            attrs={
+                "class": "form-control",
+                "rows": 4,
+                "placeholder": "Type resolution details or reply to email customer...",
+                "id": "supportCustomerResponse",
+            }
+        ),
+    )
+    send_email_notification = forms.BooleanField(
+        required=False,
+        initial=True,
+        label="Send Email Notification",
+        help_text="Send email notification with resolution/update to customer.",
+        widget=forms.CheckboxInput(attrs={"class": "form-check-input", "role": "switch", "id": "supportSendEmailSwitch"}),
+    )
+
     class Meta:
         model = SupportRequest
         fields = ["status", "admin_notes"]
@@ -126,20 +218,20 @@ class CategoryAdminForm(forms.ModelForm):
             "name": forms.TextInput(
                 attrs={
                     "class": "form-control",
-                    "placeholder": "e.g. Therapy Machines, Kansa Therapy",
+                    "placeholder": "Enter Category name",
                 }
             ),
             "slug": forms.TextInput(
                 attrs={
                     "class": "form-control",
-                    "placeholder": "Leave empty to auto-generate from name",
+                    "placeholder": "Enter Url Slug",
                 }
             ),
             "description": forms.Textarea(
                 attrs={
                     "class": "form-control",
                     "rows": 3,
-                    "placeholder": "Category summary displayed on website and filters...",
+                    "placeholder": "Enter Category description",
                 }
             ),
             "image": forms.ClearableFileInput(
@@ -234,13 +326,13 @@ class ServiceAdminForm(forms.ModelForm):
             "name": forms.TextInput(
                 attrs={
                     "class": "form-control",
-                    "placeholder": "e.g. Spinal Traction Therapy Bed",
+                    "placeholder": "Enter Product name",
                 }
             ),
             "slug": forms.TextInput(
                 attrs={
                     "class": "form-control",
-                    "placeholder": "Leave empty to auto-generate from name",
+                    "placeholder": "Enter Url Slug",
                 }
             ),
             "category": forms.Select(attrs={"class": "form-select"}),
@@ -248,14 +340,14 @@ class ServiceAdminForm(forms.ModelForm):
                 attrs={
                     "class": "form-control",
                     "rows": 2,
-                    "placeholder": "Concise summary for cards (max 300 characters)...",
+                    "placeholder": "describe machine",
                 }
             ),
             "description": forms.Textarea(
                 attrs={
                     "class": "form-control",
                     "rows": 5,
-                    "placeholder": "Comprehensive product/therapy description...",
+                    "placeholder": "Enter Full description",
                 }
             ),
             "image": forms.ClearableFileInput(
@@ -268,21 +360,21 @@ class ServiceAdminForm(forms.ModelForm):
                 attrs={
                     "class": "form-control",
                     "rows": 3,
-                    "placeholder": "Bullet points or narrative of therapeutic benefits...",
+                    "placeholder": "Enter therapeutic benefits",
                 }
             ),
             "usage_instructions": forms.Textarea(
                 attrs={
                     "class": "form-control",
                     "rows": 3,
-                    "placeholder": "How to operate or receive therapy...",
+                    "placeholder": "Enter usage instructions",
                 }
             ),
             "precautions": forms.Textarea(
                 attrs={
                     "class": "form-control",
                     "rows": 3,
-                    "placeholder": "Contraindications or precautions...",
+                    "placeholder": "Enter precautions or warnings",
                 }
             ),
             "is_featured": forms.CheckboxInput(

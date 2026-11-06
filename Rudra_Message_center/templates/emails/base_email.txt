@@ -1,0 +1,28 @@
+================================================================================
+{{ site_settings.business_name|default:"Rudra Massage & Wellness" }}
+{% if language == 'gu' %}થેરાપી અને વેલનેસ સાધનો{% else %}THERAPY & WELLNESS SOLUTIONS{% endif %}
+================================================================================
+
+{% if language == 'gu' %}નમસ્તે {{ customer_name|default:"ગ્રાહક મિત્ર" }},{% else %}Dear {{ customer_name|default:"Valued Customer" }},{% endif %}
+
+{% block content %}{% endblock %}
+
+{% if language == 'gu' %}
+શુભેચ્છાઓ સાથે,
+વેલનેસ કેર ટીમ
+{{ site_settings.business_name|default:"Rudra Massage & Wellness" }}
+{% else %}
+Warm regards,
+Wellness Advisory Team
+{{ site_settings.business_name|default:"Rudra Massage & Wellness" }}
+{% endif %}
+
+--------------------------------------------------------------------------------
+CONTACT & SUPPORT:
+{{ site_settings.business_name|default:"Rudra Massage & Wellness" }}
+{% if site_settings.business_address %}Address: {{ site_settings.business_address }}{% endif %}
+{% if site_settings.primary_phone %}Helpline: {{ site_settings.primary_phone }}{% endif %}
+{% if site_settings.contact_email %}Email: {{ site_settings.contact_email }}{% endif %}
+{% if site_settings.business_hours %}Hours: {{ site_settings.business_hours }}{% endif %}
+================================================================================
+

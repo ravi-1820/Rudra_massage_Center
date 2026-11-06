@@ -1,4 +1,5 @@
 
+
 from datetime import timedelta
 import logging
 
@@ -15,6 +16,12 @@ from .google_sheets import (
     queue_enquiry_sync,
     queue_support_request_sync,
 )
+from .email_service import (
+    send_appointment_received_email,
+    send_enquiry_received_email,
+    send_support_request_received_email,
+)
+from django.utils import translation
 
 from .forms import AppointmentForm, ContactForm, EnquiryForm, SupportTicketForm
 from .models import (
@@ -382,8 +389,11 @@ def appointment(request):
                     )
                     return redirect("user:appointment")
 
-                appointment_obj = form.save()
+                appointment_obj = form.save(commit=False)
+                appointment_obj.language = translation.get_language() or "en"
+                appointment_obj.save()
                 transaction.on_commit(lambda: queue_appointment_sync(appointment_obj))
+                transaction.on_commit(lambda: send_appointment_received_email(appointment_obj))
                 messages.success(
                     request,
                     f"Thank you, {appointment_obj.name}! Your appointment request ({appointment_obj.booking_reference}) has been received. Our wellness coordinator will contact you shortly to confirm schedule availability.",
@@ -467,8 +477,11 @@ def contact(request):
                 )
                 return redirect("user:contact")
 
-            support_obj = form.save()
+            support_obj = form.save(commit=False)
+            support_obj.language = translation.get_language() or "en"
+            support_obj.save()
             transaction.on_commit(lambda: queue_support_request_sync(support_obj))
+            transaction.on_commit(lambda: send_support_request_received_email(support_obj))
             messages.success(
                 request,
                 f"Thank you, {support_obj.name}! Your message has been received (Ticket: {support_obj.ticket_number}). Our wellness care advisory team will contact you shortly.",
@@ -536,8 +549,11 @@ def enquiry(request):
                     )
                     return redirect("user:enquiry")
 
-                enquiry_obj = form.save()
+                enquiry_obj = form.save(commit=False)
+                enquiry_obj.language = translation.get_language() or "en"
+                enquiry_obj.save()
                 transaction.on_commit(lambda: queue_enquiry_sync(enquiry_obj))
+                transaction.on_commit(lambda: send_enquiry_received_email(enquiry_obj))
                 messages.success(
                     request,
                     f"Thank you, {enquiry_obj.name}! Your enquiry has been received. Our wellness specialist will contact you within 24 hours.",
@@ -616,8 +632,11 @@ def support(request):
                 )
                 return redirect("user:support")
 
-            ticket_obj = form.save()
+            ticket_obj = form.save(commit=False)
+            ticket_obj.language = translation.get_language() or "en"
+            ticket_obj.save()
             transaction.on_commit(lambda: queue_support_request_sync(ticket_obj))
+            transaction.on_commit(lambda: send_support_request_received_email(ticket_obj))
             messages.success(
                 request,
                 f"Thank you, {ticket_obj.name}! Your support ticket ({ticket_obj.ticket_number}) has been created. Our technical support team reviews all requests within 4 business hours.",

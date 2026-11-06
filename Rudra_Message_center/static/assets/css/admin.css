@@ -399,3 +399,321 @@
     padding: 18px;
   }
 }
+
+/* ==========================================================================
+   Admin Action & Header Buttons
+   ========================================================================== */
+.btn-admin-header {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 6px 16px;
+  font-size: 0.83rem;
+  font-weight: 600;
+  border-radius: 9999px;
+  background-color: #f0faf4;
+  color: #065f46;
+  border: 1px solid #bbf7d0;
+  text-decoration: none;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+.btn-admin-header:hover,
+.btn-admin-header:focus {
+  background-color: #51f0a8;
+  color: #000000;
+  border-color: #51f0a8;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(81, 240, 168, 0.38);
+}
+
+.btn-admin-header i.bi-arrow-right {
+  transition: transform 0.2s ease;
+  font-size: 0.85rem;
+}
+
+.btn-admin-header:hover i.bi-arrow-right {
+  transform: translateX(3px);
+}
+
+[data-theme="dark"] .btn-admin-header {
+  background-color: rgba(81, 240, 168, 0.1);
+  color: #51f0a8;
+  border-color: rgba(81, 240, 168, 0.25);
+}
+
+[data-theme="dark"] .btn-admin-header:hover,
+[data-theme="dark"] .btn-admin-header:focus {
+  background-color: #51f0a8;
+  color: #000000;
+  border-color: #51f0a8;
+}
+
+.btn-outline-forest {
+  color: #065f46;
+  border: 1px solid #bbf7d0;
+  background-color: #f0faf4;
+  border-radius: 8px;
+  padding: 4px 9px;
+  font-size: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  text-decoration: none;
+}
+
+.btn-outline-forest:hover,
+.btn-outline-forest:focus {
+  background-color: #065f46;
+  color: #ffffff;
+  border-color: #065f46;
+  transform: translateY(-1px);
+}
+
+[data-theme="dark"] .btn-outline-forest {
+  color: #51f0a8;
+  border-color: rgba(81, 240, 168, 0.3);
+  background-color: rgba(81, 240, 168, 0.08);
+}
+
+[data-theme="dark"] .btn-outline-forest:hover,
+[data-theme="dark"] .btn-outline-forest:focus {
+  background-color: #51f0a8;
+  color: #000000;
+  border-color: #51f0a8;
+}
+
+/* ==========================================================================
+   Admin Filter & Action Controls
+   ========================================================================== */
+.btn-admin-filter {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 5px 16px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  border-radius: 9999px;
+  background-color: var(--primary, #51f0a8);
+  color: #000000;
+  border: 1px solid var(--primary, #51f0a8);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 1px 3px rgba(81, 240, 168, 0.28);
+}
+
+.btn-admin-filter:hover {
+  background-color: #3de697;
+  color: #000000;
+  border-color: #3de697;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(81, 240, 168, 0.4);
+}
+
+.btn-admin-reset {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 5px 14px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  border-radius: 9999px;
+  background-color: #f3f4f6;
+  color: #4b5563;
+  border: 1px solid #e5e7eb;
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+
+.btn-admin-reset:hover {
+  background-color: #e5e7eb;
+  color: #111827;
+  transform: translateY(-1px);
+}
+
+/* Status Toggle Badge Button */
+.badge-status-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 4px 12px;
+  font-size: 0.76rem;
+  font-weight: 600;
+  border-radius: 9999px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.18s ease;
+  white-space: nowrap;
+}
+
+.badge-status-btn.active {
+  background-color: #dcfce7;
+  color: #15803d;
+  border-color: #86efac;
+}
+
+.badge-status-btn.active:hover {
+  background-color: #bbf7d0;
+  color: #14532d;
+  border-color: #4ade80;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(22, 163, 74, 0.15);
+}
+
+.badge-status-btn.inactive {
+  background-color: #f3f4f6;
+  color: #6b7280;
+  border-color: #e5e7eb;
+}
+
+.badge-status-btn.inactive:hover {
+  background-color: #e5e7eb;
+  color: #374151;
+  border-color: #d1d5db;
+  transform: translateY(-1px);
+}
+
+/* Unified Action Icon Buttons */
+.btn-action-icon {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  border: 1px solid transparent;
+  text-decoration: none;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+}
+
+.btn-action-icon.btn-action-edit {
+  background-color: #f0faf4;
+  border-color: #bbf7d0;
+  color: #065f46;
+}
+
+.btn-action-icon.btn-action-edit:hover {
+  background-color: #51f0a8;
+  border-color: #51f0a8;
+  color: #000000;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(81, 240, 168, 0.35);
+}
+
+.btn-action-icon.btn-action-view {
+  background-color: #eff6ff;
+  border-color: #bfdbfe;
+  color: #1d4ed8;
+}
+
+.btn-action-icon.btn-action-view:hover {
+  background-color: #2563eb;
+  border-color: #2563eb;
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(37, 99, 235, 0.25);
+}
+
+.btn-action-icon.btn-action-delete {
+  background-color: #fef2f2;
+  border-color: #fecaca;
+  color: #dc2626;
+}
+
+.btn-action-icon.btn-action-delete:hover {
+  background-color: #dc2626;
+  border-color: #dc2626;
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(220, 38, 38, 0.25);
+}
+
+/* Classification Tags */
+.badge-tag-need {
+  background-color: #ecfdf5;
+  color: #047857;
+  border: 1px solid #a7f3d0;
+  border-radius: 9999px;
+  font-size: 0.72rem;
+  font-weight: 500;
+  padding: 2px 9px;
+  white-space: nowrap;
+}
+
+.badge-tag-body {
+  background-color: #f0fdfa;
+  color: #0f766e;
+  border: 1px solid #99f6e4;
+  border-radius: 9999px;
+  font-size: 0.72rem;
+  font-weight: 500;
+  padding: 2px 9px;
+  white-space: nowrap;
+}
+
+.badge-tag-empty {
+  font-size: 0.74rem;
+  color: #9ca3af;
+  font-style: italic;
+  font-weight: 400;
+}
+
+/* Order Pill */
+.badge-order-num {
+  display: inline-block;
+  padding: 3px 10px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  border-radius: 9999px;
+  background-color: #f8fafc;
+  color: #475569;
+  border: 1px solid #e2e8f0;
+}
+
+/* Dark mode variations */
+[data-theme="dark"] .badge-status-btn.active {
+  background-color: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+  border-color: rgba(74, 222, 128, 0.3);
+}
+
+[data-theme="dark"] .badge-status-btn.inactive {
+  background-color: rgba(107, 114, 128, 0.15);
+  color: #9ca3af;
+  border-color: rgba(156, 163, 175, 0.2);
+}
+
+[data-theme="dark"] .btn-action-icon.btn-action-edit {
+  background-color: rgba(81, 240, 168, 0.1);
+  border-color: rgba(81, 240, 168, 0.25);
+  color: #51f0a8;
+}
+
+[data-theme="dark"] .btn-action-icon.btn-action-view {
+  background-color: rgba(37, 99, 235, 0.12);
+  border-color: rgba(37, 99, 235, 0.3);
+  color: #60a5fa;
+}
+
+[data-theme="dark"] .btn-action-icon.btn-action-delete {
+  background-color: rgba(220, 38, 38, 0.12);
+  border-color: rgba(220, 38, 38, 0.3);
+  color: #f87171;
+}
+
+[data-theme="dark"] .badge-order-num {
+  background-color: #1e293b;
+  color: #94a3b8;
+  border-color: #334155;
+}
+

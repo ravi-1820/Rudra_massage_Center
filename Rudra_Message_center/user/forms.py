@@ -19,15 +19,19 @@ class EnquiryForm(forms.ModelForm):
         error_messages={"required": "Please provide your full name."},
     )
     email = forms.EmailField(
-        required=False,
+        required=True,
         widget=forms.EmailInput(
             attrs={
                 "id": "email",
                 "class": "form-veda-control",
-                "placeholder": "you@example.com (optional)",
+                "placeholder": "Enter your email address",
+                "required": "required",
             }
         ),
-        error_messages={"invalid": "Please enter a valid email address."},
+        error_messages={
+            "required": "Please provide your email address to receive enquiry updates.",
+            "invalid": "Please enter a valid email address.",
+        },
     )
     phone = forms.CharField(
         max_length=20,
@@ -197,15 +201,19 @@ class AppointmentForm(forms.ModelForm):
         error_messages={"required": "Please provide your full name."},
     )
     email = forms.EmailField(
-        required=False,
+        required=True,
         widget=forms.EmailInput(
             attrs={
                 "id": "aptEmail",
                 "class": "form-veda-control",
-                "placeholder": "you@example.com (optional)",
+                "placeholder": "Enter your email address",
+                "required": "required",
             }
         ),
-        error_messages={"invalid": "Please enter a valid email address."},
+        error_messages={
+            "required": "Please provide your email address to receive booking confirmation.",
+            "invalid": "Please enter a valid email address.",
+        },
     )
     phone = forms.CharField(
         max_length=20,

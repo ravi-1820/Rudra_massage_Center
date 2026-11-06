@@ -1,0 +1,34 @@
+{% extends "emails/base_email.txt" %}
+
+{% block content %}
+{% if language == 'gu' %}
+અમે તમારી સપોર્ટ ટિકિટ {{ ticket_number }} અંગેનો અપડેટ આપવા માટે સંપર્ક કરી રહ્યા છીએ.
+
+ટિકિટ નંબર: {{ ticket_number }}
+વર્તમાન સ્થિતિ: {{ status_display }}
+{% if response_message %}
+સપોર્ટ ટીમ તરફથી જવાબ / સમાધાન:
+{{ response_message }}
+{% endif %}
+વિનંતી શ્રેણી: {{ request_type_display }}
+{% if subject %}વિષય: {{ subject }}{% endif %}
+{% if product_name %}પ્રોડક્ટ: {{ product_name }}{% endif %}
+
+કોઈપણ સહાય માટે અમારી હેલ્પલાઇન {{ site_settings.primary_phone }} પર સંપર્ક કરશો.
+{% else %}
+We are writing to provide an update regarding your support ticket {{ ticket_number }}.
+
+SUPPORT TICKET NUMBER: {{ ticket_number }}
+Status: {{ status_display }}
+{% if response_message %}
+RESPONSE / RESOLUTION FROM OUR SUPPORT TEAM:
+{{ response_message }}
+{% endif %}
+Category: {{ request_type_display }}
+{% if subject %}Subject: {{ subject }}{% endif %}
+{% if product_name %}Product: {{ product_name }}{% endif %}
+
+For further assistance, please contact our helpline at {{ site_settings.primary_phone }}.
+{% endif %}
+{% endblock %}
+

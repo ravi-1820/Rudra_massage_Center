@@ -68,7 +68,7 @@
       </div>
 
       <!-- Category Filter -->
-      <select name="category" class="form-select form-select-sm" style="width: 170px;" onchange="this.form.submit()">
+      <select name="category" class="form-select form-select-sm rounded-pill px-3" style="width: 175px;" onchange="this.form.submit()">
         <option value="">All Categories</option>
         {% for cat in categories %}
           <option value="{{ cat.slug }}" {% if selected_category == cat.slug %}selected{% endif %}>{{ cat.name }}</option>
@@ -76,17 +76,21 @@
       </select>
 
       <!-- Status Filter -->
-      <select name="status" class="form-select form-select-sm" style="width: 130px;" onchange="this.form.submit()">
+      <select name="status" class="form-select form-select-sm rounded-pill px-3" style="width: 135px;" onchange="this.form.submit()">
         <option value="">All Statuses</option>
         <option value="active" {% if selected_status == "active" %}selected{% endif %}>Active Only</option>
         <option value="inactive" {% if selected_status == "inactive" %}selected{% endif %}>Deactivated</option>
       </select>
 
       <!-- Submit Filter -->
-      <button type="submit" class="btn btn-sm btn-outline-dark">Filter</button>
+      <button type="submit" class="btn btn-sm btn-admin-filter">
+        <i class="bi bi-funnel-fill"></i> Filter
+      </button>
 
       {% if search_query or selected_category or selected_status %}
-        <a href="{% url 'custom_admin:services' %}" class="btn btn-sm btn-outline-secondary" title="Clear filters">Reset</a>
+        <a href="{% url 'custom_admin:services' %}" class="btn btn-sm btn-admin-reset" title="Clear filters">
+          <i class="bi bi-arrow-counterclockwise"></i> Reset
+        </a>
       {% endif %}
     </form>
   </div>
@@ -140,38 +144,36 @@
 
             <!-- Classifications (Pills) -->
             <td>
-              <div class="d-flex flex-wrap gap-1" style="max-width: 250px;">
+              <div class="d-flex flex-wrap gap-1" style="max-width: 260px;">
                 {% for need in svc.customer_needs.all %}
-                  <span class="badge bg-light text-secondary border" style="font-size: 0.7rem;">{{ need.name }}</span>
-                {% empty %}
+                  <span class="badge-tag-need">{{ need.name }}</span>
                 {% endfor %}
                 {% for body in svc.body_parts.all %}
-                  <span class="badge bg-light text-info border" style="font-size: 0.7rem;">{{ body.name }}</span>
-                {% empty %}
+                  <span class="badge-tag-body">{{ body.name }}</span>
                 {% endfor %}
                 {% if not svc.customer_needs.all and not svc.body_parts.all %}
-                  <span class="text-muted small">-</span>
+                  <span class="badge-tag-empty">Unclassified</span>
                 {% endif %}
               </div>
             </td>
 
             <!-- Order -->
-            <td class="text-center fw-semibold text-muted">
-              {{ svc.display_order }}
+            <td class="text-center">
+              <span class="badge-order-num">#{{ svc.display_order }}</span>
             </td>
 
             <!-- Active Status Toggle -->
             <td class="text-center">
-              <form method="post" action="{% url 'custom_admin:service_toggle_active' svc.id %}">
+              <form method="post" action="{% url 'custom_admin:service_toggle_active' svc.id %}" class="d-inline">
                 {% csrf_token %}
                 <input type="hidden" name="next" value="{{ request.get_full_path }}">
                 {% if svc.is_active %}
-                  <button type="submit" class="btn btn-sm btn-outline-success rounded-pill px-2 py-1" style="font-size: 0.75rem; font-weight: 600;" title="Click to deactivate">
-                    <i class="bi bi-check-circle me-1"></i> Active
+                  <button type="submit" class="btn btn-sm badge-status-btn active" title="Active on website • Click to deactivate">
+                    <i class="bi bi-check-circle-fill"></i> Active
                   </button>
                 {% else %}
-                  <button type="submit" class="btn btn-sm btn-outline-secondary rounded-pill px-2 py-1" style="font-size: 0.75rem;" title="Click to activate">
-                    <i class="bi bi-x-circle me-1"></i> Inactive
+                  <button type="submit" class="btn btn-sm badge-status-btn inactive" title="Inactive / Draft • Click to activate">
+                    <i class="bi bi-dash-circle"></i> Inactive
                   </button>
                 {% endif %}
               </form>
@@ -179,14 +181,14 @@
 
             <!-- Actions -->
             <td class="text-end">
-              <div class="d-inline-flex gap-1">
-                <a href="{% url 'custom_admin:service_edit' svc.id %}" class="btn btn-sm btn-outline-dark" title="Edit Service" aria-label="Edit Service">
-                  <i class="bi bi-pencil"></i>
+              <div class="d-inline-flex gap-1 justify-content-end">
+                <a href="{% url 'custom_admin:service_edit' svc.id %}" class="btn btn-sm btn-action-icon btn-action-edit" title="Edit Service" aria-label="Edit Service">
+                  <i class="bi bi-pencil-square"></i>
                 </a>
-                <a href="{% url 'user:service_detail' slug=svc.slug %}" target="_blank" class="btn btn-sm btn-outline-secondary" title="Preview on public site" aria-label="Preview">
+                <a href="{% url 'user:service_detail' slug=svc.slug %}" target="_blank" class="btn btn-sm btn-action-icon btn-action-view" title="Preview on public site" aria-label="Preview">
                   <i class="bi bi-box-arrow-up-right"></i>
                 </a>
-                <button type="button" class="btn btn-sm btn-outline-danger btn-delete-trigger" 
+                <button type="button" class="btn btn-sm btn-action-icon btn-action-delete btn-delete-trigger" 
                         title="Delete Service" aria-label="Delete Service"
                         data-bs-toggle="modal" data-bs-target="#deleteConfirmModal"
                         data-record-type="Therapy Solution"

@@ -118,16 +118,66 @@
           </select>
         </div>
 
+        <!-- Customer Response Box -->
+        <div class="mb-3">
+          <label for="supportCustomerResponse" class="form-veda-label">
+            <i class="bi bi-envelope me-1 text-gold"></i> Reply to Customer
+          </label>
+          <textarea name="customer_response" id="supportCustomerResponse" rows="4" class="form-control" placeholder="Type resolution message or response to email directly to customer..."></textarea>
+          <small class="text-muted d-block mt-1">This response will be emailed to {{ support_request.email|default:"the customer" }}.</small>
+        </div>
+
+        <!-- Send Email Notification Switch -->
+        <div class="form-check form-switch mb-3 p-2 border rounded-3 bg-light">
+          <input class="form-check-input" type="checkbox" role="switch" name="send_email_notification" id="supportSendEmailSwitch" checked>
+          <label class="form-check-label fw-semibold small ms-1" for="supportSendEmailSwitch">
+            Email notification to {{ support_request.email|default:"customer" }}
+          </label>
+        </div>
+
         <div class="mb-3">
           <label for="supportRequestAdminNotes" class="form-veda-label">Private Staff Notes</label>
-          <textarea name="admin_notes" id="supportRequestAdminNotes" rows="5" class="form-control" placeholder="Add confidential internal notes regarding technician review, warranty validity, phone consultations...">{{ support_request.admin_notes }}</textarea>
+          <textarea name="admin_notes" id="supportRequestAdminNotes" rows="4" class="form-control" placeholder="Add confidential internal notes regarding technician review, warranty validity, phone consultations...">{{ support_request.admin_notes }}</textarea>
           <small class="text-muted d-block mt-1">Staff-only notes. Never displayed to customers.</small>
         </div>
 
         <button type="submit" class="btn-veda-primary btn-veda-sm w-100">
-          <i class="bi bi-save me-1"></i> Update Ticket Status
+          <i class="bi bi-save me-1"></i> Update Ticket & Notify
         </button>
       </form>
+    </div>
+
+    <!-- Email Notification Audit Card -->
+    <div class="card border rounded-4 p-4 shadow-sm bg-white mb-4">
+      <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
+        <h6 class="fw-bold text-forest mb-0">
+          <i class="bi bi-envelope-check me-2 text-gold"></i>Customer Notifications
+        </h6>
+        <span class="badge bg-light text-muted border">{{ email_logs|length }} sent</span>
+      </div>
+      {% if email_logs %}
+        <div class="d-flex flex-column gap-2" style="max-height: 250px; overflow-y: auto;">
+          {% for log in email_logs %}
+            <div class="p-2 border rounded-3 bg-light small">
+              <div class="d-flex align-items-center justify-content-between mb-1">
+                <span class="fw-semibold text-dark">{{ log.get_notification_type_display }}</span>
+                {% if log.status == 'sent' %}
+                  <span class="badge bg-success-subtle text-success border border-success-subtle">Sent</span>
+                {% else %}
+                  <span class="badge bg-danger-subtle text-danger border border-danger-subtle">Failed</span>
+                {% endif %}
+              </div>
+              <div class="text-muted" style="font-size: 0.74rem;">
+                {{ log.recipient_email }} &bull; {{ log.created_at|date:"d M Y, H:i" }}
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="text-muted small text-center py-2">
+          No notifications sent yet.
+        </div>
+      {% endif %}
     </div>
 
     <!-- Quick Communication Actions -->

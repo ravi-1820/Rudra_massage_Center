@@ -1,0 +1,68 @@
+{% extends "emails/base_email.html" %}
+
+{% block content %}
+<div class="lead-text">
+  {% if language == 'gu' %}
+    અમે તમારી સપોર્ટ ટિકિટ <strong>{{ ticket_number }}</strong> અંગેનો અપડેટ આપવા માટે સંપર્ક કરી રહ્યા છીએ.
+  {% else %}
+    We are writing to provide an update regarding your support ticket <strong>{{ ticket_number }}</strong>.
+  {% endif %}
+</div>
+
+<div class="summary-card">
+  <div style="font-size: 13px; color: #66706b; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px;">
+    {% if language == 'gu' %}ટિકિટ નંબર & વર્તમાન સ્થિતિ{% else %}Ticket Number & Status{% endif %}
+  </div>
+  <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-top: 4px;">
+    <span style="font-size: 18px; font-weight: 700; color: #093723; font-family: monospace;">{{ ticket_number }}</span>
+    <span class="badge-status" style="{% if status == 'resolved' %}background-color: #d1fae5; border-color: #10b981; color: #065f46;{% elif status == 'closed' %}background-color: #f3f4f6; border-color: #9ca3af; color: #374151;{% endif %}">
+      {{ status_display }}
+    </span>
+  </div>
+</div>
+
+{% if response_message %}
+<div class="response-card">
+  <div class="response-card-title">
+    {% if language == 'gu' %}સપોર્ટ ટીમ તરફથી સમાધાન / સંદેશ:{% else %}Resolution / Support Update From Our Team:{% endif %}
+  </div>
+  <div class="response-card-body">{{ response_message }}</div>
+</div>
+{% endif %}
+
+<table class="detail-table">
+  <tr>
+    <td class="detail-label">{% if language == 'gu' %}વિનંતી શ્રેણી{% else %}Category{% endif %}</td>
+    <td class="detail-value">{{ request_type_display }}</td>
+  </tr>
+  {% if subject %}
+  <tr>
+    <td class="detail-label">{% if language == 'gu' %}વિષય{% else %}Subject{% endif %}</td>
+    <td class="detail-value">{{ subject }}</td>
+  </tr>
+  {% endif %}
+  {% if product_name %}
+  <tr>
+    <td class="detail-label">{% if language == 'gu' %}સાધન{% else %}Product{% endif %}</td>
+    <td class="detail-value">{{ product_name }}</td>
+  </tr>
+  {% endif %}
+</table>
+
+<div class="next-steps">
+  {% if status == 'resolved' %}
+    {% if language == 'gu' %}
+      જો તમારો પ્રશ્ન સંપૂર્ણ રીતે ઉકેલાઈ ગયો હોય તો આપને વધુ કંઈ કરવાની જરૂર નથી. જો કોઈ સહાય બાકી હોય, તો આપ આ ટિકિટ સંદર્ભ સાથે અમારો સંપર્ક કરી શકો છો.
+    {% else %}
+      If your issue has been resolved to your satisfaction, no further action is required. If you still require technical assistance, please reply to this email or call our helpline.
+    {% endif %}
+  {% else %}
+    {% if language == 'gu' %}
+      અમારી ટીમ આ ટિકિટ પર સક્રિયપણે કાર્ય કરી રહી છે. કોઈપણ તાત્કાલિક માહિતી માટે અમારો સંપર્ક કરી શકો છો.
+    {% else %}
+      Our team is actively assisting with your ticket. If you have additional details to provide, please reply directly with your reference number.
+    {% endif %}
+  {% endif %}
+</div>
+{% endblock %}
+

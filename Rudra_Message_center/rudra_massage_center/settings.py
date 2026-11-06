@@ -145,7 +145,15 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 
 # Email Configuration (Django 6 MAILERS)
-_EMAIL_BACKEND = os.getenv('EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
+_EMAIL_BACKEND = os.getenv('EMAIL_BACKEND', 'django.core.mail.backends.smtp.EmailBackend').strip()
+_EMAIL_HOST = os.getenv('EMAIL_HOST', 'smtp.gmail.com').strip()
+_EMAIL_PORT = int(os.getenv('EMAIL_PORT', '465').strip())
+_EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'False').strip().lower() in ('true', '1', 'yes')
+_EMAIL_USE_SSL = os.getenv('EMAIL_USE_SSL', 'True').strip().lower() in ('true', '1', 'yes')
+_EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', 'ravitech090@gmail.com').strip().strip("'\"")
+_EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', 'rrih griy cfjb fxub').strip().strip("'\"")
+_EMAIL_TIMEOUT = int(os.getenv('EMAIL_TIMEOUT', '25').strip())
+
 MAILERS = {
     'default': {
         'BACKEND': _EMAIL_BACKEND,
@@ -153,21 +161,36 @@ MAILERS = {
 }
 if 'smtp' in _EMAIL_BACKEND.lower():
     MAILERS['default']['OPTIONS'] = {
-        'host': os.getenv('EMAIL_HOST', 'smtp.gmail.com'),
-        'port': int(os.getenv('EMAIL_PORT', '587')),
-        'use_tls': os.getenv('EMAIL_USE_TLS', 'True').lower() in ('true', '1', 'yes'),
-        'username': os.getenv('EMAIL_HOST_USER', ''),
-        'password': os.getenv('EMAIL_HOST_PASSWORD', ''),
+        'host': _EMAIL_HOST,
+        'port': _EMAIL_PORT,
+        'use_tls': _EMAIL_USE_TLS,
+        'use_ssl': _EMAIL_USE_SSL,
+        'username': _EMAIL_HOST_USER,
+        'password': _EMAIL_HOST_PASSWORD,
+        'timeout': _EMAIL_TIMEOUT,
     }
 
-DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', os.getenv('EMAIL_HOST_USER') or 'webmaster@localhost')
+DEFAULT_FROM_EMAIL = (
+    os.getenv('DEFAULT_FROM_EMAIL', '').strip().strip("'\"")
+    or (f"Rudra Massage & Wellness <{_EMAIL_HOST_USER}>" if _EMAIL_HOST_USER else 'Rudra Massage & Wellness <care@rudrawellness.com>')
+)
+SERVER_EMAIL = os.getenv('SERVER_EMAIL', '').strip().strip('"\'') or DEFAULT_FROM_EMAIL
 
 
 # Google Sheets Integration
 GOOGLE_SHEETS_ENABLED = os.getenv('GOOGLE_SHEETS_ENABLED', 'False').lower() in ('true', '1', 'yes')
 GOOGLE_SHEETS_SPREADSHEET_ID = os.getenv('GOOGLE_SHEETS_SPREADSHEET_ID', '1arzbB89B3tYfRB6SFTe32ej7Yq_tJ10AMx7ME4hcrjs').strip()
-GOOGLE_SERVICE_ACCOUNT_FILE = os.getenv(
-    'GOOGLE_SERVICE_ACCOUNT_FILE',
-    r'C:\Users\rajja\.credentials\rudra-massage\rudra-sheets-service-account.json').strip()
+def _clean_credentials_path(val: str) -> str:
+    if not val:
+        return ''
+    cleaned = str(val).strip().strip('"\'')
+    cleaned = cleaned.replace('\r', '\\r').replace('\t', '\\t').replace('\n', '\\n')
+    return cleaned.replace('\\', '/')
+
+
+GOOGLE_SERVICE_ACCOUNT_FILE = _clean_credentials_path(
+    os.getenv('GOOGLE_SERVICE_ACCOUNT_FILE', 'C:/Users/rajja/.credentials/rudra-massage/rudra-sheets-service-account.json')
+)
+GOOGLE_SHEETS_REQUEST_TIMEOUT = int(os.getenv('GOOGLE_SHEETS_REQUEST_TIMEOUT', '20'))
 
 

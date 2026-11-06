@@ -1,18 +1,33 @@
-# Core Framework & Dependencies
+# ==============================================================================
+# Rudra Massage & Wellness - Production & Environment Dependencies
+# ==============================================================================
+
+# Core Framework & Asynchronous Utilities
 Django==6.1.2
 asgiref==3.12.1
 sqlparse==0.6.0
 
-# Image Processing (ImageField support)
+# Image Processing (Service / Product Catalog ImageField support)
 Pillow==12.3.0
 
-# Environment Configuration
+# Environment Variable Management
 python-dotenv==1.2.4
 
-# Google Sheets API & Authentication
+# HTTP & Transport Clients
+requests==2.34.2
+httplib2==0.32.0
+urllib3==2.8.0
+certifi==2026.10.19
+
+# Google Sheets API & Service Account Authentication
 google-api-python-client==2.201.0
 google-auth==2.62.0
 google-auth-httplib2==0.4.4
+google-api-core==2.43.0
 
-# Timezone data (required for IANA timezones on Windows)
+# Security, Cryptography & Signature Verification
+cryptography==50.0.2
+
+# Timezone Support (IANA Timezones for Windows)
 tzdata==2026.5
+

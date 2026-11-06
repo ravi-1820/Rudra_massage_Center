@@ -1,0 +1,70 @@
+{% extends "emails/base_email.html" %}
+
+{% block content %}
+<div class="lead-text">
+  {% if language == 'gu' %}
+    રુદ્ર મસાજ અને વેલનેસનો સંપર્ક કરવા બદલ આભાર. અમને તમારી પ્રોડક્ટ અને થેરાપી અંગેની પૂછપરછ સફળતાપૂર્વક મળી ગઈ છે.
+  {% else %}
+    Thank you for reaching out to Rudra Massage & Wellness. We have successfully received your product and therapy enquiry.
+  {% endif %}
+</div>
+
+<div class="summary-card">
+  <div style="font-size: 13px; color: #66706b; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px;">
+    {% if language == 'gu' %}પૂછપરછ સંદર્ભ નંબર{% else %}Enquiry Reference ID{% endif %}
+  </div>
+  <div style="font-size: 20px; font-weight: 700; color: #093723; margin-top: 4px; font-family: monospace;">
+    {{ enquiry_id }}
+  </div>
+</div>
+
+<table class="detail-table">
+  <tr>
+    <td class="detail-label">{% if language == 'gu' %}પ્રોડક્ટ / વિષય{% else %}Equipment / Service{% endif %}</td>
+    <td class="detail-value">{{ service_name }}</td>
+  </tr>
+  <tr>
+    <td class="detail-label">{% if language == 'gu' %}પૂછપરછનો પ્રકાર{% else %}Enquiry Type{% endif %}</td>
+    <td class="detail-value">{{ enquiry_type_display }}</td>
+  </tr>
+  <tr>
+    <td class="detail-label">{% if language == 'gu' %}હેતુ{% else %}Intended Application{% endif %}</td>
+    <td class="detail-value">{{ usage_intention_display }}</td>
+  </tr>
+  <tr>
+    <td class="detail-label">{% if language == 'gu' %}કોલ કરવાનો અનુકૂળ સમય{% else %}Preferred Callback Window{% endif %}</td>
+    <td class="detail-value">{{ callback_time_display }}</td>
+  </tr>
+  {% if preferred_contact_method %}
+  <tr>
+    <td class="detail-label">{% if language == 'gu' %}સંપર્ક પદ્ધતિ{% else %}Contact Method{% endif %}</td>
+    <td class="detail-value">{{ preferred_contact_method }}</td>
+  </tr>
+  {% endif %}
+  {% if city %}
+  <tr>
+    <td class="detail-label">{% if language == 'gu' %}શહેર{% else %}City{% endif %}</td>
+    <td class="detail-value">{{ city }}</td>
+  </tr>
+  {% endif %}
+</table>
+
+{% if message %}
+<div style="margin: 16px 0; padding: 12px 14px; background: #fafafa; border: 1px solid #eef0ee; border-radius: 4px; font-size: 13px;">
+  <strong style="color: #444;">{% if language == 'gu' %}તમારો સંદેશ:{% else %}Your Message:{% endif %}</strong>
+  <div style="margin-top: 4px; color: #555; white-space: pre-line;">{{ message }}</div>
+</div>
+{% endif %}
+
+<div class="next-steps">
+  <strong style="color: #093723; display: block; margin-bottom: 6px;">
+    {% if language == 'gu' %}અમારી પ્રતિબદ્ધતા:{% else %}What happens next?{% endif %}
+  </strong>
+  {% if language == 'gu' %}
+    અમારા વેલનેસ નિષ્ણાત તમારી જરૂરિયાતોની સમીક્ષા કરી રહ્યા છે અને આપેલા પસંદગીના સમયગાળા દરમિયાન <strong>24 કલાકમાં</strong> તમારી સાથે સંપર્ક કરશે.
+  {% else %}
+    Our wellness product specialists are reviewing your requirements and will get in touch with you within <strong>24 hours</strong> during your preferred contact window.
+  {% endif %}
+</div>
+{% endblock %}
+

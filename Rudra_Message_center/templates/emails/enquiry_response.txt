@@ -1,0 +1,30 @@
+{% extends "emails/base_email.txt" %}
+
+{% block content %}
+{% if language == 'gu' %}
+અમે તમારી પૂછપરછ {{ enquiry_id }} અંગેનો પ્રત્યુત્તર આપવા માટે સંપર્ક કરી રહ્યા છીએ.
+
+પૂછપરછ સંદર્ભ નંબર: {{ enquiry_id }}
+વર્તમાન સ્થિતિ: {{ status_display }}
+{% if response_message %}
+અમારી વેલનેસ સલાહકાર ટીમ તરફથી જવાબ:
+{{ response_message }}
+{% endif %}
+પ્રોડક્ટ / સેવા: {{ service_name }}
+
+કોઈપણ સહાય માટે અમારી હેલ્પલાઇન {{ site_settings.primary_phone }} પર સંપર્ક કરશો.
+{% else %}
+We are writing in response to your therapy and equipment enquiry {{ enquiry_id }}.
+
+ENQUIRY REFERENCE: {{ enquiry_id }}
+Status: {{ status_display }}
+{% if response_message %}
+RESPONSE FROM OUR WELLNESS SPECIALIST:
+{{ response_message }}
+{% endif %}
+Equipment / Service: {{ service_name }}
+
+For further information, please contact our team at {{ site_settings.primary_phone }}.
+{% endif %}
+{% endblock %}
+

@@ -25,6 +25,12 @@ from user.models import (
     SiteSettings,
     SupportRequest,
     GoogleSheetsSyncRecord,
+    EmailNotificationLog,
+)
+from user.email_service import (
+    send_appointment_response_email,
+    send_enquiry_response_email,
+    send_support_response_email,
 )
 from .forms import (
     AdminLoginForm,
@@ -573,11 +579,25 @@ def enquiry_detail(request, enquiry_id):
         Enquiry.objects.select_related("service", "service__category"),
         id=enquiry_id,
     )
+    old_status = enquiry.status
 
     if request.method == "POST":
         form = EnquiryStatusForm(request.POST, instance=enquiry)
         if form.is_valid():
             enquiry = form.save()
+            customer_response = form.cleaned_data.get("customer_response")
+            send_email = form.cleaned_data.get("send_email_notification", True)
+
+            status_changed = (old_status != enquiry.status)
+            if send_email and enquiry.email:
+                mail_sent = send_enquiry_response_email(
+                    enquiry,
+                    response_message=customer_response,
+                    previous_status=old_status,
+                )
+                if mail_sent:
+                    messages.info(request, f"Notification email sent to {enquiry.email}.")
+
             messages.success(
                 request,
                 f"Enquiry #{enquiry.id} updated successfully. Status is now '{enquiry.get_status_display()}'.",
@@ -591,6 +611,11 @@ def enquiry_detail(request, enquiry_id):
     else:
         form = EnquiryStatusForm(instance=enquiry)
 
+    email_logs = EmailNotificationLog.objects.filter(
+        source_type=EmailNotificationLog.SourceType.ENQUIRY,
+        source_id=enquiry.id,
+    ).order_by("-created_at")
+
     return render(
         request,
         "custom_admin/enquiry_detail.html",
@@ -598,6 +623,7 @@ def enquiry_detail(request, enquiry_id):
             "enquiry": enquiry,
             "form": form,
             "status_choices": Enquiry.Status.choices,
+            "email_logs": email_logs,
         },
     )
 
@@ -613,10 +639,14 @@ def update_enquiry_status(request, enquiry_id):
         messages.error(request, f"Invalid status choice '{new_status}' provided.")
         return redirect(request.POST.get("next") or "custom_admin:enquiries")
 
+    old_status = enquiry_obj.status
     enquiry_obj.status = new_status
     if admin_notes is not None:
         enquiry_obj.admin_notes = admin_notes.strip()
     enquiry_obj.save()
+
+    if old_status != new_status and enquiry_obj.email:
+        send_enquiry_response_email(enquiry_obj, previous_status=old_status)
 
     messages.success(
         request,
@@ -765,11 +795,37 @@ def appointment_detail(request, appointment_id):
         Appointment.objects.select_related("service", "service__category"),
         id=appointment_id,
     )
+    old_status = appointment.status
+    old_date = appointment.appointment_date
+    old_slot = appointment.time_slot
 
     if request.method == "POST":
         form = AppointmentStatusForm(request.POST, instance=appointment)
         if form.is_valid():
-            apt = form.save()
+            apt = form.save(commit=False)
+            new_date = form.cleaned_data.get("appointment_date")
+            new_slot = form.cleaned_data.get("time_slot")
+            if new_date:
+                apt.appointment_date = new_date
+            if new_slot:
+                apt.time_slot = new_slot
+            apt.save()
+
+            customer_response = form.cleaned_data.get("customer_response")
+            send_email = form.cleaned_data.get("send_email_notification", True)
+            status_changed = (old_status != apt.status)
+            rescheduled = bool((new_date and new_date != old_date) or (new_slot and new_slot != old_slot))
+
+            if send_email and apt.email:
+                mail_sent = send_appointment_response_email(
+                    apt,
+                    response_message=customer_response,
+                    previous_status=old_status,
+                    rescheduled=rescheduled,
+                )
+                if mail_sent:
+                    messages.info(request, f"Notification email sent to {apt.email}.")
+
             messages.success(
                 request,
                 f"Appointment {apt.booking_reference} updated successfully. Status is now '{apt.get_status_display()}'.",
@@ -781,7 +837,18 @@ def appointment_detail(request, appointment_id):
                 "Failed to update appointment. Please verify the submitted form.",
             )
     else:
-        form = AppointmentStatusForm(instance=appointment)
+        form = AppointmentStatusForm(
+            instance=appointment,
+            initial={
+                "appointment_date": appointment.appointment_date,
+                "time_slot": appointment.time_slot,
+            },
+        )
+
+    email_logs = EmailNotificationLog.objects.filter(
+        source_type=EmailNotificationLog.SourceType.APPOINTMENT,
+        source_id=appointment.id,
+    ).order_by("-created_at")
 
     return render(
         request,
@@ -790,6 +857,7 @@ def appointment_detail(request, appointment_id):
             "appointment": appointment,
             "form": form,
             "status_choices": Appointment.Status.choices,
+            "email_logs": email_logs,
         },
     )
 
@@ -805,10 +873,14 @@ def update_appointment_status(request, appointment_id):
         messages.error(request, f"Invalid appointment status choice '{new_status}' provided.")
         return redirect(request.POST.get("next") or "custom_admin:appointments")
 
+    old_status = apt_obj.status
     apt_obj.status = new_status
     if admin_notes is not None:
         apt_obj.admin_notes = admin_notes.strip()
     apt_obj.save()
+
+    if old_status != new_status and apt_obj.email:
+        send_appointment_response_email(apt_obj, previous_status=old_status)
 
     messages.success(
         request,
@@ -1003,11 +1075,25 @@ def support_requests(request):
 @staff_required
 def support_request_detail(request, request_id):
     req_obj = get_object_or_404(SupportRequest, id=request_id)
+    old_status = req_obj.status
 
     if request.method == "POST":
         form = SupportRequestStatusForm(request.POST, instance=req_obj)
         if form.is_valid():
             saved_obj = form.save()
+            customer_response = form.cleaned_data.get("customer_response")
+            send_email = form.cleaned_data.get("send_email_notification", True)
+            status_changed = (old_status != saved_obj.status)
+
+            if send_email and saved_obj.email:
+                mail_sent = send_support_response_email(
+                    saved_obj,
+                    response_message=customer_response,
+                    previous_status=old_status,
+                )
+                if mail_sent:
+                    messages.info(request, f"Notification email sent to {saved_obj.email}.")
+
             messages.success(
                 request,
                 f"Support Request {saved_obj.ticket_number} updated successfully. Status is now '{saved_obj.get_status_display()}'.",
@@ -1021,6 +1107,11 @@ def support_request_detail(request, request_id):
     else:
         form = SupportRequestStatusForm(instance=req_obj)
 
+    email_logs = EmailNotificationLog.objects.filter(
+        source_type=EmailNotificationLog.SourceType.SUPPORT_REQUEST,
+        source_id=req_obj.id,
+    ).order_by("-created_at")
+
     return render(
         request,
         "custom_admin/support_request_detail.html",
@@ -1028,6 +1119,7 @@ def support_request_detail(request, request_id):
             "support_request": req_obj,
             "form": form,
             "status_choices": SupportRequest.Status.choices,
+            "email_logs": email_logs,
         },
     )
 
@@ -1043,10 +1135,20 @@ def update_support_request_status(request, request_id):
         messages.error(request, f"Invalid support request status choice '{new_status}' provided.")
         return redirect(request.POST.get("next") or "custom_admin:support_requests")
 
+    old_status = req_obj.status
     req_obj.status = new_status
     if admin_notes is not None:
         req_obj.admin_notes = admin_notes.strip()
     req_obj.save()
+
+    customer_response = request.POST.get("customer_response")
+    send_email = request.POST.get("send_email_notification", "on") in ("on", "true", "1")
+    if send_email and (old_status != new_status or customer_response) and req_obj.email:
+        send_support_response_email(
+            req_obj,
+            response_message=customer_response,
+            previous_status=old_status,
+        )
 
     messages.success(
         request,
@@ -1131,6 +1233,9 @@ def google_sheets_retry_action(request, sync_id):
     from user.google_sheets import sync_single_record
 
     sync_record = get_object_or_404(GoogleSheetsSyncRecord, id=sync_id)
+
+    # Track retry attempt
+    sync_record.mark_in_progress()
 
     # Trigger single record sync
     result = sync_single_record(sync_record)

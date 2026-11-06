@@ -197,14 +197,10 @@
     
     <!-- Page Heading -->
     <div class="text-center mb-4">
-      <span class="section-subtitle-tag" style="color: #0d9f5d; letter-spacing: 0.12em; font-weight: 700; font-size: 0.78rem;">PERSONALIZED WELLNESS</span>
       <h1 class="h2 fw-bold text-dark mt-2 mb-2" style="font-family: var(--font-heading); color: #15232b;" data-i18n="apt.title">Book Your Appointment</h1>
       <p class="text-muted mx-auto mb-3" style="max-width: 620px; font-size: 0.95rem;" data-i18n="apt.subtitle">
         Choose a service and preferred time. Our team will contact you to confirm your appointment.
       </p>
-      <div class="d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill small fw-semibold" style="background: rgba(81, 240, 168, 0.15); color: #0b7a48; border: 1px solid rgba(81, 240, 168, 0.4);">
-        <i class="bi bi-calendar2-check"></i> <span data-i18n="apt.privacy">Requests are typically confirmed within a few hours.</span>
-      </div>
     </div>
 
     <!-- Form Container -->
@@ -268,13 +264,13 @@
               <!-- Email Address -->
               <div class="col-md-6">
                 <label for="aptEmail" class="form-veda-label">
-                  <span data-i18n="form.email">Email Address</span> <span class="text-muted fw-normal" style="font-size: 0.8rem;">(Optional)</span>
+                  <span data-i18n="form.email">Email Address</span> *
                 </label>
                 <div class="form-input-icon-wrap">
                   <i class="bi bi-envelope input-icon"></i>
                   <input type="email" name="email" id="aptEmail"
                     class="form-veda-control {% if form.email.errors %}is-invalid{% endif %}"
-                    placeholder="Enter Email" data-i18n-placeholder="form.emailPlaceholder" value="{{ form.email.value|default:'' }}">
+                    placeholder="Enter Email" data-i18n-placeholder="form.emailPlaceholder" value="{{ form.email.value|default:'' }}" required>
                 </div>
                 {% if form.email.errors %}
                 <div class="invalid-feedback-custom text-danger small mt-1">{{ form.email.errors.0 }}</div>
@@ -403,24 +399,11 @@
                 {% endif %}
               </div>
 
-              <!-- Status Notice Alert -->
-              <div class="col-12 mt-3">
-                <div class="alert alert-light border small text-muted d-flex align-items-center gap-2 mb-0" style="border-radius: 12px;">
-                  <i class="bi bi-info-circle-fill text-success fs-5"></i>
-                  <div>
-                    <span data-i18n="apt.noticeAlert"><strong>Please note:</strong> This submission is an appointment request. Our coordinator will contact you to confirm final slot availability.</span>
-                  </div>
-                </div>
-              </div>
-
               <!-- Submit Button -->
               <div class="col-12 mt-4 text-center">
                 <button type="submit" class="btn-wellness-submit" id="submitAppointmentBtn">
                   <i class="bi bi-calendar2-check-fill me-2"></i><span data-i18n="apt.requestBtn">Request Appointment</span>
                 </button>
-                <div class="text-center text-muted small mt-3">
-                  <i class="bi bi-shield-lock-fill me-1"></i> <span data-i18n="apt.privacy">Your details are safe with us. No payment is required for demo requests.</span>
-                </div>
               </div>
 
             </div>

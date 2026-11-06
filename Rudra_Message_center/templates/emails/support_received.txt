@@ -1,0 +1,26 @@
+{% extends "emails/base_email.txt" %}
+
+{% block content %}
+{% if language == 'gu' %}
+તમારી સપોર્ટ વિનંતી સફળતાપૂર્વક નોંધાઈ ગઈ છે.
+
+સપોર્ટ ટિકિટ નંબર: {{ ticket_number }}
+વિનંતીનો પ્રકાર: {{ request_type_display }}
+{% if subject %}વિષય: {{ subject }}{% endif %}
+{% if product_name %}પ્રોડક્ટ: {{ product_name }}{% endif %}
+સ્થિતિ: {{ status_display }}
+
+અમારી ટીમ 4 વ્યાપારિક કલાકોમાં આ ટિકિટની સમીક્ષા કરીને તમારો સંપર્ક કરશે.
+{% else %}
+Your support request has been successfully registered with Rudra Massage & Wellness.
+
+SUPPORT TICKET NUMBER: {{ ticket_number }}
+Request Category: {{ request_type_display }}
+{% if subject %}Subject: {{ subject }}{% endif %}
+{% if product_name %}Product / Device: {{ product_name }}{% endif %}
+Current Status: {{ status_display }}
+
+Our technical support team is reviewing your ticket and will respond within 4 business hours.
+{% endif %}
+{% endblock %}
+

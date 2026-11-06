@@ -1,0 +1,64 @@
+{% extends "emails/base_email.html" %}
+
+{% block content %}
+<div class="lead-text">
+  {% if language == 'gu' %}
+    રુદ્ર મસાજ અને વેલનેસ કસ્ટમર કેરનો સંપર્ક કરવા બદલ આભાર. તમારી સપોર્ટ વિનંતી સફળતાપૂર્વક નોંધાઈ ગઈ છે.
+  {% else %}
+    Thank you for contacting Rudra Massage & Wellness Customer Support. Your request has been successfully registered in our system.
+  {% endif %}
+</div>
+
+<div class="summary-card">
+  <div style="font-size: 13px; color: #66706b; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px;">
+    {% if language == 'gu' %}સપોર્ટ ટિકિટ નંબર{% else %}Support Ticket Number{% endif %}
+  </div>
+  <div style="font-size: 20px; font-weight: 700; color: #093723; margin-top: 4px; font-family: monospace;">
+    {{ ticket_number }}
+  </div>
+</div>
+
+<table class="detail-table">
+  <tr>
+    <td class="detail-label">{% if language == 'gu' %}વિનંતીનો પ્રકાર{% else %}Request Category{% endif %}</td>
+    <td class="detail-value">{{ request_type_display }}</td>
+  </tr>
+  {% if subject %}
+  <tr>
+    <td class="detail-label">{% if language == 'gu' %}વિષય{% else %}Subject{% endif %}</td>
+    <td class="detail-value">{{ subject }}</td>
+  </tr>
+  {% endif %}
+  {% if product_name %}
+  <tr>
+    <td class="detail-label">{% if language == 'gu' %}સાધન / મોડેલ{% else %}Product / Model{% endif %}</td>
+    <td class="detail-value">{{ product_name }}</td>
+  </tr>
+  {% endif %}
+  <tr>
+    <td class="detail-label">{% if language == 'gu' %}સ્થિતિ{% else %}Current Status{% endif %}</td>
+    <td class="detail-value">
+      <span class="badge-status">{{ status_display }}</span>
+    </td>
+  </tr>
+</table>
+
+{% if message %}
+<div style="margin: 16px 0; padding: 12px 14px; background: #fafafa; border: 1px solid #eef0ee; border-radius: 4px; font-size: 13px;">
+  <strong style="color: #444;">{% if language == 'gu' %}તમારો સંદેશ / પ્રશ્ન:{% else %}Submitted Issue / Message:{% endif %}</strong>
+  <div style="margin-top: 4px; color: #555; white-space: pre-line;">{{ message }}</div>
+</div>
+{% endif %}
+
+<div class="next-steps">
+  <strong style="color: #093723; display: block; margin-bottom: 6px;">
+    {% if language == 'gu' %}આગળ શું થશે?{% else %}What happens next?{% endif %}
+  </strong>
+  {% if language == 'gu' %}
+    અમારી ટેકનિકલ અને કસ્ટમર સપોર્ટ ટીમ તમારી ટિકિટની વિગતો ચકાસી રહી છે. સામાન્ય રીતે અમે <strong>4 વ્યાપારિક કલાકો</strong>માં પ્રત્યુત્તર આપીએ છીએ. જો ઇમરજન્સી હોય તો આપ સીધા અમારા હેલ્પલાઇન નંબર પર સંપર્ક કરી શકો છો.
+  {% else %}
+    Our customer care and technical support specialists are reviewing your request. We typically review and respond within <strong>4 business hours</strong>. For urgent technical matters, please call our direct helpline.
+  {% endif %}
+</div>
+{% endblock %}
+

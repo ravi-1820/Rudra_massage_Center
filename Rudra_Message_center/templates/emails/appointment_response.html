@@ -1,0 +1,91 @@
+{% extends "emails/base_email.html" %}
+
+{% block content %}
+<div class="lead-text">
+  {% if language == 'gu' %}
+    અમે તમારી એપોઇન્ટમેન્ટ વિનંતી <strong>{{ booking_reference }}</strong> અંગેનો અપડેટ આપવા માટે સંપર્ક કરી રહ્યા છીએ.
+  {% else %}
+    We are writing to provide an update regarding your appointment booking <strong>{{ booking_reference }}</strong>.
+  {% endif %}
+</div>
+
+<div class="summary-card">
+  <div style="font-size: 13px; color: #66706b; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px;">
+    {% if language == 'gu' %}બુકિંગ સંદર્ભ નંબર & વર્તમાન સ્થિતિ{% else %}Booking Reference & Status{% endif %}
+  </div>
+  <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-top: 4px;">
+    <span style="font-size: 18px; font-weight: 700; color: #093723; font-family: monospace;">{{ booking_reference }}</span>
+    <span class="badge-status" style="{% if status == 'confirmed' %}background-color: #d1fae5; border-color: #10b981; color: #065f46;{% elif status == 'cancelled' %}background-color: #fee2e2; border-color: #ef4444; color: #991b1b;{% elif status == 'completed' %}background-color: #e0f2fe; border-color: #0284c7; color: #075985;{% endif %}">
+      {{ status_display }}
+    </span>
+  </div>
+</div>
+
+{% if response_message %}
+<div class="response-card">
+  <div class="response-card-title">
+    {% if language == 'gu' %}અમારી વેલનેસ ટીમ તરફથી સંદેશ:{% else %}Message From Our Wellness Coordinator:{% endif %}
+  </div>
+  <div class="response-card-body">{{ response_message }}</div>
+</div>
+{% endif %}
+
+<table class="detail-table">
+  <tr>
+    <td class="detail-label">{% if language == 'gu' %}થેરાપી સોલ્યુશન{% else %}Therapy Solution{% endif %}</td>
+    <td class="detail-value">{{ service_name }}</td>
+  </tr>
+  <tr>
+    <td class="detail-label">{% if language == 'gu' %}નિયુક્ત તારીખ{% else %}Scheduled Date{% endif %}</td>
+    <td class="detail-value">
+      {{ appointment_date|date:"l, d F Y" }}
+      {% if rescheduled %}
+        <span style="font-size: 11px; color: #0284c7; font-weight: 700; margin-left: 6px;">({% if language == 'gu' %}પુનઃ સુનિશ્ચિત{% else %}Rescheduled{% endif %})</span>
+      {% endif %}
+    </td>
+  </tr>
+  <tr>
+    <td class="detail-label">{% if language == 'gu' %}સમય વિન્ડો{% else %}Time Window{% endif %}</td>
+    <td class="detail-value">{{ time_slot_display }}</td>
+  </tr>
+  <tr>
+    <td class="detail-label">{% if language == 'gu' %}ડેમોનું સ્વરૂપ{% else %}Demo Format{% endif %}</td>
+    <td class="detail-value">{{ demo_format_display }}</td>
+  </tr>
+  {% if city %}
+  <tr>
+    <td class="detail-label">{% if language == 'gu' %}સ્થળ / શહેર{% else %}Location / City{% endif %}</td>
+    <td class="detail-value">{{ city }}</td>
+  </tr>
+  {% endif %}
+</table>
+
+<div class="next-steps">
+  {% if status == 'confirmed' %}
+    {% if language == 'gu' %}
+      તમારી એપોઇન્ટમેન્ટની <strong>સફળતાપૂર્વક પુષ્ટિ</strong> થઈ ગઈ છે. અમારા નિષ્ણાત નિર્ધારિત સમયે ઉપલબ્ધ રહેશે. જો તમારે સમય બદલવો હોય તો કૃપા કરીને ઓછામાં ઓછા 3 કલાક અગાઉ અમને જાણ કરશો.
+    {% else %}
+      Your appointment has been <strong>successfully confirmed</strong>. Our specialist will be ready at the scheduled time. If you need to make any further adjustments, please contact us at least 3 hours prior.
+    {% endif %}
+  {% elif status == 'cancelled' %}
+    {% if language == 'gu' %}
+      આ એપોઇન્ટમેન્ટ વિનંતી રદ કરવામાં આવી છે. જો આપ ભવિષ્યમાં નવો સમય સુનિશ્ચિત કરવા માંગતા હોવ, તો અમારી વેબસાઇટ પર અથવા અમારા હેલ્પલાઇન નંબર પર ગમે ત્યારે સંપર્ક કરી શકો છો.
+    {% else %}
+      This booking request has been cancelled. If you would like to reschedule for a future date, please feel free to book again on our website or call our customer care team.
+    {% endif %}
+  {% elif status == 'completed' %}
+    {% if language == 'gu' %}
+      રુદ્ર મસાજ અને વેલનેસની મુલાકાત લેવા બદલ આભાર. અમે આશા રાખીએ છીએ કે તમારો થેરાપી અનુભવ ઉત્તમ રહ્યો હશે.
+    {% else %}
+      Thank you for completing your therapy session with Rudra Massage & Wellness. We hope you had a rejuvenating and beneficial experience.
+    {% endif %}
+  {% else %}
+    {% if language == 'gu' %}
+      જો આપને કોઈ પણ પ્રશ્ન અથવા સહાયની જરૂર હોય, તો અમારી હેલ્પલાઇન પર સંપર્ક કરવા વિનંતી.
+    {% else %}
+      If you have any questions or require additional guidance, please feel free to reach out to our team at any time.
+    {% endif %}
+  {% endif %}
+</div>
+{% endblock %}
+

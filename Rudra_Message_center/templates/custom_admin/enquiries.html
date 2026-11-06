@@ -100,9 +100,13 @@
       </select>
 
       <!-- Submit / Reset -->
-      <button type="submit" class="btn btn-sm btn-outline-dark">Filter</button>
+      <button type="submit" class="btn-admin-filter">
+        <i class="bi bi-funnel-fill"></i> Filter
+      </button>
       {% if search_query or selected_status or selected_service or selected_date_range %}
-        <a href="{% url 'custom_admin:enquiries' %}" class="btn btn-sm btn-outline-secondary" title="Reset all filters">Reset</a>
+        <a href="{% url 'custom_admin:enquiries' %}" class="btn-admin-reset" title="Reset all filters">
+          <i class="bi bi-arrow-counterclockwise"></i> Reset
+        </a>
       {% endif %}
     </form>
   </div>

@@ -1,0 +1,28 @@
+{% extends "emails/base_email.txt" %}
+
+{% block content %}
+{% if language == 'gu' %}
+અમને તમારી પૂછપરછ સફળતાપૂર્વક મળી ગઈ છે.
+
+પૂછપરછ સંદર્ભ નંબર: {{ enquiry_id }}
+પ્રોડક્ટ / વિષય: {{ service_name }}
+પૂછપરછનો પ્રકાર: {{ enquiry_type_display }}
+હેતુ: {{ usage_intention_display }}
+કોલ કરવાનો અનુકૂળ સમય: {{ callback_time_display }}
+શહેર: {{ city|default:"-" }}
+
+અમારા વેલનેસ નિષ્ણાત તમારી જરૂરિયાત સમજીને 24 કલાકમાં તમારો સંપર્ક કરશે.
+{% else %}
+Thank you for contacting Rudra Massage & Wellness. We have received your product and therapy enquiry.
+
+ENQUIRY REFERENCE: {{ enquiry_id }}
+Equipment / Service: {{ service_name }}
+Enquiry Type: {{ enquiry_type_display }}
+Intended Use: {{ usage_intention_display }}
+Preferred Call Window: {{ callback_time_display }}
+City: {{ city|default:"-" }}
+
+Our wellness advisory team will review your requirements and reach out to you within 24 hours.
+{% endif %}
+{% endblock %}
+

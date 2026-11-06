@@ -1,0 +1,50 @@
+{% extends "emails/base_email.html" %}
+
+{% block content %}
+<div class="lead-text">
+  {% if language == 'gu' %}
+    અમે તમારી પૂછપરછ <strong>{{ enquiry_id }}</strong> અંગેનો પ્રત્યુત્તર આપવા માટે સંપર્ક કરી રહ્યા છીએ.
+  {% else %}
+    We are writing in response to your therapy and equipment enquiry <strong>{{ enquiry_id }}</strong>.
+  {% endif %}
+</div>
+
+<div class="summary-card">
+  <div style="font-size: 13px; color: #66706b; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px;">
+    {% if language == 'gu' %}પૂછપરછ સંદર્ભ & વર્તમાન સ્થિતિ{% else %}Enquiry Reference & Status{% endif %}
+  </div>
+  <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-top: 4px;">
+    <span style="font-size: 18px; font-weight: 700; color: #093723; font-family: monospace;">{{ enquiry_id }}</span>
+    <span class="badge-status">{{ status_display }}</span>
+  </div>
+</div>
+
+{% if response_message %}
+<div class="response-card">
+  <div class="response-card-title">
+    {% if language == 'gu' %}અમારી વેલનેસ સલાહકાર ટીમ તરફથી જવાબ:{% else %}Response From Our Wellness Specialist:{% endif %}
+  </div>
+  <div class="response-card-body">{{ response_message }}</div>
+</div>
+{% endif %}
+
+<table class="detail-table">
+  <tr>
+    <td class="detail-label">{% if language == 'gu' %}પ્રોડક્ટ / સેવા{% else %}Equipment / Service{% endif %}</td>
+    <td class="detail-value">{{ service_name }}</td>
+  </tr>
+  <tr>
+    <td class="detail-label">{% if language == 'gu' %}પૂછપરછ શ્રેણી{% else %}Category{% endif %}</td>
+    <td class="detail-value">{{ enquiry_type_display }}</td>
+  </tr>
+</table>
+
+<div class="next-steps">
+  {% if language == 'gu' %}
+    જો આપને વધુ માહિતી જોઈતી હોય અથવા અમારા એક્સપિરિયન્સ સેન્ટર ખાતે લાઇવ ડેમો જોવા માંગતા હોવ, તો આપ ગમે ત્યારે અમારા હેલ્પલાઇન નંબર પર સંપર્ક કરી શકો છો.
+  {% else %}
+    If you require further product specifications, price estimations, or wish to schedule an in-person equipment trial at our Ahmedabad centre, please reply to this message or contact our team directly.
+  {% endif %}
+</div>
+{% endblock %}
+

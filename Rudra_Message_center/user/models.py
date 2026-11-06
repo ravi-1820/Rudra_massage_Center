@@ -431,6 +431,12 @@ class Enquiry(models.Model):
         blank=True,
         help_text="Internal notes added by staff during telephone follow-up",
     )
+    language = models.CharField(
+        max_length=10,
+        default="en",
+        blank=True,
+        help_text="Preferred communication language (en/gu)",
+    )
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -524,6 +530,12 @@ class Appointment(models.Model):
     admin_notes = models.TextField(
         blank=True,
         help_text="Internal staff notes regarding slot confirmation or logistics",
+    )
+    language = models.CharField(
+        max_length=10,
+        default="en",
+        blank=True,
+        help_text="Preferred communication language (en/gu)",
     )
 
     created_at = models.DateTimeField(auto_now_add=True)
@@ -711,6 +723,12 @@ class SupportRequest(models.Model):
         blank=True,
         help_text="Private internal staff follow-up and resolution notes",
     )
+    language = models.CharField(
+        max_length=10,
+        default="en",
+        blank=True,
+        help_text="Preferred communication language (en/gu)",
+    )
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -885,3 +903,99 @@ class GoogleSheetsSyncRecord(models.Model):
         )
 
 
+
+
+class EmailNotificationLog(models.Model):
+    """
+    Durable database-backed tracking record for customer email notifications.
+    Prevents duplicates, tracks delivery success/failure, and logs error messages
+    without exposing credentials or customer secrets.
+    """
+
+    class NotificationType(models.TextChoices):
+        APPOINTMENT_RECEIVED = "appointment_received", "Appointment Received"
+        APPOINTMENT_RESPONSE = "appointment_response", "Appointment Response"
+        ENQUIRY_RECEIVED = "enquiry_received", "Enquiry Received"
+        ENQUIRY_RESPONSE = "enquiry_response", "Enquiry Response"
+        SUPPORT_RECEIVED = "support_received", "Support Request Received"
+        SUPPORT_RESPONSE = "support_response", "Support Request Response"
+
+    class Status(models.TextChoices):
+        SENT = "sent", "Sent"
+        FAILED = "failed", "Failed"
+        SKIPPED = "skipped", "Skipped"
+
+    class SourceType(models.TextChoices):
+        APPOINTMENT = "appointment", "Appointment"
+        ENQUIRY = "enquiry", "Enquiry"
+        SUPPORT_REQUEST = "support_request", "Support Request"
+
+    notification_type = models.CharField(
+        max_length=50,
+        choices=NotificationType.choices,
+        help_text="Type of notification sent",
+    )
+    source_type = models.CharField(
+        max_length=50,
+        choices=SourceType.choices,
+        help_text="Originating Django model",
+    )
+    source_id = models.PositiveIntegerField(
+        help_text="Primary key of originating database record",
+    )
+    source_identifier = models.CharField(
+        max_length=64,
+        db_index=True,
+        blank=True,
+        help_text="Booking Ref, Ticket No, or ENQ-ID",
+    )
+    recipient_email = models.CharField(
+        max_length=254,
+        blank=True,
+        help_text="Recipient email address",
+    )
+    recipient_name = models.CharField(
+        max_length=150,
+        blank=True,
+        help_text="Recipient customer name",
+    )
+    subject = models.CharField(
+        max_length=255,
+        help_text="Subject line of sent email",
+    )
+    status = models.CharField(
+        max_length=20,
+        choices=Status.choices,
+        default=Status.SENT,
+        db_index=True,
+    )
+    error_message = models.CharField(
+        max_length=255,
+        blank=True,
+        help_text="Error message if delivery failed",
+    )
+    idempotency_key = models.CharField(
+        max_length=128,
+        blank=True,
+        db_index=True,
+        help_text="Unique key preventing duplicate notifications",
+    )
+    language = models.CharField(
+        max_length=10,
+        default="en",
+        help_text="Language code used for email (en or gu)",
+    )
+    sent_at = models.DateTimeField(
+        null=True,
+        blank=True,
+        help_text="Timestamp of successful dispatch",
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+        verbose_name = "Email Notification Log"
+        verbose_name_plural = "Email Notification Logs"
+
+    def __str__(self):
+        return f"[{self.get_notification_type_display()}] {self.recipient_email} -> {self.get_status_display()}"

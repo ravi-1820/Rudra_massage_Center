@@ -74,13 +74,13 @@
     <!-- Search & Filter Form -->
     <form method="GET" action="{% url 'custom_admin:appointments' %}" class="d-flex flex-wrap align-items-center gap-2">
       <!-- Search Input -->
-      <div class="input-group input-group-sm" style="width: 240px;">
-        <input type="text" name="q" value="{{ search_query }}" class="form-control" placeholder="Search client, ID, city..." aria-label="Search appointments">
-        <button class="btn btn-outline-secondary" type="submit"><i class="bi bi-search"></i></button>
+      <div class="input-group input-group-sm" style="width: 220px;">
+        <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
+        <input type="text" name="q" value="{{ search_query }}" class="form-control border-start-0" placeholder="Search client, ID..." aria-label="Search appointments">
       </div>
 
       <!-- Status Filter -->
-      <select name="status" class="form-select form-select-sm" style="width: 140px;" onchange="this.form.submit()" aria-label="Filter by status">
+      <select name="status" class="form-select form-select-sm rounded-pill px-3" style="width: 130px;" onchange="this.form.submit()" aria-label="Filter by status">
         <option value="">All Statuses</option>
         {% for val, label in status_choices %}
         <option value="{{ val }}" {% if status_filter == val %}selected{% endif %}>{{ label }}</option>
@@ -88,15 +88,15 @@
       </select>
 
       <!-- Service Filter -->
-      <select name="service" class="form-select form-select-sm" style="width: 160px;" onchange="this.form.submit()" aria-label="Filter by service">
+      <select name="service" class="form-select form-select-sm rounded-pill px-3" style="width: 145px;" onchange="this.form.submit()" aria-label="Filter by service">
         <option value="">All Services</option>
         {% for s in services %}
-        <option value="{{ s.id }}" {% if selected_service == s.id|stringformat:'s' %}selected{% endif %}>{{ s.name }}</option>
+        <option value="{{ s.id }}" {% if selected_service == s.id|stringformat:'s' %}selected{% endif %}>{{ s.name|truncatechars:18 }}</option>
         {% endfor %}
       </select>
 
       <!-- Date Range Filter -->
-      <select name="date_range" class="form-select form-select-sm" style="width: 130px;" onchange="this.form.submit()" aria-label="Filter by date range">
+      <select name="date_range" class="form-select form-select-sm rounded-pill px-3" style="width: 120px;" onchange="this.form.submit()" aria-label="Filter by date range">
         <option value="">All Dates</option>
         <option value="today" {% if selected_date_range == 'today' %}selected{% endif %}>Today</option>
         <option value="upcoming" {% if selected_date_range == 'upcoming' %}selected{% endif %}>Upcoming</option>
@@ -106,16 +106,20 @@
       </select>
 
       <!-- Format Filter -->
-      <select name="demo_format" class="form-select form-select-sm" style="width: 130px;" onchange="this.form.submit()" aria-label="Filter by demo format">
+      <select name="demo_format" class="form-select form-select-sm rounded-pill px-3" style="width: 125px;" onchange="this.form.submit()" aria-label="Filter by demo format">
         <option value="">All Formats</option>
         {% for val, label in demo_format_choices %}
-        <option value="{{ val }}" {% if selected_demo_format == val %}selected{% endif %}>{{ label|truncatechars:20 }}</option>
+        <option value="{{ val }}" {% if selected_demo_format == val %}selected{% endif %}>{{ label|truncatechars:16 }}</option>
         {% endfor %}
       </select>
 
+      <button type="submit" class="btn btn-sm btn-admin-filter">
+        <i class="bi bi-funnel-fill"></i> Filter
+      </button>
+
       {% if search_query or status_filter or selected_service or selected_date_range or selected_demo_format %}
-      <a href="{% url 'custom_admin:appointments' %}" class="btn btn-sm btn-outline-danger" title="Clear All Filters">
-        <i class="bi bi-x-circle"></i>
+      <a href="{% url 'custom_admin:appointments' %}" class="btn btn-sm btn-admin-reset" title="Clear All Filters">
+        <i class="bi bi-arrow-counterclockwise"></i> Reset
       </a>
       {% endif %}
     </form>
@@ -125,80 +129,142 @@
     <table class="admin-table">
       <thead>
         <tr>
-          <th>Booking ID</th>
-          <th>Client Name</th>
-          <th>Date & Time Slot</th>
+          <th style="width: 135px;">Booking ID</th>
+          <th>Client Details</th>
+          <th style="width: 155px;">Slot / Schedule</th>
           <th>Requested Machine</th>
-          <th>Demo Format</th>
-          <th>Status</th>
-          <th class="text-end">Actions</th>
+          <th style="width: 135px;">Format</th>
+          <th style="width: 130px;" class="text-center">Status</th>
+          <th style="width: 90px;" class="text-end">Actions</th>
         </tr>
       </thead>
       <tbody>
         {% for item in appointments %}
         <tr>
-          <td class="fw-bold">
-            <a href="{% url 'custom_admin:appointment_detail' item.id %}" class="text-forest text-decoration-none">
+          <!-- Booking ID -->
+          <td>
+            <a href="{% url 'custom_admin:appointment_detail' item.id %}" class="fw-bold text-forest text-decoration-none d-block">
               {{ item.booking_reference }}
             </a>
-            <br>
-            <small class="text-muted" style="font-size: 0.75rem;">{{ item.created_at|date:"d M Y, h:i A" }}</small>
+            <small class="text-muted" style="font-size: 0.73rem;">
+              <i class="bi bi-clock me-1"></i>{{ item.created_at|date:"d M, h:i A" }}
+            </small>
           </td>
+
+          <!-- Client Details -->
           <td>
-            <a href="{% url 'custom_admin:appointment_detail' item.id %}" class="text-dark text-decoration-none">
-              <strong>{{ item.name }}</strong>
+            <a href="{% url 'custom_admin:appointment_detail' item.id %}" class="text-dark text-decoration-none fw-bold d-block">
+              {{ item.name }}
             </a>
-            <br>
-            <small class="text-muted"><i class="bi bi-telephone"></i> {{ item.phone }}</small>
-            {% if item.city %}<br><small class="text-muted"><i class="bi bi-geo-alt"></i> {{ item.city }}</small>{% endif %}
-            {% if item.email %}<br><small class="text-muted"><i class="bi bi-envelope"></i> {{ item.email }}</small>{% endif %}
-          </td>
-          <td>
-            <span class="badge bg-light text-dark border">{{ item.appointment_date|date:"D, d M Y" }}</span>
-            <br>
-            <small class="text-muted">{{ item.get_time_slot_display }}</small>
-          </td>
-          <td>
-            {% if item.service %}
-              <strong>{{ item.service.name }}</strong>
-              <br><small class="text-muted">{{ item.service.category.name }}</small>
-            {% else %}
-              {{ item.service_name_snapshot|default:"—" }}
+            <div class="small text-muted d-flex align-items-center gap-1 mt-1">
+              <span><i class="bi bi-telephone text-success me-1"></i>{{ item.phone }}</span>
+              {% if item.city %}<span class="text-truncate" style="max-width: 100px;">&bull; <i class="bi bi-geo-alt text-muted me-1"></i>{{ item.city }}</span>{% endif %}
+            </div>
+            {% if item.email %}
+              <div class="small text-muted text-truncate" style="max-width: 200px;" title="{{ item.email }}">
+                <i class="bi bi-envelope me-1"></i>{{ item.email }}
+              </div>
+            {% endif %}
+            {% if item.notes %}
+              <div class="small text-muted mt-1 px-2 py-1 rounded bg-light border text-truncate" style="max-width: 250px;" title="Note / Address: {{ item.notes }}">
+                <i class="bi bi-geo text-forest me-1"></i>{{ item.notes }}
+              </div>
             {% endif %}
           </td>
+
+          <!-- Slot / Schedule -->
           <td>
-            <span class="badge bg-light text-dark border" style="font-size: 0.78rem;">
-              {{ item.get_demo_format_display }}
+            <div class="fw-semibold text-dark">
+              <i class="bi bi-calendar-event text-forest me-1"></i>{{ item.appointment_date|date:"D, d M Y" }}
+            </div>
+            <span class="badge bg-light text-secondary border mt-1" style="font-size: 0.72rem;">
+              <i class="bi bi-clock me-1"></i>{{ item.get_time_slot_display }}
             </span>
           </td>
+
+          <!-- Requested Machine -->
           <td>
-            {% if item.status == 'pending' %}
-              <span class="badge bg-warning text-dark"><i class="bi bi-hourglass-split"></i> Pending</span>
-            {% elif item.status == 'confirmed' %}
-              <span class="badge bg-success"><i class="bi bi-check2-circle"></i> Confirmed</span>
-            {% elif item.status == 'completed' %}
-              <span class="badge bg-info text-dark"><i class="bi bi-award"></i> Completed</span>
-            {% elif item.status == 'cancelled' %}
-              <span class="badge bg-danger"><i class="bi bi-x-circle"></i> Cancelled</span>
+            {% if item.service %}
+              <div class="fw-bold text-dark">{{ item.service.name }}</div>
+              <small class="badge bg-light text-muted border-0 fw-normal mt-1">{{ item.service.category.name }}</small>
+            {% else %}
+              <span class="fw-semibold text-dark">{{ item.service_name_snapshot|default:"—" }}</span>
             {% endif %}
           </td>
-          <td class="text-end">
-            <div class="d-inline-flex align-items-center gap-1">
-              <form method="POST" action="{% url 'custom_admin:update_appointment_status' item.id %}" class="d-inline-block">
-                {% csrf_token %}
-                <input type="hidden" name="next" value="{{ request.get_full_path }}">
-                <select name="status" class="form-select form-select-sm" style="width: 125px;" onchange="this.form.submit()" aria-label="Update status for appointment {{ item.booking_reference }}">
-                  {% for val, label in status_choices %}
-                  <option value="{{ val }}" {% if item.status == val %}selected{% endif %}>{{ label }}</option>
-                  {% endfor %}
-                </select>
-              </form>
 
-              <a href="{% url 'custom_admin:appointment_detail' item.id %}" class="btn btn-sm btn-outline-forest" title="View Full Appointment Details" aria-label="View Details">
+          <!-- Demo Format -->
+          <td>
+            {% if item.demo_format == 'centre' %}
+              <span class="badge rounded-pill border px-2 py-1" style="background:#ecfdf5; color:#047857; border-color:#a7f3d0; font-size: 0.75rem;">
+                <i class="bi bi-building me-1"></i> Centre Visit
+              </span>
+            {% elif item.demo_format == 'home' %}
+              <span class="badge rounded-pill border px-2 py-1" style="background:#eff6ff; color:#1d4ed8; border-color:#bfdbfe; font-size: 0.75rem;">
+                <i class="bi bi-house-door me-1"></i> Home Demo
+              </span>
+            {% elif item.demo_format == 'video' %}
+              <span class="badge rounded-pill border px-2 py-1" style="background:#faf5ff; color:#7e22ce; border-color:#e9d5ff; font-size: 0.75rem;">
+                <i class="bi bi-camera-video me-1"></i> Video Call
+              </span>
+            {% else %}
+              <span class="badge bg-light text-dark border">{{ item.get_demo_format_display }}</span>
+            {% endif %}
+          </td>
+
+          <!-- Status Dropdown Toggle -->
+          <td class="text-center">
+            <div class="dropdown d-inline-block">
+              <button class="btn btn-sm dropdown-toggle border-0 p-0" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="Click to change status">
+                {% if item.status == 'pending' %}
+                  <span class="badge rounded-pill px-3 py-1 border" style="background:#fef3c7; color:#92400e; border-color:#fde68a; font-size: 0.75rem;">
+                    <i class="bi bi-hourglass-split me-1"></i> Pending
+                  </span>
+                {% elif item.status == 'confirmed' %}
+                  <span class="badge rounded-pill px-3 py-1 border" style="background:#dcfce7; color:#15803d; border-color:#86efac; font-size: 0.75rem;">
+                    <i class="bi bi-check2-circle me-1"></i> Confirmed
+                  </span>
+                {% elif item.status == 'completed' %}
+                  <span class="badge rounded-pill px-3 py-1 border" style="background:#eff6ff; color:#1d4ed8; border-color:#bfdbfe; font-size: 0.75rem;">
+                    <i class="bi bi-award me-1"></i> Completed
+                  </span>
+                {% elif item.status == 'cancelled' %}
+                  <span class="badge rounded-pill px-3 py-1 border" style="background:#fef2f2; color:#b91c1c; border-color:#fecaca; font-size: 0.75rem;">
+                    <i class="bi bi-x-circle me-1"></i> Cancelled
+                  </span>
+                {% endif %}
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end shadow-sm" style="min-width: 140px; font-size: 0.8rem;">
+                {% for val, label in status_choices %}
+                  {% if val != item.status %}
+                  <li>
+                    <form method="POST" action="{% url 'custom_admin:update_appointment_status' item.id %}">
+                      {% csrf_token %}
+                      <input type="hidden" name="status" value="{{ val }}">
+                      <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                      <button type="submit" class="dropdown-item py-1 px-3 d-flex align-items-center gap-2">
+                        {% if val == 'pending' %}<i class="bi bi-hourglass text-warning"></i>
+                        {% elif val == 'confirmed' %}<i class="bi bi-check2-circle text-success"></i>
+                        {% elif val == 'completed' %}<i class="bi bi-award text-info"></i>
+                        {% elif val == 'cancelled' %}<i class="bi bi-x-circle text-danger"></i>
+                        {% endif %}
+                        <span>{{ label }}</span>
+                      </button>
+                    </form>
+                  </li>
+                  {% endif %}
+                {% endfor %}
+              </ul>
+            </div>
+          </td>
+
+          <!-- Actions -->
+          <td class="text-end">
+            <div class="d-inline-flex gap-1 justify-content-end">
+              <a href="{% url 'custom_admin:appointment_detail' item.id %}" class="btn btn-sm btn-action-icon btn-action-view" title="View Full Appointment Details" aria-label="View Details">
                 <i class="bi bi-eye"></i>
               </a>
 
-              <button type="button" class="btn btn-sm btn-outline-danger btn-delete-trigger" 
+              <button type="button" class="btn btn-sm btn-action-icon btn-action-delete btn-delete-trigger" 
                       title="Delete Appointment" aria-label="Delete Appointment"
                       data-bs-toggle="modal" data-bs-target="#deleteConfirmModal"
                       data-record-type="Appointment Booking"
@@ -210,16 +276,6 @@
             </div>
           </td>
         </tr>
-        {% if item.notes %}
-        <tr class="bg-light">
-          <td colspan="7" class="py-2 px-4 small text-muted">
-            <strong>Notes / Doorstep Address:</strong> {{ item.notes }}
-            {% if item.admin_notes %}
-              <br><strong class="text-forest">Staff Follow-Up:</strong> {{ item.admin_notes }}
-            {% endif %}
-          </td>
-        </tr>
-        {% endif %}
         {% empty %}
         <tr>
           <td colspan="7" class="text-center py-5 text-muted">
